@@ -1,29 +1,50 @@
 <% provide(:title, 'Sign up') %>
-<h1 style="color: blue;">Sign up</h1>
 
-<form accept-charset="UTF-8" action="<%= signup_path %>" class="new_user"
-      id="new_user" method="post">
-  <input name="utf8" type="hidden" value="&#x2713;" />
-  <input name="authenticity_token" type="hidden"
-         value="<%= form_authenticity_token %>" />
-         
-  <label for="user_name">Name</label>
-  <input id="user_name" name="user[name]" type="text" />
+<% content_for :option do %>
+  <li><%= link_to "Login", login_path, class:"indigo-text text-accent-4"%></li>
+<% end %>
 
-  <label for="user_lastname">Lastname</label>
-  <input id="user_lastname" name="user[lastname]" type="text" />
-
-  <label for="user_email">Email</label>
-  <input id="user_email" name="user[email]" type="email" />
-
-  <label for="user_password">Password</label>
-  <input id="user_password" name="user[password]"
-         type="password" />
-
-  <label for="user_password_confirmation">Confirmation</label>
-  <input id="user_password_confirmation"
-         name="user[password_confirmation]" type="password" />
-
-  <input class="btn btn-primary" name="commit" type="submit"
-         value="Create my account" />
-</form>
+<div class="container">
+  <div class="row">
+    <div class="col s12 l6 offset-l3">
+      <h4 class="indigo-text text-accent-4">Sign up</h4>
+      <%= render "shared/error_messages" %>
+      <form accept-charset="UTF-8" action="<%= signup_path %>" class="col s12"
+            id="new_user" method="post">
+        <input name="utf8" type="hidden" value="&#x2713;" />
+        <input name="authenticity_token" type="hidden"
+               value="<%= form_authenticity_token %>" />
+               
+        <div class="input-field ">
+          <i class="material-icons prefix input__icon--color">account_box</i>
+          <input id="user_name" name="user[name]" type="text" />
+          <label for="user_name">Name</label>
+        </div>
+        <div class="input-field ">
+          <i class="material-icons prefix input__icon--color">account_box</i>
+          <input id="user_lastname" name="user[lastname]" type="text" />
+          <label for="user_lastname">Lastname</label>
+        </div>
+        <div class="input-field ">
+          <i class="material-icons prefix input__icon--color">email</i>
+          <input id="user_email" name="user[email]" type="email" />
+          <label for="user_email">Email</label>
+        </div>
+        <div class="input-field ">
+          <i class="material-icons prefix input__icon--color">lock</i>
+          <input id="user_password" name="user[password]"
+                 type="password" />
+          <label for="user_password">Password</label>
+        </div>
+        <div class="input-field ">
+          <i class="material-icons prefix input__icon--color">confirmation_number</i>
+          <input id="user_password_confirmation"
+                 name="user[password_confirmation]" type="password" />
+          <label for="user_password_confirmation">Confirmation</label>
+        </div>
+        <button class="btn waves-effect waves-light" type="submit" name="action">Log in
+        </button> 
+      </form>
+    </div>
+  </div>
+</div>

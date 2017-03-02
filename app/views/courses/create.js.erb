@@ -1,0 +1,14 @@
+var error= <%= @course_user.errors.count %>;
+
+if(error>0){
+  $(".si").html("<h6>No</h6>");
+  <% @course_user.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+  <% end %>
+}else{
+  $(".si").html("<h6>Si</h6>");
+  
+  $('#modal1').modal('close');       
+}
+
+

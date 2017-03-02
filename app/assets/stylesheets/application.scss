@@ -1,0 +1,392 @@
+@import "materialize/components/color";
+
+  // Colors
+  // ==========================================================================
+
+  $primary-color: color("indigo", "darken-1") !default;
+  $primary-color-light: false !default;
+  $primary-color-dark: false !default;
+  @if not $primary-color-light {
+    $primary-color-light: lighten($primary-color, 15%);
+  }
+  @if not $primary-color-dark {
+    $primary-color-dark: darken($primary-color, 15%);
+  }
+  $secondary-color: color("indigo", "lighten-1") !default;
+  $success-color: color("green", "base") !default;
+  $error-color: color("red", "base") !default;
+  $link-color: color("indigo", "accent-4") !default;
+
+  // Global
+  // ==========================================================================
+  // Media Query Ranges
+
+  $small-screen-up: 768px !default;
+  $medium-screen-up: 993px !default;
+  $large-screen-up: 1201px !default;
+  $small-screen: 767px !default;
+  $medium-screen: 992px !default;
+  $large-screen: 1200px !default;
+
+  $medium-and-up: "only screen and (min-width : #{$small-screen-up})" !default;
+  $large-and-up: "only screen and (min-width : #{$medium-screen-up})" !default;
+  $small-and-down: "only screen and (max-width : #{$small-screen})" !default;
+  $medium-and-down: "only screen and (max-width : #{$medium-screen})" !default;
+  $medium-only: "only screen and (min-width : #{$small-screen-up}) and (max-width : #{$medium-screen})" !default;
+
+
+@import "materialize";
+@import "materialize/extras/nouislider";
+
+html, body {
+  height: 100%;
+}	
+
+body {
+  background-repeat: no-repeat;
+	background: #f0f3f4;
+	background: -webkit-linear-gradient(#eceff1, #eceff1, #ffffff) fixed no-repeat;
+	background: -o-linear-gradient(#eceff1, #eceff1, #ffffff) fixed no-repeat;
+	background: -moz-linear-gradient(#eceff1, #eceff1, #ffffff) fixed no-repeat;
+  background: linear-gradient(#eceff1, #eceff1, #ffffff) fixed no-repeat;
+}
+
+//=================
+// Side Navigation
+//=================
+
+#sidenav-overlay {
+  z-index: -1;
+}
+
+//======
+// Form
+//======
+
+.input__icon--color {
+  color: #607d8b;
+}
+
+.input__icon--color:focus {
+  color: #5c6bc0;
+}
+
+.z-depth--light {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
+}
+
+.nav__content {
+  width: 90%;
+  margin: 0 auto;
+}
+
+.alert-danger {
+  color: red;
+}
+
+//================
+// Menu dashboard
+//================
+
+.full-height {
+  height: 100%;
+}
+
+.dashboard-container{
+  height: calc(100% - 168px);
+}
+
+@media screen and (min-width: 768px){
+  .dashboard-container {
+    height: calc(100% - 112px);
+  }
+}
+
+.nav-dashboard div.row {
+  margin-bottom: 0;
+}
+
+.nav-dashboard ul {
+  padding: 5.25px;
+}
+
+.nav-dashboard ul > div.row {
+  height: 20%;
+}
+
+.nav-dashboard ul > div.double-row {
+  height: 40%;
+}
+
+.nav-dashboard ul > div.row .col {
+  padding: 5.25px;
+}
+
+.nav-dashboard ul div.row > div.col,
+.nav-dashboard ul div.row div.col > li,
+.nav-dashboard ul div.row div.col > li a,
+{
+  height: 100%;
+}
+
+//==================
+// Color background
+//==================
+
+.color-panal {
+  background-color: #9ed8d2!important;
+}
+
+.color-chat {
+  //background-color: #a5d99e!important;
+  background-color: #78c66c!important;
+}
+
+.color-product {
+  //background-color: #b4c198!important;
+  background-color:  #96a970!important;
+}
+
+.color-compromises {
+  //background-color: #b3b7cf!important;
+  background-color: #8289b0!important;
+}
+
+.color-task {
+  //background-color: #94a2f0!important;
+  background-color:  #6377e9!important;
+}
+
+.color-isa {
+  //background-color: #b1b2b8!important;
+  background-color: #94969e!important;
+}
+
+.color-evaluation {
+  //background-color: #a7bfbd!important;
+  background-color: #89a9a7!important;
+}
+
+//==================
+// Version 2
+//==================
+
+.color-panal2 {
+  background:  #dcefed; /* For browsers that do not support gradients */
+  background: -webkit-linear-gradient(left,  #dcefed ,#ffffff); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(right, #dcefed, #ffffff); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(right, #dcefed, #ffffff); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(to right, #dcefed, #ffffff); /* Standard syntax */
+  border-left: 5px solid #49b6ab;
+}
+
+.color-chat2 {
+  background: #cceac8; /* For browsers that do not support gradients */
+  background: -webkit-linear-gradient(left, #cceac8 ,#ffffff); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(right, #cceac8, #ffffff); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(right,#cceac8, #ffffff); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(to right, #cceac8 , #ffffff); /* Standard syntax */
+  border-left: 5px solid #54b946;
+}
+
+.color-product2 { 
+  background: #d4edab; /* For browsers that do not support gradients */
+  background: -webkit-linear-gradient(left, #d4edab ,#ffffff); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(right, #d4edab, #ffffff); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(right, #d4edab, #ffffff); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(to right, #d4edab, #ffffff); /* Standard syntax */
+  border-left: 5px solid #93d12e;
+}
+
+.color-compromises2 {
+  background: #d0d2e2; /* For browsers that do not support gradients */
+  background: -webkit-linear-gradient(left, #d0d2e2 ,#ffffff); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(right, #d0d2e2, #ffffff); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(right, #d0d2e2, #ffffff); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(to right, #d0d2e2, #ffffff); /* Standard syntax */
+  border-left: 5px solid #61689e;
+}
+
+.color-task2 {
+  background: #a6b1f2; /* For browsers that do not support gradients */
+  background: -webkit-linear-gradient(left, #a6b1f2 ,#ffffff); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(right, #a6b1f2, #ffffff); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(right, #a6b1f2, #ffffff); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(to right, #a6b1f2, #ffffff); /* Standard syntax */
+  border-left: 5px solid #203ddf;
+}
+
+.color-isa2 {
+  background: #d7d7db; /* For browsers that do not support gradients */
+  background: -webkit-linear-gradient(left, #d7d7db ,#ffffff); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(right, #d7d7db, #ffffff); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(right, #d7d7db, #ffffff); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(to right, #d7d7db, #ffffff); /* Standard syntax */
+  border-left: 5px solid #797986;
+}
+
+.color-evaluation2 {
+  background: #a6b1f2; /* For browsers that do not support gradients */
+  background: -webkit-linear-gradient(left, #a6b1f2 ,#ffffff); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(right, #a6b1f2, #ffffff); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(right, #a6b1f2, #ffffff); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(to right, #a6b1f2, #ffffff); /* Standard syntax */
+  border-left: 5px solid #699691;
+}
+
+.color-indigo {
+  background-color: #5c6bc0;
+}
+
+
+.color-gradient {
+  background: #4c59cd; /* For browsers that do not support gradients */
+  background: -webkit-linear-gradient(left top, #4c59cd, #5c6bc0); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(bottom right, #4c59cd, #5c6bc0); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(bottom right, #4c59cd, #5c6bc0); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(to bottom right,#4c59cd, #5c6bc0); 
+}
+
+.img-height-size {
+  height: 64px;
+}
+
+//===============
+// Vertical menu
+//===============
+
+$width-small: 72px;
+$width-big: 288px;
+
+.sidetoolbar {
+  position: fixed;
+  width: $width-small;
+  height: 100%;
+  background-color: lightblue;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
+  transition: all .3s;
+
+  &:hover {
+    width: $width-big;
+  }
+  nav {
+    height: 100%;
+    background-color: lightblue;
+    padding-bottom: 55px;
+  }
+  nav ul {
+    float: none;
+    height: 100%;
+    background-color: white;
+    overflow: auto;
+  }
+  nav ul li {
+    float: none;
+    position: relative;
+    height: 72px;
+    line-height: 72px;
+  }
+  nav ul li a {
+    position: absolute;
+    width: 100%;
+    height: 72px;
+    white-space:nowrap;
+  }
+  nav ul li a i, nav ul li a span {
+    display: inline-block;
+    vertical-align: middle;
+    color: black;
+  }
+  nav ul li a i {
+    text-align: center;
+    width:100%;
+    height: 72px;
+    line-height: 72px;
+    margin-right: 20px;
+  }
+  nav ul li a span {
+    max-width: 100px;
+    visibility: hidden;
+    opacity: 0;
+    text-overflow: ellipsis;
+  }
+  &:hover nav ul li a i, &:hover nav ul li a span {
+    width: auto;
+    text-align: left;
+  }
+  &:hover nav ul li a span {
+    visibility: visible;
+    opacity: 1;
+  }
+  & + div{
+    height: 100%;
+    margin-left: $width-small;
+  }
+}
+
+.grid-course {
+  
+  div.card-wrapper {
+    float: left;
+    width: 25%;
+    padding: 0 0 11.5px 11.5px;
+  }
+  div.card-wrapper div.card-dashed {
+    height: 300px;
+    border: 2px dashed #b5c3c9;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #dadcf1;
+  }
+  div.card-wrapper div.card-solid {
+    height: 300px;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: white;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.15), 0 6px 20px 0 rgba(0, 0, 0, 0.15);
+  }
+  
+}
+
+.background-header {
+  height: 112px;
+  background-color: #4c59cd;
+}
+
+
+.grid-dashboard {
+  nav {
+    height: 100%;
+    background-color: white;
+  }
+  nav ul {
+    float: none;
+    height: 100%;
+  }
+  nav ul div.row {
+    height: 50%;
+    margin-bottom: 0;
+  }
+  nav ul div.row div.col {
+    height: 100%;
+    padding-top: 11.5px;
+    padding-bottom: 11.5px;
+  }
+  nav ul li {
+    float: none;
+    height: 100%;
+  }
+  nav ul li a {
+    height: 100%;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    background-color: white;
+    transition: box-shadow .3s;
+    justify-content: center;
+    flex-direction: column;
+    &:hover {
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.15), 0 6px 20px 0 rgba(0, 0, 0, 0.15);
+    }
+  }
+
+}

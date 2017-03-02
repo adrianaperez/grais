@@ -1,0 +1,249 @@
+<% content_for :bar_option do %>
+  Dashboard
+<% end %>
+
+<!--Small-->
+<div class="hide-on-med-and-up row full-height" style="margin-bottom: 0;">
+	<div class="col s12 m5 l4 full-height" style="padding: 0;">
+		<nav class="nav-dashboard full-height white z-depth-0">
+			<ul class="full-height">
+				<div class="row">
+					<div class="col s12">
+						<li style="float: none;"><a href="" class="z-depth-3 valign-wrapper color-panal"><i class="material-icons white-text" style="display: inline-block;text-shadow: 4px 4px 8px  rgba(0, 0, 0, 0.2);">dashboard</i><span class="black-text" style="padding-left: 1em;">PANAL RAIS</span></a></li>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col s6">
+						<li style="float: none;"><a href="" class="z-depth-3 valign-wrapper color-chat"><i class="material-icons black-text" style="display: inline-block;">art_track</i><span class="black-text" style="padding-left: 1em;">CHAT</span></a></li>
+					</div>
+					<div class="col s6">
+						<li style="float: none;"><a href="" class="z-depth-3 valign-wrapper color-product" style="height: 100%;"><i class="material-icons black-text" style="display: inline-block;">devices_other</i><span class="black-text" style="padding-left: 1em;">PRODUCTS</span></a></li>
+					</div>
+				</div>
+				<div class="row double-row">
+					<div class="col s6">
+						<li style="float: none;"><a href="" class="z-depth-3 valign-wrapper color-compromises" style="height: 100%;"><i class="material-icons black-text" style="display: inline-block;">update</i><span class="black-text" style="padding-left: 1em;">COMPROMISES</span></a></li>
+					</div>
+					<div class="col s6">
+						<div class="row" style="height: 50%;">
+							<div class="col s12" style="height: 100%;padding-left: 0; padding-right: 0;
+							padding-top: 0; padding-bottom: 5.25px;">
+								<li style="float: none; height: 100%;"><a href="" class="z-depth-3 valign-wrapper color-task" style="height: 100%;"><i class="material-icons black-text" style="display: inline-block;">event</i><span class="black-text" style="padding-left: 1em;">TASK</span></a></li>
+							</div>
+						</div>
+						<div class="row" style="height: 50%;">
+							<div class="col s12" style="height: 100%; padding-left: 0; padding-right: 0; padding-top: 5.25px; padding-bottom: 0px;">
+								<li style="float: none; height: 100%;"><a href="" class="z-depth-3 valign-wrapper color-isa" style="height: 100%;"><i class="material-icons black-text" style="display: inline-block;">laptop_mac</i><span class="black-text" style="padding-left: 1em;">ISA</span></a></li>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col s12">
+						<li style="float: none;"><a href="" class="z-depth-3 valign-wrapper color-evaluation"><i class="material-icons black-text" style="display: inline-block;">verified_user</i><span class="black-text" style="padding-left: 1em;">AUTO/CO-EVALUATION</span></a></li>
+					</div>
+				</div>
+			</ul>
+		</nav>
+	</div>
+</div>
+	
+
+<!--Medium and Large-->
+<div class="grid-dashboard" style="height: 100%; min-height: 450px; background-color: lightblue;">
+	<nav class="z-depth-0">
+		<ul>
+			<div class="row">
+				<div class="col m3 l3">
+					<li>
+						<a href="" class="color-chat valign-wrapper">
+							<i class="material-icons white-text" style="font-size: 6em; text-shadow: 4px 4px 8px  rgba(0, 0, 0, 0.05); margin-bottom: 15px;">forum</i>
+							<span style="font-size: 1.5em;">Conversations</span>
+						</a>	
+					</li>
+				</div>
+				<div class="col m6 l6">
+					<li>
+						<%= link_to(courses_path, class:"color-panal lighten-2 valign-wrapper") do %>
+          		<i class="material-icons grey-text text-darken-2" style="font-size: 6em; text-shadow: 4px 4px 8px  rgba(0, 0, 0, 0.05); margin-bottom: 15px;">apps</i>
+							<span class="grey-text text-darken-3" style="font-size: 1.5em;">Courses</span>
+            <% end %>
+					</li>
+				</div>
+				<div class="col m3 l3">
+					<li>
+						<a href="" class="color-task valign-wrapper">
+							<i class="material-icons white-text" style="font-size: 6em; text-shadow: 4px 4px 8px  rgba(0, 0, 0, 0.05); margin-bottom: 15px;">event</i>
+							<span style="font-size: 1.5em;">Tasks</span>
+						</a>	
+					</li>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col m3 l3">
+					<li>
+						<a href="" class="color-product valign-wrapper">
+							<i class="material-icons white-text" style="font-size: 6em; text-shadow: 4px 4px 8px  rgba(0, 0, 0, 0.05); margin-bottom: 15px;">devices_other</i>
+							<span style="font-size: 1.5em;">Products</span>
+						</a>	
+					</li>
+				</div>
+				<div class="col m3 l3">
+					<li>
+						<a href="" class="color-compromises valign-wrapper">
+							<i class="material-icons white-text" style="font-size: 6em; text-shadow: 4px 4px 8px  rgba(0, 0, 0, 0.05); margin-bottom: 15px;">update</i>
+							<span style="font-size: 1.5em;">Commitments</span>
+						</a>	
+					</li>
+				</div>
+				<div class="col m3 l3">
+					<li>
+						<a href="" class="color-isa valign-wrapper">
+							<i class="material-icons white-text" style="font-size: 6em; text-shadow: 4px 4px 8px  rgba(0, 0, 0, 0.05); margin-bottom: 15px;">laptop_mac</i>
+							<span style="font-size: 1.5em;">Reports</span>
+						</a>	
+					</li>
+				</div>
+				<div class="col m3 l3">
+					<li>
+						<a href="" class="color-evaluation valign-wrapper">
+							<i class="material-icons white-text" style="font-size: 6em; text-shadow: 4px 4px 8px  rgba(0, 0, 0, 0.05); margin-bottom: 15px;">assignment_turned_in</i>
+							<span style="font-size: 1.5em;">Evaluations</span>
+						</a>	
+					</li>
+				</div>
+			</div>
+		</ul>
+	</nav>
+</div>
+
+
+
+
+
+
+
+<div class="center-block white" style="display: none; min-height: 100%; border: 1px solid #cfd8dc; width: 90%; position: relative; border-radius: 5px;">
+	<div style="display: none; width: 56px; height: 56px; line-height: 56px; margin: 11.5px; border: 1px dashed #cfd8dc; background-color: #e8eaf6;">
+		<i class="material-icons" style="color:#9fa8da; font-size: 48px; text-align: center;">add</i>
+	</div>
+
+	<div class="grid-course" style="min-height: 100%;">
+		<div class="card-wrapper">
+			<div class="card-dashed">
+			<div class="si"></div>
+			
+			<%= form_for(@course, url: courses_path, remote: true) do |f| %>
+
+	      <%= f.label :name %>
+    		<%= f.text_field :name %>
+
+	      <%= f.label :description %>
+    			<%= f.text_field :description %>
+
+	      <%= f.submit "Log in", class: "btn btn-primary" %>
+	    <% end %>
+
+			</div>
+		</div>
+		<div class="card-solid">
+			<div>
+				
+		
+			</div>
+		</div>
+		<div class="card-wrapper">
+			<div class="card-solid">
+				<div class="center-block" style="width: 25%">
+          <%= image_tag "typewriter-01.svg", class: "circle responsive-img"%>
+				</div>
+				<h6 style="font-weight: bold; text-align: center; color: #304ffe;">Course Name</h6>
+				<p style="max-height: 94px;overflow: hidden; color: #1a1a1a; padding: 5px;">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+				quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+				consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+				cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+				proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+				<div class="row valign-wrapper">
+          <div class="col s3">
+            <%= image_tag "user_boy.svg", class: "circle responsive-img"%>
+          </div>
+          <div class="col s9">
+            <span class="indigo-text text-accent-3">
+              Proffesor Name
+            </span>
+          </div>
+        </div>
+			</div>
+		</div>
+		<div class="card-wrapper">
+			<div class="card-solid">
+				
+			</div>
+		</div>
+		<div class="card-wrapper">
+			<div class="card-solid">
+				
+			</div>
+		</div>
+		<div class="card-wrapper">
+			<div class="card-solid">
+				
+			</div>
+		</div>
+		
+	</div>
+
+</div>
+
+
+<div style="display: none; top: 168px; z-index: 1;" class="hide-on-small-only full-height">
+	<div class="sidetoolbar" style="top: 56px;">
+		<nav class="z-depth-0">
+			<ul>
+				<li>
+					<a href="" class="color-panal">
+						<i class="material-icons">dashboard</i>
+						<span class="black-text">PANAL RAIS</span>
+					</a>
+				</li>
+				<li>
+					<a href="" class="color-chat">
+						<i class="material-icons">art_track</i>
+						<span class="black-text">COVERSATIONS</span>
+					</a>
+				</li>
+				<li>
+					<a href="" class="color-product">
+						<i class="material-icons">devices_other</i>
+						<span class="black-text">PRODUCTS</span>
+					</a>
+				</li>
+				<li>
+					<a href="" class="color-compromises">
+						<i class="material-icons">update</i>
+						<span class="black-text">COMPROMISES</span>
+					</a>
+				</li>
+				<li>
+					<a href="" class="color-task">
+						<i class="material-icons">event</i>
+						<span class="black-text">TASK</span>
+					</a>
+				</li>
+				<li>
+					<a href="" class="color-isa">
+						<i class="material-icons">laptop_mac</i>
+						<span class="black-text">ISA</span>
+					</a>
+				</li>
+				<li>
+					<a href="" class="color-evaluation">
+						<i class="material-icons">verified_user</i>
+						<span class="black-text">AUTO/CO-EVALUATION</span>
+					</a>
+				</li>
+			</ul>
+		</nav>
+	</div>
+</div>

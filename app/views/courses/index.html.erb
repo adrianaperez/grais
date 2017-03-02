@@ -1,0 +1,51 @@
+<% content_for :bar_option do %>  
+  <ul class="tabs">
+    <li class="tab"><a class="active" href="#test1">my courses</a></li>
+    <li class="tab"><a href="#test2">all courses</a></li>
+  </ul>      
+<% end %>
+
+<div id="test1">
+  <div class="grid-course">
+    <div class="card-wrapper">
+      <a href="#modal1">
+        <div class="card-dashed">
+        
+        </div>
+      </a>
+      <!-- Modal Structure -->
+      <%= form_for(@course, url: courses_path, remote: true) do |f| %>
+        <div id="modal1" class="modal">
+          <div class="modal-content">
+            <h4>New course</h4>
+            
+              <div class="input-field ">
+                <%= f.label :name %>
+                <%= f.text_field :name %>
+              </div>
+              <div class="input-field ">
+                <%= f.label :description %>
+                <%= f.text_field :description %>
+              </div>
+            
+          </div>
+          <div class="modal-footer">
+            <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat red lighten-2" >Cancel</a>
+            <%= f.submit "Create", class: "modal-action waves-effect waves-green btn-flat" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    <% @my_courses.each do |msg| %>
+      <div class="card-wrapper">
+        <div class="card-solid ">
+          <span><%= msg.name %></span>
+          <span><%= msg.description %></span>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+<div id="test2">
+  
+</div>

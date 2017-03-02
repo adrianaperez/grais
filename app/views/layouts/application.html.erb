@@ -5,8 +5,36 @@
     <%= csrf_meta_tags %>
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   </head>
   <body>
-  	<%= yield %>
+  	<header>
+  		<div class="navbar-fixed">
+		  	<nav class="z-deep--light white">
+		  		<div class="nav__content">
+					  <div class="nav-wrapper">
+					  	<a href="#" class="brand-logo">Logo</a>
+					  	<%= link_to "LOGO", root_url, class:"brand-logo indigo-text text-text-lighten-1"%>  
+					    <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons blue-text text-darken-2">menu</i></a>
+					    <ul class="right hide-on-med-and-down">
+					    	<%= yield :option %>
+					    </ul>
+					    <ul class="side-nav" id="mobile-demo">
+					    	<li><%= link_to "Login", login_path, class:"indigo-text text-darken-2"%></li>
+					    	<li><%= link_to "Sign up", signup_path, class:"indigo-text text-darken-2"%></li>
+					    </ul>
+					  </div>
+					</div>
+				</nav>
+			</div>
+  	</header>
+  	<main>
+  		<%= yield %>
+  	</main>
+		<script type="text/javascript">
+			$( document ).ready(function(){
+		    $(".button-collapse").sideNav();
+			})
+		</script>
   </body>
 </html>

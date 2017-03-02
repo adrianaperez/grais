@@ -1,0 +1,22 @@
+<form accept-charset="UTF-8" action="<%= login_path %>" method="post" class="col s12">
+  <input name="utf8" type="hidden" value="&#x2713;" />
+  <input name="authenticity_token" type="hidden"
+         value="<%= form_authenticity_token %>" />
+  <div class="input-field ">
+    <i class="material-icons prefix input__icon--color">mail_outline</i>
+    <input class="" id="session_email"
+         name="session[email]" type="text" />
+    <label for="session_email">Email</label>
+  </div>
+  <div class="input-field ">
+    <%= link_to "Forgot password?", new_password_reset_path %>
+  </div>
+  <div class="input-field ">
+    <i class="material-icons prefix input__icon--color">lock_outline</i>
+    <input id="session_password" name="session[password]"
+           type="password" />
+    <label for="session_password">Password</label>
+  </div>
+  <button class="btn waves-effect waves-light" type="submit" name="action">Log in
+  </button>       
+</form>

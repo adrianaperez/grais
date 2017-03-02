@@ -1,8 +1,21 @@
 class User < ApplicationRecord
 
-  attr_accessor :reset_token
+  has_many :course_user_relationships
+  has_many :courses, through: :course_user_relationships
+  has_many :commitment_user_relationships
+  has_many :commitments, through: :commitment_user_relationships
+  has_many :tasks
 
+  validates :name,  presence: true, length: { maximum: 32 }
+  validates :name,  presence: true, length: { maximum: 32 }
+  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
+  validates :email, presence: true, length: { maximum: 64 },
+                    format: { with: VALID_EMAIL_REGEX },
+                    uniqueness: true
   has_secure_password
+  validates :password, presence: true, length: { maximum: 64 }
+
+  attr_accessor :reset_token
 
   # Returns the hash digest of the given string.
   def User.digest(string)
