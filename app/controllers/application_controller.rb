@@ -1,8 +1,10 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
-  include SessionsHelper
+  # TODO: Estos manejadores de sesiones deben desahabilitarse para cuando se hagan
+  # peticiones desde la app, o que se debe hacer?
+  #include SessionsHelper #comentar para pruebas en Android
 
-  before_action :require_login
+  #before_action :require_login #comentar para pruebas en Android
  
   private
  
