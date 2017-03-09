@@ -48,5 +48,8 @@ Rails.application.routes.draw do
     collection do
       post :update_course
     end
+    collection do
+      post :find_courses_by_user
+    end
   end
 end

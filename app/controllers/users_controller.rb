@@ -1,8 +1,11 @@
 class UsersController < ApplicationController
 
   # TODO: Esta validacion login da prolemas para las peticiones desde la app
-  #skip_before_action :require_login, only: [:new, :create] Comentado para pruebas Android
-  skip_before_action :verify_authenticity_token #esto es para hacer pruebas, preguntar antes si necesitas eliminarlo
+  skip_before_action :require_login, only: [:new, :create, :all, :find] # Comentado para pruebas Android
+
+##para que no requeira el token
+  skip_before_filter :verify_authenticity_token,
+                     :if => Proc.new { |c| c.request.format == 'application/json' }
 
   def index
   end
@@ -36,6 +39,8 @@ class UsersController < ApplicationController
   # get all the users
   def all
     users = User.all
+    
+    puts users.inspect
 
       respond_to do |format|
         format.json {render json: users}

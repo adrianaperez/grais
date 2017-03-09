@@ -137,6 +137,27 @@ class CoursesController < ApplicationController
       end
    end
 
+  #Obtener todos los cursos de un usuario
+  def find_courses_by_user
+    u = User.find(params[:id])
+    if u == nil
+        respond_to do |format|
+          format.json {render json: u, status: :not_found}
+        end
+    end
+    #comparar el id con el id_user que tenga la tabla course_usuario
+    list = CourseUser.where(:user => u)
+    
+    if (list != nil)
+      respond_to do |format|
+        format.json {render json: list}
+      end
+    else
+        respond_to do |format|
+          format.json {render json: {info: "Unprocessable entity", status: :unprocessable_entity}.to_json}
+        end
+    end
+  end
 
   # Se coloco al final para que no de peos con las acciones de la app, tambien se agrego los campos faltantes
   private
