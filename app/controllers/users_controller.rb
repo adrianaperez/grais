@@ -175,7 +175,13 @@ class UsersController < ApplicationController
   # Se coloco al final para que no de peos con las acciones de la app, tambien se agrego los campos faltantes
   private
       def user_params
-          params.require(:user).permit(:names, :lastnames, :email, :password_digest, :initials,
+          #Se agrega password y password_confirmation, no password_digest.
+          #En Rails dice que se puede obviar, al ser nulo el sabrá que no
+          #tiene que hacer comparación, pero imagino que se mantiene password en vez de password_digest
+          #Ve al link de github para que veas lo que hacen. Al final del siguiente link
+          #http://api.rubyonrails.org/classes/ActiveModel/SecurePassword/ClassMethods.html#method-i-has_secure_password
+          #Gracias por la ayuda. Recuerde que parte de lo que no puedo hacer resulta de mi poco conocimiento.
+          params.require(:user).permit(:names, :lastnames, :email, :password, :password_confirmation, :initials,
            :country, :city, :phone, :sn_one, :sn_two, :skills, :image_user)
       end
 end
