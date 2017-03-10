@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170221230343) do
+ActiveRecord::Schema.define(version: 20170308010354) do
 
   create_table "commitment_user_relationships", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.integer  "user_id"
@@ -57,6 +57,15 @@ ActiveRecord::Schema.define(version: 20170221230343) do
     t.index ["company_id"], name: "index_course_user_relationships_on_company_id", using: :btree
     t.index ["course_id"], name: "index_course_user_relationships_on_course_id", using: :btree
     t.index ["user_id"], name: "index_course_user_relationships_on_user_id", using: :btree
+  end
+
+  create_table "course_users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+    t.integer  "user_id"
+    t.integer  "course_id"
+    t.string   "rol"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "course_id"], name: "index_course_users_on_user_id_and_course_id", using: :btree
   end
 
   create_table "courses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|

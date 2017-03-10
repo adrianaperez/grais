@@ -1,0 +1,30 @@
+<!--
+<%= link_to(course_path(course.id)) do %>
+  <div class="card-wrapper">
+    <div class="card-solid ">
+      <div class="card horizontal">
+        <div class="card-image">
+          <img src="http://lorempixel.com/100/190/nature/6">
+        </div>
+        <div class="card-stacked">
+          <div class="card-content">
+            <p><%= course.name %></p>
+            <p><%= course.description %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+-->
+<%= link_to(course_path(course.id), style:"text-decoration: none;") do %>
+  <div class="w-g">
+    <div class="w-i">
+      <img src="http://lorempixel.com/100/190/nature/6">
+    </div>
+    <div class="w-c" style="padding: 10px;">
+      <p><%= course.name %></p>
+      <p><%= course.description %></p>
+    </div>
+  </div>
+<% end %>

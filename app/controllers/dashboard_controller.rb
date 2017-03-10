@@ -1,6 +1,6 @@
 class DashboardController < ApplicationController
   
-	layout "dashboard"
+	layout "base"
 
   def index
     @course = Course.new

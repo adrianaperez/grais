@@ -1,2 +1,34 @@
-<h1>Courses#show</h1>
-<p>Find me in app/views/courses/show.html.erb</p>
+<% content_for :img_option do %>
+  <div class="parallax-container">
+    <div class="parallax"><%= image_tag "polygon-pattern-copy.jpg"%></div>
+  </div>
+<% end %>
+
+<% content_for :bar_option do %>  
+  <ul class="tabs">
+    <li class="tab"><a class="active" href="#information" style="outline: none;">information</a></li>
+    <li class="tab"><a href="#my_team" style="outline: none;">my team</a></li>
+    <li class="tab"><a href="#members" style="outline: none;">members</a></li>
+    <li class="tab"><a href="#products" style="outline: none;">products</a></li>
+    <li class="tab"><a href="#conversations" style="outline: none;">conversations</a></li>
+  </ul>      
+<% end %>
+
+<div id="information">
+  <h4>Este es el nombre del curso</h4>
+  <h5>Descripción del curso</h5>
+  <p>Esta es una descripción del curso que actuamente se puede ver</p>
+  <%= link_to "Editar", edit_course_path %></li>
+</div>
+<div id="my_team">
+  <h4>Mi equipo</h4>
+</div>
+<div id="members">
+  <h4>Miembros del curso</h4>
+</div>
+<div id="products">
+  <h4>Productos del curso</h4>
+</div>
+<div id="conversations">
+  <h4>Aqui van las conversaciones curso</h4>
+</div>
