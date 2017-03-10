@@ -2,8 +2,12 @@ class CoursesController < ApplicationController
 
   layout "dashboard"
 
+  # TODO: Esta validacion login da prolemas para las peticiones desde la app
+  skip_before_action :require_login, only: [:search_courses_by_string, :all] # Comentado para pruebas Android
+
 
    skip_before_action :verify_authenticity_token #esto es para hacer pruebas, preguntar antes si necesitas eliminarlo
+
 
   def index
     @course = Course.new
@@ -49,6 +53,17 @@ class CoursesController < ApplicationController
   end
 
   def delete
+  end
+
+  # get all the courses
+  def all
+    courses = Course.all
+    
+    puts courses.inspect
+
+      respond_to do |format|
+        format.json {render json: courses}
+      end
   end
 
   #create 1 course
@@ -151,6 +166,23 @@ class CoursesController < ApplicationController
     if (list != nil)
       respond_to do |format|
         format.json {render json: list}
+      end
+    else
+        respond_to do |format|
+          format.json {render json: {info: "Unprocessable entity", status: :unprocessable_entity}.to_json}
+        end
+    end
+  end
+
+  #Obtener cursos dado un string
+  def search_courses_by_string
+    #listSearch = Course.where("name LIKE %?%", params[:name_course])
+    listSearch = Course.where("name LIKE ?", "%#{params[:name_course]}%")
+    puts  listSearch.inspect
+
+    if (listSearch != nil)
+      respond_to do |format|
+        format.json {render json: listSearch}
       end
     else
         respond_to do |format|

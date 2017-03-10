@@ -51,5 +51,11 @@ Rails.application.routes.draw do
     collection do
       post :find_courses_by_user
     end
+    collection do
+      post :search_courses_by_string
+    end
+    collection do
+      post :all #TODO: Esto deberia ser un get pero hay otra ruta por defecto que toma el request si se hace get
+    end
   end
 end

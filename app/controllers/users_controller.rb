@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
 
   # TODO: Esta validacion login da prolemas para las peticiones desde la app
-  skip_before_action :require_login, only: [:new, :create, :all, :find] # Comentado para pruebas Android
+  skip_before_action :require_login, only: [:new, :create, :all, :find, :update_user,:create_user] # Comentado para pruebas Android
 
 ##para que no requeira el token
   skip_before_filter :verify_authenticity_token,
@@ -78,14 +78,27 @@ class UsersController < ApplicationController
     u.skills = params[:skills]
     u.image_user = "45345.png" #cambiar cuando se tenga lista la traza
 
-    if u.save
-      respond_to do |format|
-        format.json {render json: u, status: :created}
+    #buscar registros que coincidan con el email del usario que se esta creando (params[:email])
+    #y si hay alguna coincidencia devolver error
+    mailLists = User.where("email = ?", u.email)
+    puts mailLists.length
+    puts  mailLists.inspect
+
+    if(mailLists.length == 0)
+      if u.save
+        respond_to do |format|
+          format.json {render json: {user: u, status: :created}.to_json}
+        end
+      else
+        respond_to do |format|
+          format.json {render json: {user: u, status: :unprocessable_entity}.to_json}
+        end
       end
+    
     else
       respond_to do |format|
-        format.json {render json: u, status: :unprocessable_entity}
-      end
+        format.json {render json:  {info: "Este correo ya existe", status: :not_acceptable}.to_json}
+      end 
     end
   end
 
@@ -98,11 +111,13 @@ class UsersController < ApplicationController
         format.json {render json: u, status: :not_found}
       end
     end
+    
+    puts u.inspect
 
     u.names = params[:names]
     u.lastnames = params[:lastnames]
-    u.email = params[:email]
-    u.password_digest = params[:password_digest]
+    #u.email = params[:email]
+    #u.password_digest = "123456" #params[:password_digest]
     u.initials = params[:initials]
     u.country = params[:country]
     u.city = params[:city]
@@ -160,7 +175,7 @@ class UsersController < ApplicationController
   # Se coloco al final para que no de peos con las acciones de la app, tambien se agrego los campos faltantes
   private
       def user_params
-          params.require(:user).permit(:names, :lastname, :email, :password_digest, :initials,
+          params.require(:user).permit(:names, :lastnames, :email, :password_digest, :initials,
            :country, :city, :phone, :sn_one, :sn_two, :skills, :image_user)
       end
 end
