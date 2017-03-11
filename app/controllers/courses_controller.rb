@@ -2,11 +2,7 @@ class CoursesController < ApplicationController
 
   layout "base"
 
-  # TODO: Esta validacion login da prolemas para las peticiones desde la app
-  skip_before_action :require_login, only: [:search_courses_by_string, :all] # Comentado para pruebas Android
-
-
-   skip_before_action :verify_authenticity_token #esto es para hacer pruebas, preguntar antes si necesitas eliminarlo
+  #skip_before_action :verify_authenticity_token #esto es para hacer pruebas, preguntar antes si necesitas eliminarlo
 
 
   def index

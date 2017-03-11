@@ -1,11 +1,7 @@
 class UsersController < ApplicationController
 
   # TODO: Esta validacion login da prolemas para las peticiones desde la app
-  skip_before_action :require_login, only: [:new, :create, :all, :find, :update_user,:create_user] # Comentado para pruebas Android
-
-##para que no requeira el token
-  skip_before_filter :verify_authenticity_token,
-                     :if => Proc.new { |c| c.request.format == 'application/json' }
+  skip_before_action :require_login, only: [:new, :create]
 
   def index
   end
@@ -68,7 +64,8 @@ class UsersController < ApplicationController
     u.names = params[:names]
     u.lastnames = params[:lastnames]
     u.email = params[:email]
-    u.password_digest = params[:password_digest]
+    u.password = params[:password]
+    u.password_confirmation = params[:password]
     u.initials = params[:initials]
     u.country = params[:country]
     u.city = params[:city]
@@ -81,23 +78,27 @@ class UsersController < ApplicationController
     #buscar registros que coincidan con el email del usario que se esta creando (params[:email])
     #y si hay alguna coincidencia devolver error
     mailLists = User.where("email = ?", u.email)
-    puts mailLists.length
-    puts  mailLists.inspect
 
     if(mailLists.length == 0)
       if u.save
+        @user = u
+        log_in @user
+        
         respond_to do |format|
           format.json {render json: {user: u, status: :created}.to_json}
+          format.html{redirect_to dashboard_path}
         end
       else
         respond_to do |format|
           format.json {render json: {user: u, status: :unprocessable_entity}.to_json}
+          format.html{render 'new'}
         end
       end
     
     else
       respond_to do |format|
         format.json {render json:  {info: "Este correo ya existe", status: :not_acceptable}.to_json}
+        format.html{render 'new'}
       end 
     end
   end
@@ -149,20 +150,18 @@ class UsersController < ApplicationController
       end
     end
 
-    oldPasswordSaved = "" # En vez de "" obtener y desencriptar password_digest
-
     #comparo las claves 
-    if(oldPasswordSaved ==  params[:old_password]) 
-      newPasswordEncrypted = "" # En vez de "" encriptar params[:new_password] 
-      u.password_digest = newPasswordEncrypted
+    if(u.authenticate(params[:old_password])) 
+      u.password = params[:new_password]
+      u.password_confirmation = params[:new_password]
 
       if u.save
         respond_to do |format|
-          format.json {render json: u, status: :ok}
+          format.json {render json: {user: u, status: :ok}.to_json}
         end
       else
         respond_to do |format|
-          format.json {render json: u, status: :unprocessable_entity}
+          format.json {render json: {info: "Error saving data", status: :unprocessable_entity}.to_json}
         end
       end #cierre del if
     else
