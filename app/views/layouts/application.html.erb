@@ -19,10 +19,6 @@
 					    <ul class="right hide-on-med-and-down">
 					    	<%= yield :option %>
 					    </ul>
-					    <ul class="side-nav" id="mobile-demo">
-					    	<li><%= link_to "Login", login_path, class:"indigo-text text-darken-2"%></li>
-					    	<li><%= link_to "Sign up", signup_path, class:"indigo-text text-darken-2"%></li>
-					    </ul>
 					  </div>
 					</div>
 				</nav>
@@ -31,6 +27,11 @@
   	<main>
   		<%= yield %>
   	</main>
+    <!--SideNav-->
+    <ul class="side-nav" id="mobile-demo">
+      <li><%= link_to "Login", login_path, class:"indigo-text text-darken-2"%></li>
+      <li><%= link_to "Sign up", signup_path, class:"indigo-text text-darken-2"%></li>
+    </ul>
 		<script type="text/javascript">
 			$( document ).ready(function(){
 		    $(".button-collapse").sideNav();

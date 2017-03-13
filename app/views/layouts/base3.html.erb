@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= full_title(yield(:title)) %></title>
+    <%= csrf_meta_tags %>
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  </head>
+  <body>
+    <header>
+      <div class="navbar-fixed">
+        <nav class="z-depth-0">
+          <div class="nav__content">
+            <div class="nav-wrapper">
+              <%= link_to "LOGO", root_url, class:"brand-logo white-text left"%> 
+              <a href="#" data-activates="mobile-demo" class="button-collapse hide-on-med-and-up right"><i class="material-icons white-text">menu</i></a>
+              <a href="#!" class="hide-on-med-and-up right"><i class="material-icons right">add_alert</i></a>
+              <ul class="right hide-on-small-only">
+                <!-- Dropdown Trigger -->
+                <li><a href="#!"><i class="material-icons right">add_alert</i></a></li>
+                <li>
+                  <%= link_to("#!", data:{activates:"dropdown1"}, class:"dropdown-button img-height-size") do %>
+                    <div class="user-img">
+                      <div class="wrapper-image">
+                        <%= image_tag "Neuschwanstein.jpg"%>
+                      </div>
+                    </div>
+                  <% end %>
+                </li>
+              </ul>
+              <ul class="side-nav" id="mobile-demo">
+                <li><%= link_to "Log out", logout_path, method: "delete" %></li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+      </div>
+      <div class="wrapper-submenu" style="height: 48px; line-height: 48px;">
+        <div id="submenu" class="z-depth--light" style="width: 100%; height: 48px; background-color: white; z-index: 996;">
+          <%= yield :bar_option %>
+        </div>
+      </div>
+      <!-- Dropdown Structure -->
+      <ul id="dropdown1" class="dropdown-content" style="margin-top: 64px;">
+        <li class="divider"></li>
+        <li><%= link_to "Profile", user_path(current_user)%></li>
+        <li class="divider"></li>
+        <li><%= link_to "Log out", logout_path, method: "delete" %></li>
+      </ul>
+    </header>
+    <div class="sidebar">
+      
+    </div>
+    <main class="wrapper-main">
+      <div class="center-block" style="width: 90%; height: 100%;">
+        <%= yield %>
+      </div>
+    </main>
+    <script type="text/javascript">
+      $( document ).ready(function(){
+        $(".button-collapse").sideNav();
+        $('.modal').modal();
+        $(".pendejo").sideNav();
+        //$('.parallax').parallax();
+
+        /*/Sticky Header
+        $(window).scroll(function(){
+          var positionTop = $(".navbar-fixed").height();
+          var p = $(".parallax-container").height();
+          var currentPosition = $(this).scrollTop();
+          var positionSidebar = $(".sidebar").offset();
+          if (currentPosition > p) {
+            $("#submenu").addClass("pinned");
+            $("#submenu").css("top", positionTop);
+          } else {
+            $("#submenu").removeClass("pinned");
+            $("#submenu").css("top", "auto");
+          }
+        });
+        */
+      });
+    </script>
+  </body>
+</html>

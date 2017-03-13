@@ -1,6 +1,6 @@
 class CoursesController < ApplicationController
 
-  layout "dashboard"
+  layout "base"
 
   def index
     @course = Course.new
@@ -8,7 +8,7 @@ class CoursesController < ApplicationController
   end
 
   def show
-
+    @course = Course.find(params[:id])
   end
 
   def new
@@ -39,13 +39,8 @@ class CoursesController < ApplicationController
     end
   end
 
-  private
-
-    def course_params
-        params.require(:course).permit(:name, :description)
-    end
-
   def edit
+    @course = Course.find(params[:id])
   end
 
   def update
@@ -53,4 +48,11 @@ class CoursesController < ApplicationController
 
   def delete
   end
+
+  private
+
+    def course_params
+        params.require(:course).permit(:name, :description)
+    end
+
 end

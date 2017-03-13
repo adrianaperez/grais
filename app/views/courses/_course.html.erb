@@ -1,0 +1,15 @@
+<%= link_to( course_path course.id ) do %>  
+  <div class="wrapper-card">
+    <div class="card-course">
+      <div class="wrapper-img">
+        <%= image_tag "Neuschwanstein.jpg"%>
+      </div>
+      <div class="wrapper-content">
+        <div class="content">
+          <p><%= course.name %></p>
+          <p><%= course.description %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

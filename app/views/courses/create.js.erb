@@ -1,14 +1,18 @@
 var error= <%= @course_user.errors.count %>;
-
+//var v = "<%= @course.description %>";
+//console.log(v);
 if(error>0){
-  $(".si").html("<h6>No</h6>");
+  console.log("NO se creo el curso");
   <% @course_user.errors.full_messages.each do |msg| %>
       <li><%= msg %></li>
   <% end %>
 }else{
-  $(".si").html("<h6>Si</h6>");
   
-  $('#modal1').modal('close');       
+  console.log("Se creo el curso");
+  $('#modal1').modal('close');
+  $('.modal-content input').val('');
+  $("#my_courses").prepend("<%= j render @course %>");
+  
 }
 
 

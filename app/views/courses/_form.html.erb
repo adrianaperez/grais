@@ -1,6 +1,6 @@
-<h1>Edit course</h1>
-
 <%= form_for(@course, url: courses_path, remote: true) do |f| %>
+  <div class="modal-content">
+    <h4>New course</h4>
   
     <div class="input-field ">
       <%= f.label :name %>
@@ -10,5 +10,9 @@
       <%= f.label :description %>
       <%= f.text_field :description %>
     </div>   
-    <%= f.submit "Create", class: "btn" %> 
+  </div>
+  <div class="modal-footer">
+    <%= f.submit "Create", class: "btn" %>
+    <a href="#!" data-turbolinks="false" class=" modal-action modal-close waves-effect waves-green btn-flat red lighten-2" >Cancel</a> 
+  </div>
 <% end %>
