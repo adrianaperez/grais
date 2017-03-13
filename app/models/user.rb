@@ -8,7 +8,8 @@ class User < ApplicationRecord
   
   has_and_belongs_to_many :course_users #new
 
-  # TODO: Estas validaciones me estan dando error, luego de que se cambio el parametro a 'names' en vez de 'name'
+
+  #verificar los valores de maximum
   validates :names,  presence: true, length: { maximum: 50 }
   validates :lastnames,  presence: true, length: { maximum: 50 }
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
@@ -16,8 +17,8 @@ class User < ApplicationRecord
                     format: { with: VALID_EMAIL_REGEX },
                     uniqueness: true
   has_secure_password
-  #Aca se cambio password a password_digest, daba error en la app
-  validates :password_digest, presence: true, length: { maximum: 65 }
+
+  validates :password, presence: true, length: { maximum: 65 }
 
   attr_accessor :reset_token
 
