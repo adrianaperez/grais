@@ -153,15 +153,40 @@ class CoursesController < ApplicationController
     u = User.find(params[:id])
     if u == nil
         respond_to do |format|
-          format.json {render json: u, status: :not_found}
+          format.json {render json: {info: "User not found", status: :not_found}.to_json}
         end
     end
-    #comparar el id con el id_user que tenga la tabla course_usuario
-    list = CourseUser.where(:user => u)
+
+    list = Array.new
+
+    #Buscar los registros de CourseUSer de el usuario (u)
+    CourseUser.where(:user => u).each do |cu|   # Para cada registro en el que aparece el usuario
+      course = cu.course  #Course.find(cu.course.id)  # Obtener el curso
+      auxList = CourseUser.where(:course => course) # Y para obtener el numero de miembros de ese curso, buscamos todos los registros
+                                                    # en CourseUSer donde aparece dicho curso (miembros)
+      course.studentsAmount = auxList.length - 1
+
+      # Encontrar el CEO del curso en el cual aparece el usuario
+      if cu.rol == "L"  #Dado que estos registros de CourseUser son de el usuario actual, si el rol es L implica que u es el CEO
+        course.ceo = u.names
+        course.ceo_id = u.id
+      else  # Buscar el registro del CEO en la lista de registros en CourseUSer donde aparece dicho curso (miembros)
+        auxList.each do |auxCU|  
+          if auxCU.rol == "L" # Es decir donde el rol es L
+            course.ceo = auxCU.user.names
+            course.ceo_id = auxCU.user.id
+          end
+        end
+      end
+
+      list << course
+    end
+
+    puts list.inspect
     
     if (list != nil)
       respond_to do |format|
-        format.json {render json: list}
+        format.json {render json: {courses: list, status: :ok}.to_json}
       end
     else
         respond_to do |format|
