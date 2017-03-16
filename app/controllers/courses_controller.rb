@@ -53,13 +53,34 @@ class CoursesController < ApplicationController
 
   # get all the courses
   def all
-    courses = Course.all
-    
-    puts courses.inspect
+    list = Array.new
 
-      respond_to do |format|
-        format.json {render json: courses}
+    Course.all.each do |course|
+      auxList = CourseUser.where(:course => course) # Y para obtener el numero de miembros de ese curso, buscamos todos los registros
+                                                    # en CourseUSer donde aparece dicho curso (miembros)
+      course.studentsAmount = auxList.length - 1
+
+      # Encontrar el CEO del curso en el cual aparece el usuario
+      # Buscar el registro del CEO en la lista de registros en CourseUSer donde aparece dicho curso (miembros)
+      auxList.each do |auxCU|  
+        if auxCU.rol == "L" # Es decir donde el rol es L
+          course.ceo = auxCU.user.names
+          course.ceo_id = auxCU.user.id
+        end
       end
+
+      list << course
+    end
+
+    if (list != nil)
+      respond_to do |format|
+        format.json {render json: {courses: list, status: :ok}.to_json}
+      end
+    else
+        respond_to do |format|
+          format.json {render json: {info: "Unprocessable entity", status: :unprocessable_entity}.to_json}
+        end
+    end
   end
 
   #create 1 course
@@ -95,7 +116,8 @@ class CoursesController < ApplicationController
 
         if cu.save
           respond_to do |format|
-            format.json {render json: c, status: :ok}
+
+            format.json {render json: {course: c, status: :ok}.to_json}
           end
         else
           respond_to do |format|
@@ -104,7 +126,8 @@ class CoursesController < ApplicationController
         end
       else
         respond_to do |format|
-          format.json {render json: c, status: :unprocessable_entity}
+
+          format.json  {render json: {course: c, status: :unprocessable_entity}.to_json}
         end
       end
 
@@ -139,11 +162,13 @@ class CoursesController < ApplicationController
 
       if c.save
          respond_to do |format|
-            format.json {render json: c, status: :ok}
+
+            format.json {render json: {course: c, status: :ok}.to_json}
          end
       else
          respond_to do |format|
-            format.json {render json: c, status: :unprocessable_entity}
+         
+            format.json  {render json: {course: c, status: :unprocessable_entity}.to_json}
          end
       end
    end
@@ -181,8 +206,6 @@ class CoursesController < ApplicationController
 
       list << course
     end
-
-    puts list.inspect
     
     if (list != nil)
       respond_to do |format|
