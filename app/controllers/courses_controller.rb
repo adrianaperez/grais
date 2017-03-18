@@ -53,13 +53,34 @@ class CoursesController < ApplicationController
 
   # get all the courses
   def all
-    courses = Course.all
-    
-    puts courses.inspect
+    list = Array.new
 
-      respond_to do |format|
-        format.json {render json: courses}
+    Course.all.each do |course|
+      auxList = CourseUser.where(:course => course) # Y para obtener el numero de miembros de ese curso, buscamos todos los registros
+                                                    # en CourseUSer donde aparece dicho curso (miembros)
+      course.studentsAmount = auxList.length - 1
+
+      # Encontrar el CEO del curso en el cual aparece el usuario
+      # Buscar el registro del CEO en la lista de registros en CourseUSer donde aparece dicho curso (miembros)
+      auxList.each do |auxCU|  
+        if auxCU.rol == "CEO" # Es decir donde el rol es CEO
+          course.ceo = auxCU.user.names
+          course.ceo_id = auxCU.user.id
+        end
       end
+
+      list << course
+    end
+
+    if (list != nil)
+      respond_to do |format|
+        format.json {render json: {courses: list, status: :ok}.to_json}
+      end
+    else
+        respond_to do |format|
+          format.json {render json: {info: "Unprocessable entity", status: :unprocessable_entity}.to_json}
+        end
+    end
   end
 
   #create 1 course
@@ -91,11 +112,12 @@ class CoursesController < ApplicationController
       c.description = params[:description]
        
       if c.save
-        cu = CourseUser.new(:user => u,:course => c,:rol => "L")
+        cu = CourseUser.new(:user => u,:course => c,:rol => "CEO")
 
         if cu.save
           respond_to do |format|
-            format.json {render json: c, status: :ok}
+
+            format.json {render json: {course: c, status: :ok}.to_json}
           end
         else
           respond_to do |format|
@@ -104,7 +126,8 @@ class CoursesController < ApplicationController
         end
       else
         respond_to do |format|
-          format.json {render json: c, status: :unprocessable_entity}
+
+          format.json  {render json: {course: c, status: :unprocessable_entity}.to_json}
         end
       end
 
@@ -139,11 +162,13 @@ class CoursesController < ApplicationController
 
       if c.save
          respond_to do |format|
-            format.json {render json: c, status: :ok}
+
+            format.json {render json: {course: c, status: :ok}.to_json}
          end
       else
          respond_to do |format|
-            format.json {render json: c, status: :unprocessable_entity}
+         
+            format.json  {render json: {course: c, status: :unprocessable_entity}.to_json}
          end
       end
    end
@@ -153,15 +178,38 @@ class CoursesController < ApplicationController
     u = User.find(params[:id])
     if u == nil
         respond_to do |format|
-          format.json {render json: u, status: :not_found}
+          format.json {render json: {info: "User not found", status: :not_found}.to_json}
         end
     end
-    #comparar el id con el id_user que tenga la tabla course_usuario
-    list = CourseUser.where(:user => u)
+
+    list = Array.new
+
+    #Buscar los registros de CourseUSer de el usuario (u)
+    CourseUser.where(:user => u).each do |cu|   # Para cada registro en el que aparece el usuario
+      course = cu.course  #Course.find(cu.course.id)  # Obtener el curso
+      auxList = CourseUser.where(:course => course) # Y para obtener el numero de miembros de ese curso, buscamos todos los registros
+                                                    # en CourseUSer donde aparece dicho curso (miembros)
+      course.studentsAmount = auxList.length - 1
+
+      # Encontrar el CEO del curso en el cual aparece el usuario
+      if cu.rol == "CEO"  #Dado que estos registros de CourseUser son de el usuario actual, si el rol es CEO implica que u es el CEO
+        course.ceo = u.names
+        course.ceo_id = u.id
+      else  # Buscar el registro del CEO en la lista de registros en CourseUSer donde aparece dicho curso (miembros)
+        auxList.each do |auxCU|  
+          if auxCU.rol == "CEO" # Es decir donde el rol es CEO
+            course.ceo = auxCU.user.names
+            course.ceo_id = auxCU.user.id
+          end
+        end
+      end
+
+      list << course
+    end
     
     if (list != nil)
       respond_to do |format|
-        format.json {render json: list}
+        format.json {render json: {courses: list, status: :ok}.to_json}
       end
     else
         respond_to do |format|
@@ -172,18 +220,35 @@ class CoursesController < ApplicationController
 
   #Obtener cursos dado un string
   def search_courses_by_string
-    #listSearch = Course.where("name LIKE %?%", params[:name_course])
+    list = Array.new()
     listSearch = Course.where("name LIKE ?", "%#{params[:name_course]}%")
-    puts  listSearch.inspect
+    listSearch.each do |course| #Buscar cursos dado el nombre del curso
+      auxList = CourseUser.where(:course => course) # Y para obtener el numero de miembros de ese curso, buscamos todos los registros
+                                                    # en CourseUSer donde aparece dicho curso (miembros)
+      puts course.inspect
+      puts auxList.length
+      course.studentsAmount = auxList.length - 1     # El menos uno es para no inluir a quien creo el curso                                               
+    
+      # Encontrar el CEO del curso en el cual aparece el usuario
+      # Buscar el registro del CEO en la lista de registros en CourseUSer donde aparece dicho curso (miembros)
+      auxList.each do |auxCU|
+        if auxCU.rol == "CEO"
+          course.ceo = auxCU.user.names
+          course.ceo_id = auxCU.user.id 
+        end
+      end
 
-    if (listSearch != nil)
+      list << course
+    end
+
+    if (list != nil)
       respond_to do |format|
-        format.json {render json: listSearch}
+        format.json {render json: {courses: list, status: :ok}.to_json}
       end
     else
-        respond_to do |format|
-          format.json {render json: {info: "Unprocessable entity", status: :unprocessable_entity}.to_json}
-        end
+      respond_to do |format|
+        format.json {render json: {info: "Unprocessable entity", status: :unprocessable_entity}.to_json}
+      end
     end
   end
 

@@ -117,8 +117,9 @@ class UsersController < ApplicationController
 
     u.names = params[:names]
     u.lastnames = params[:lastnames]
-    #u.email = params[:email]
-    #u.password_digest = "123456" #params[:password_digest]
+    #u.email = params[:email] #agregado
+    u.password = params[:password] #agregado
+    u.password_confirmation = params[:password] #agregado
     u.initials = params[:initials]
     u.country = params[:country]
     u.city = params[:city]
@@ -130,12 +131,12 @@ class UsersController < ApplicationController
 
     if u.save
       respond_to do |format|
-        format.json {render json: u, status: :ok}
+        format.json {render json: {user: u, status: :ok}.to_json}
       end
     else
       print u.errors.full_messages # Asi se muestran los errores
       respond_to do |format|
-        format.json {render json: u, status: :unprocessable_entity}
+        format.json {render json: {user: u, status: :unprocessable_entity}.to_json}
       end
     end
   end
