@@ -16,27 +16,32 @@ document.addEventListener("turbolinks:load", function() {
 
           $('#get_all_courses').attr("data-clicked", "true");
           $.each( data , function( index, item ) {
-            console.log("======================================");
-            console.log("***"+item.name+"***");
-            $('#all_courses').append(
+            $.each(item, function(key, value){
+              console.log("Imprimiendo...");
+              console.log(key +": " + value);
+              console.log("======================================");
+              $('#all_courses').append(
 
-              '<a href="/courses/' + item.id + '">' +
-                '<div class="wrapper-card">' +
-                  '<div class="card-course">' +
-                    '<div class="wrapper-img">' +
-                      '<img src="/assets/Neuschwanstein.jpg" alt="Neuschwanstein">' +
-                    '</div>' +
-                    '<div class="wrapper-content">' +
-                      '<div class="content">' +
-                        '<p>'+ item.name + '</p>' +
-                        '<p>'+ item.description + '</p>' +
+                '<a href="/courses/' + value.id + '">' +
+                  '<div class="wrapper-card">' +
+                    '<div class="card-course">' +
+                      '<div class="wrapper-img">' +
+                        '<img src="/assets/Neuschwanstein.jpg" alt="Neuschwanstein">' +
+                      '</div>' +
+                      '<div class="wrapper-content">' +
+                        '<div class="content">' +
+                          '<p>'+ value.name + '</p>' +
+                          '<p>'+ value.description + '</p>' +
+                        '</div>' +
                       '</div>' +
                     '</div>' +
-                  '</div>' +
-                '</div>'+
-              '</a>'
+                  '</div>'+
+                '</a>'
 
-            );
+              );
+              
+            });
+            
 
             /*$.each(item, function(key, value){
               console.log(key +": " + value);

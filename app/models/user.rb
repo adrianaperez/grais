@@ -2,9 +2,9 @@ class User < ApplicationRecord
 
   has_many :course_users
   has_many :courses, through: :course_users
-  has_many :commitment_user_relationships
-  has_many :commitments, through: :commitment_user_relationships
-  has_many :tasks
+  has_many :product_users
+  has_many :product, through: :product_users
+  #has_many :tasks
   
   #Esta asosiacion es solo si la asosiacion es directa. En este caso es indirecta pues cuenta con un modelo intermedio
   #Por tal razon se utiliza has_many :course_users y has_many :users, through: :course_users

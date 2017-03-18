@@ -9,4 +9,5 @@ class AlterProductFields < ActiveRecord::Migration[5.0]
     remove_belongs_to :products, :team, index: true, foreign_key: true
     change_column :products, :name, :string, limit: 255
     remove_column :products, :logo, :string, limit: 120
+  end
 end

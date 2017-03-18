@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class CommitmentUserRelationshipTest < ActiveSupport::TestCase
+class ProductUserTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end
