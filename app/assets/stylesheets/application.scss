@@ -66,11 +66,12 @@ body {
 
 .wrapper-main {
   height: calc(100% - 104px);
+
   @media screen and (min-width: 767px) {
     height: calc(100% - 112px);
   }
   @media screen and (min-width: 992px) {
-    
+
   }
 }
 
@@ -318,10 +319,11 @@ body {
 // Vertical menu
 //===============
 
-$width-small: 72px;
-$width-big: 210px;
+
 
 /*
+$width-small: 72px;
+$width-big: 210px;
 .sidetoolbar {
   position: fixed;
   width: $width-small;
@@ -394,7 +396,8 @@ $width-big: 210px;
   width: 210px;
   height: 100%;
   background-color: lightblue;
-  transition: width 3s ease-in-out;
+  transform: translateX(0);
+  transition: transform .3s linear;
   nav {
     height: 100%;
     background-color: lightblue;
@@ -409,13 +412,13 @@ $width-big: 210px;
   nav ul li {
     float: none;
     position: relative;
-    height: 64px;
-    line-height: 64px;
+    height: 48px;
+    line-height: 48px;
   }
   nav ul li a {
     position: absolute;
     width: 100%;
-    height: 64px;
+    height: 48px;
     white-space:nowrap;
   }
   nav ul li a i, nav ul li a span {
@@ -428,17 +431,24 @@ $width-big: 210px;
   }
   + main {
     margin-left: 210px;
+    transition: margin-left .4s linear;
   }
   @media screen and (max-width: 767px) {
     display: none;
     + main {
-    margin-left: 0;
+      margin-left: 0;
+    }
   }
+  @media screen and (min-width: 992px) {
+    width: 240px;
+    + main {
+      margin-left: 240px;
+    }
   }
 }
 
 .hide-sidebar{
-  left: -210px;
+  transform: translateX(-100%);
   + main {
     margin-left: 0;
   }
@@ -619,4 +629,6 @@ $width-big: 210px;
       height: 100%;
     }
   }
+
 }
+

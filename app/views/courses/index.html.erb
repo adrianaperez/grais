@@ -20,10 +20,10 @@
   </ul>
 <% end %>
 <% content_for :bar_option do %> 
-  <ul class="tabs">
+  <ul class="tabs center-block" style="width: 80%">
     <li class="tab"><a class="active" href="#my_courses" style="outline: none;">my courses</a></li>
     <li class="tab"><a href="#member" style="outline: none;">member</a></li>
-    <li class="tab"><a href="#all_courses" style="outline: none;">all courses</a></li>
+    <li class="tab"><a href="#all_courses" id="get_all_courses" data-clicked ="false" data-turbolinks="false" style="outline: none;">all courses</a></li>
   </ul>      
 <% end %>
 
@@ -46,14 +46,14 @@
     </div>    
   <%end%>
 </div>
-  <!-- Modal Structure - New course -->
-  <div id="modal1" class="modal">
-    <%= render "form" %>
-  </div>
+<!-- Modal Structure - New course -->
+<div id="modal1" class="modal">
+  <%= render "form" %>
+</div>
 </div>
 <div id="member">
   <h4 style="margin: 0;">Member</h4>
 </div>
 <div id="all_courses">
-  <h4 style="margin: 0;">All courses</h4>
+
 </div>

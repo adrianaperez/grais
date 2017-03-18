@@ -11,8 +11,7 @@ if(error>0){
   console.log("Se creo el curso");
   $('#modal1').modal('close');
   $('.modal-content input').val('');
-  $("#my_courses").prepend("<%= j render @course %>");
-  
+  $("#my_courses").prepend("<%= j render @course %>");  
 }
 
 

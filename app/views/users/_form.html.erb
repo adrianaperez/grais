@@ -1,14 +1,14 @@
-<%= form_for(@user, url: courses_path, remote: true) do |f| %>
+<%= form_for(@user, url: users_path, remote: true) do |f| %>
   <div class="modal-content">
-    <h4>Editar tu perfil</h4>
+    <h4>Edit you profile</h4>
   
     <div class="input-field ">
-      <%= f.label :name %>
-      <%= f.text_field :name %>
+      <%= f.label :names %>
+      <%= f.text_field :names %>
     </div>
     <div class="input-field ">
-      <%= f.label :lastname %>
-      <%= f.text_field :lastname %>
+      <%= f.label :lastnames %>
+      <%= f.text_field :lastnames %>
     </div>
     <div class="input-field ">
       <%= f.label :email %>

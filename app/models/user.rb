@@ -1,19 +1,26 @@
 class User < ApplicationRecord
 
-  has_many :course_user_relationships
-  has_many :courses, through: :course_user_relationships
+  has_many :course_users
+  has_many :courses, through: :course_users
   has_many :commitment_user_relationships
   has_many :commitments, through: :commitment_user_relationships
   has_many :tasks
+  
+  #Esta asosiacion es solo si la asosiacion es directa. En este caso es indirecta pues cuenta con un modelo intermedio
+  #Por tal razon se utiliza has_many :course_users y has_many :users, through: :course_users
+  #has_and_belongs_to_many :course_users #new
 
-  validates :name,  presence: true, length: { maximum: 32 }
-  validates :name,  presence: true, length: { maximum: 32 }
+
+  #verificar los valores de maximum
+  validates :names,  presence: true, length: { maximum: 50 }
+  validates :lastnames,  presence: true, length: { maximum: 50 }
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   validates :email, presence: true, length: { maximum: 64 },
                     format: { with: VALID_EMAIL_REGEX },
                     uniqueness: true
   has_secure_password
-  validates :password, presence: true, length: { maximum: 64 }
+
+  validates :password, presence: true, length: { maximum: 65 }
 
   attr_accessor :reset_token
 
