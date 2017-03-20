@@ -68,12 +68,15 @@ class CoursesController < ApplicationController
     end
 
     if (list != nil)
+      @courses_list = list
       respond_to do |format|
         format.json {render json: {courses: list, status: :ok}.to_json}
+        format.js
       end
     else
         respond_to do |format|
           format.json {render json: {info: "Unprocessable entity", status: :unprocessable_entity}.to_json}
+          format.js
         end
     end
   end

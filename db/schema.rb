@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170318043038) do
+ActiveRecord::Schema.define(version: 20170319140948) do
 
   create_table "commitments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string   "description"
@@ -57,12 +57,12 @@ ActiveRecord::Schema.define(version: 20170318043038) do
   end
 
   create_table "product_users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
-    t.integer  "user_id"
     t.integer  "product_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+    t.integer  "course_user_id"
+    t.index ["course_user_id"], name: "index_product_users_on_course_user_id", using: :btree
     t.index ["product_id"], name: "index_product_users_on_product_id", using: :btree
-    t.index ["user_id"], name: "index_product_users_on_user_id", using: :btree
   end
 
   create_table "products", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
@@ -119,5 +119,6 @@ ActiveRecord::Schema.define(version: 20170318043038) do
   end
 
   add_foreign_key "course_users", "teams"
+  add_foreign_key "product_users", "course_users"
   add_foreign_key "products", "teams"
 end

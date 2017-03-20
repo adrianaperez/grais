@@ -1,6 +1,16 @@
 Rails.application.routes.draw do
 
+  #Rutas de prueba
+  #get '/courses/:id/teams', to: 'teams#find_teams_by_course', as: 'teams_course'
+  #get '/courses/all', to:'courses#all', as: 'all_courses'
+  #resources :teams, :defaults => { :format => 'json' }, :except => [:create, :update, :destroy, :edit, :index, :show, :new] do
+    #collection do
+      #post :find_teams_by_course
+    #end
+  #end
 
+  resources :products
+  resources :teams
   resources :courses
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   root 'app#start'

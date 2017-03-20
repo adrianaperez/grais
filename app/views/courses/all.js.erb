@@ -1,3 +1,6 @@
-console.log("Solicitando todos los cursos");
+console.log("Solicitando todos los cursos ESTA ES UNA PRUEBA");
+<% @list.each do |msg| %>  
+    //$("#member").append("<li><%= msg %></li>");
+    $("#member").prepend("<%= j render msg %>");  
+<% end %>
 
-$("#all_courses").append("<%= j render @all_courses %>");
