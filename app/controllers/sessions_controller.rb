@@ -20,11 +20,11 @@ class SessionsController < ApplicationController
       end
     else
       # Create an error message.
-      flash.now[:danger] = 'Invalid email/password combination. Try again'
+      flash.now[:danger] = 'La combinación correo/contrasena no coincide'
       
       respond_to do |format|
         format.json {render json: {status: :unauthorized}.to_json}
-        format.html { render 'new' }
+        format.html { render 'new', notice:"Mensaje de error" }
         format.js
       end
         #render 'new'

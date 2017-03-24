@@ -21,3 +21,13 @@
 
 en:
   hello: "Hello world"
+
+  activerecord:
+    errors:
+      messages:
+        record_invalid: "La validación falló: %{errors}"
+    errors:
+      format: "%{attribute} %{message}"
+      messages:
+        blank: no puede estar en blanco
+        invalid: no es válido

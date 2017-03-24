@@ -59,4 +59,17 @@ document.addEventListener("turbolinks:load", function() {
       });
     }
   });  
+
+
+  //////////////////////////////
+  //Checkbox del form del curso
+
+  $('input:checkbox').on( 'change', function() {
+      if( $(this).is(':checked') ) {
+          $(this).val('1');
+      } else {
+          $(this).val('0');  
+      }
+  });
+
 });

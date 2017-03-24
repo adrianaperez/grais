@@ -3,9 +3,9 @@ Rails.application.routes.draw do
   #Rutas de prueba
   #get '/courses/:id/teams', to: 'teams#find_teams_by_course', as: 'teams_course'
   #get '/courses/all', to:'courses#all', as: 'all_courses'
-  #resources :teams, :defaults => { :format => 'json' }, :except => [:create, :update, :destroy, :edit, :index, :show, :new] do
+  #resources :teams, :defaults => { :format => 'json' }, :except => [ :create,:update, :destroy, :edit, :index, :show, :new] do
     #collection do
-      #post :find_teams_by_course
+      #post :create
     #end
   #end
 
@@ -58,6 +58,36 @@ Rails.application.routes.draw do
     end
     collection do
       post :all #TODO: Esto deberia ser un get pero hay otra ruta por defecto que toma el request si se hace get
+    end
+  end
+
+  resources :teams, :defaults => { :format => 'json' }, :except => [ :create,:update, :destroy, :edit, :index, :show, :new] do
+    collection do
+      post :add_member_to_team
+    end
+    collection do
+      post :delete_member
+    end
+    collection do
+      post :find_teams_by_course
+    end
+    collection do
+      post :find_members_by_team
+    end
+    collection do
+      post :find_teams_by_user
+    end
+  end
+
+  resources :products, :defaults => { :format => 'json' }, :except => [ :create,:update, :destroy, :edit, :index, :show, :new] do
+    collection do
+      post :find_products_by_course
+    end
+    collection do
+      post :find_products_by_user
+    end
+    collection do
+      post :find_products_by_team
     end
   end
 end

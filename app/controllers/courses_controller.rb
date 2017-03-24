@@ -7,7 +7,19 @@ class CoursesController < ApplicationController
 
   def index
     @course = Course.new
-    @my_courses = Course.joins(:course_users).where(course_users: {user_id: current_user.id}).order('created_at DESC')
+    courses = Course.joins(:course_users).where(course_users: {user_id: current_user.id}).order('created_at DESC')
+    @my_courses = Array.new
+    courses.each do |course|
+      c_u = CourseUser.where(course_id: course.id)
+      course.studentsAmount = c_u.length - 1
+      c_u.each do |cu|
+        if cu.rol == "CEO"
+          course.ceo = cu.user.names
+          course.ceo_id = cu.user.id
+        end
+      end
+      @my_courses << course
+    end  
   end
 
   def show

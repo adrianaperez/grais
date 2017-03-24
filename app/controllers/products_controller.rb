@@ -66,6 +66,7 @@ class ProductsController < ApplicationController
 
   def find_products_by_course
     @course = Course.find(params[:id])
+
     if @course == nil
       respond_to do |format|
         format.html{redirect_to course_path, notice: "Course not found"}
@@ -73,64 +74,77 @@ class ProductsController < ApplicationController
         format.js
       end
     end
-    list = Array.new
-    if @course.teams != nil  
+    
+    @products_list = Array.new
+    
+    if @course.teams.any?  
       @course.teams.each do |t|
-        @products = t.products
-        if @products != nil
-         list << @products
+        products = t.products
+        
+        if products.any?
+          products.each do |pd|
+            @products_list << pd
+          end
         end
       end
     end
-    if list != nil
-      respond_to do |format|
-        format.html{redirect_to course_path, notice: "Success"}
-        format.json {render json: {products: list, status: :ok}.to_json}
-        format.js
-      end
-
-    else
-      respond_to do |format|
-        format.html{redirect_to course_path, notice: "Success"}
-        format.json {render json: {info: "Unprocessable entity", status: :unprocessable_entity}.to_json}
-        format.js
-      end
+    
+    respond_to do |format|
+      format.html{redirect_to course_path, notice: "Success"}
+      format.json {render json: {products: @products_list, status: :ok}.to_json}
+      format.js
     end
-
   end
 
   def find_products_by_user
-    @user = User.find(params[:id])
+    user = User.find(params[:id])
 
-    if @user == nil
+    if user == nil
       respond_to do |format|
         format.html{redirect_to team_path, notice: "Course not found"}
         format.json {render json: {info: "Course not found", status: :not_found}.to_json}
         format.js
       end
-    end    
+    end  
+
     @product_list = Array.new
-    c_u = CourseUser.where(user_id: @user.id)
-    if c_u != nil
-      c_u.each do |cu|
-        @products_by_course = Product.joins(:product_users).where(product_users:{course_user_id: c_u.id}) 
-        if @products_by_course != nil
-          @product_list << @products_by_course 
+    course_users = CourseUser.where(user_id: user.id)
+
+    if course_users.any?
+      course_users.each do |cu|
+        products_by_course = Product.joins(:product_users).where(product_users:{course_user_id: cu.id}) 
+        if products_by_course > 0
+          products_by_course.each do |product|
+            @product_list << product
+          end  
         end
       end
     end
-    if @product_list != nil
+  
+    respond_to do |format|
+      format.html{redirect_to course_path, notice: "Success"}Products not found
+      format.json {render json: {products: @product_list, status: :ok}.to_json}
+      format.js
+    end
+  end
+
+  def find_products_by_team
+    team = Team.find(params[:id])
+
+    if team == nil
       respond_to do |format|
-        format.html{redirect_to course_path, notice: "Success"}
-        format.json {render json: {products: @product_list, status: :ok}.to_json}
+        format.html{redirect_to course_path, notice: "Team not found"}
+        format.json {render json: {info: "Team not found", status: :not_found}.to_json}
         format.js
       end
-    else
-      respond_to do |format|
-        format.html{redirect_to course_path, notice: "Products not found"}
-        format.json {render json: {info: "Unprocessable entity", status: :unprocessable_entity}.to_json}
-        format.js
-      end
+    end
+
+    @products = @team.products
+    
+    respond_to do |format|
+      format.html{redirect_to teams_path, notice: "Success"}
+      format.json {render json: {products: @products, status: :ok}.to_json}
+      format.js
     end
   end
 

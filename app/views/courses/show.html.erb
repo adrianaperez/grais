@@ -63,8 +63,8 @@
   <%= link_to "Editar", edit_course_path %></li>
 </div>
 <div id="teams">
-
-
+  <%= link_to "get",teams_course_path, remote: true %>
+  <%= render "teams/team" %>
   <ul class="collection">
     <li class="collection-item">Nombre del equipo 1</li>
     <li class="collection-item">Nombre del equipo 2</li>

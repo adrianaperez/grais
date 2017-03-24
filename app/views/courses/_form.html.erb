@@ -9,7 +9,15 @@
     <div class="input-field ">
       <%= f.label :description %>
       <%= f.text_field :description %>
-    </div>   
+    </div>
+    <div class="switch">
+      <label>
+        ISA
+        <%= hidden_field_tag 'course[strict_mode_isa]', 0 %>
+        <input type="checkbox" name="course[strict_mode_isa]" value= "0">
+        <span class="lever"></span>
+      </label>
+    </div>
   </div>
   <div class="modal-footer">
     <%= f.submit "Create", class: "btn" %>
