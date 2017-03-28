@@ -1,6 +1,6 @@
 class CoursesController < ApplicationController
 
-  layout "base"
+  layout :resolve_layout
 
   #skip_before_action :verify_authenticity_token #esto es para hacer pruebas, preguntar antes si necesitas eliminarlo
 
@@ -270,4 +270,14 @@ class CoursesController < ApplicationController
         :strict_mode_isa,:code_confirmed,:logo,:period_length,:description)
     end
 
+    def resolve_layout
+      case action_name
+      when "show"
+        "main"
+      when "index"
+        "base"
+      else
+        "application"
+      end
+    end
 end

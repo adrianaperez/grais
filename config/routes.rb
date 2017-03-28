@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
 
   #Rutas de prueba
-  #get '/courses/:id/teams', to: 'teams#find_teams_by_course', as: 'teams_course'
+  get '/courses/:id/teams', to: 'teams#find_teams_by_course', as: 'teams_course'
   #get '/courses/all', to:'courses#all', as: 'all_courses'
   #resources :teams, :defaults => { :format => 'json' }, :except => [ :create,:update, :destroy, :edit, :index, :show, :new] do
     #collection do

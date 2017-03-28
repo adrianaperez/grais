@@ -1,5 +1,7 @@
 class TeamsController < ApplicationController
 
+  layout "main"
+
   def index
     @teams = Team.all
   end

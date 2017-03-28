@@ -1,2 +1,37 @@
-<h1>Teams#show</h1>
-<p>Find me in app/views/teams/show.html.erb</p>
+<% content_for :sidebar_option do %>
+  <%= render "team_sidebar" %>
+<% end %>
+
+<% content_for :bar_option do %>
+  <ul class="tabs">
+    <li class="tab"><a href="#team_information" style="outline: none;">información</a></li>
+    <li class="tab"><a class="active" href="#team_members" style="outline: none;">miembros</a></li>
+    <li class="tab"><a href="#team_products" style="outline: none;">productos</a></li>
+  </ul>      
+<% end %>
+
+<div id="team_information">
+  <h6>Información del curso</h6>
+  <%= @team.name %>
+  <%= @team.course.id %>
+  <%= link_to( course_path @team.course.id ) do %>
+    <span>Ir al curso</span>
+  <%end%>
+</div>
+
+<div id="team_members">
+  <h1>Miembros del equipo</h1>
+  <h1>Miembros del equipo</h1>
+  <h1>Miembros del equipo</h1>
+  <h1>Miembros del equipo</h1>
+  <h1>Miembros del equipo</h1>
+  <h1>Miembros del equipo</h1>
+  <h1>Miembros del equipo</h1>
+  <h1>Miembros del equipo</h1>
+  <h1>Miembros del equipo</h1>
+  <h1>Miembros del equipo</h1>
+</div>
+
+<div id="team_products">
+  <h6>Productos del equipo</h6>
+</div>

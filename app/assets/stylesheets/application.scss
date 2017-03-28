@@ -476,6 +476,32 @@ $width-big: 210px;
   }
 }
 
+#sidebar {
+  position: fixed;
+  top: 64px;
+  width: 280px;
+  height: 100%;
+  background-color: white;
+  padding-bottom: 64px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
+  z-index: 997;
+  & ~ main, & ~ div#parax, & ~ div#menu {
+    margin-left: 280px;
+  }
+  @media screen and (max-width: 767px) {
+    display: none;
+    & ~ main, & ~ div#parax, & ~ div#menu {
+      margin-left: 0px;
+    }
+  }
+  @media screen and (min-width: 992px) {
+    width: 300px;
+    & ~ main, & ~ div#parax, & ~ div#menu {
+      margin-left: 300px;
+    }
+  }
+}
+
 .wrapper-submenu {
   height: 48px;
   line-height: 48px;

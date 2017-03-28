@@ -96,6 +96,7 @@
           var positionTop = $(".navbar-fixed").height();
           var p = $(".parallax-container").height();
           var currentPosition = $(this).scrollTop();
+          console.log("p: "+p);
           if (currentPosition > p) {
             $("#submenu").addClass("pinned");
             $("#submenu").css("top", positionTop);

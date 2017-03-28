@@ -7,36 +7,23 @@
 <% content_for :menu do %> 
   <a href="#" data-activates="slide-out" class="sidenavbar"><i class="material-icons left">list</i></a>
 <% end %>
+
+<% content_for :sidebar_option do %>
+  <%= render "course_sidebar" %>
+<% end %>
 <% content_for :bar_option do %>
   <ul class="tabs">
-    <li class="tab hide-on-med-and-up"><a href="#information" style="outline: none;">information</a></li>
-    <li class="tab"><a class="active" href="#teams" style="outline: none;">teams</a></li>
-    <li class="tab"><a href="#members" style="outline: none;">members</a></li>
-    <li class="tab"><a href="#products" style="outline: none;">products</a></li>
-    <li class="tab"><a href="#conversations" style="outline: none;">conversations</a></li>
+    <li class="tab hide-on-med-and-up"><a href="#information" style="outline: none;">información</a></li>
+    <li class="tab"><a class="active" href="#teams" style="outline: none;">equipos</a></li>
+    <li class="tab"><a href="#members" style="outline: none;">miembros</a></li>
+    <li class="tab"><a href="#products" style="outline: none;">productos</a></li>
+    <li class="tab"><a href="#conversations" style="outline: none;">muro</a></li>
   </ul>      
 <% end %>
 
 <% content_for :option_option do %>  
   <div class="sidecourse">
-    <div style="width: 100%; height: 100%; overflow: auto;">
-      <div class="wrapper-image-square">
-        <%= image_tag "Neuschwanstein.jpg"%>
-      </div>
-      <div style="padding: 20px;">
-        <div style="margin-bottom: : 10px;">
-          <span style="font-weight: bold; color: #424242; font-size: 28px;"><%= @course.name%></span>
-        </div>
-        <div class="">
-          <%= @course.description %>
-        </div>
-      </div>
-      <!--<%= link_to "EditarEditar", edit_course_path( @course.id )%>-->
-      
-      <%= link_to("#modal2") do %>
-        <span>Editar</span> <i class="material-icons" style="color: #85adad;">mode_edit</i>
-      <% end %>
-    </div>
+    
   </div>      
 <% end %>
 <!--SideNav-->
@@ -60,20 +47,16 @@
   <h4><%= @course.name%></h4>
   <h5>Descripción del curso</h5>
   <p><%= @course.description %></p>
-  <%= link_to "Editar", edit_course_path %></li>
+  <% if is_ceo? current_user.id, @course.id %>
+    <%= link_to "Editar", edit_course_path %>
+  <%end%>
 </div>
-<div id="teams">
-  <%= link_to "get",teams_course_path, remote: true %>
-  <%= render "teams/team" %>
-  <ul class="collection">
-    <li class="collection-item">Nombre del equipo 1</li>
-    <li class="collection-item">Nombre del equipo 2</li>
-    <li class="collection-item">Nombre del equipo 2</li>
-    <li class="collection-item">Nombre del equipo 4</li>
-  </ul>
-            
 
+<div id="teams">
+  <ul class="collection"> 
+  </ul>
 </div>
+
 <div id="members">
   <h4>Miembros del curso</h4>
   <ul class="collection">
@@ -110,27 +93,29 @@
   <h4>Aqui van las conversaciones curso</h4>
 </div>
 
-<!-- Modal Structure - Edit course -->
-<div id="modal2" class="modal">
-  <%= form_for(@course, url: courses_path, remote: true) do |f| %>
-    <div class="modal-content">
-      <h4>Edit course</h4>
-    
-      <div class="input-field ">
-        <%= f.label :name %>
-        <%= f.text_field :name %>
+<% content_for :modal_option do %>
+  <!-- Modal Structure - Edit course -->
+  <div id="modal2" class="modal">
+    <%= form_for(@course, url: courses_path, remote: true) do |f| %>
+      <div class="modal-content">
+        <h4>Edit course</h4>
+      
+        <div class="input-field ">
+          <%= f.label :name %>
+          <%= f.text_field :name %>
+        </div>
+        <div class="input-field ">
+          <%= f.label :description %>
+          <%= f.text_field :description %>
+        </div>   
       </div>
-      <div class="input-field ">
-        <%= f.label :description %>
-        <%= f.text_field :description %>
-      </div>   
-    </div>
-    <div class="modal-footer">
-      <%= f.submit "Create", class: "btn" %>
-      <a href="#!" data-turbolinks="false" class=" modal-action modal-close waves-effect waves-green btn-flat red lighten-2" >Cancel</a> 
-    </div>
-  <% end %>
-</div>
+      <div class="modal-footer">
+        <%= f.submit "Create", class: "btn" %>
+        <a href="#!" data-turbolinks="false" class=" modal-action modal-close waves-effect waves-green btn-flat red lighten-2" >Cancel</a> 
+      </div>
+    <% end %>
+  </div>
+<% end %>
 
 <% content_for :js do %>
   $(".sidebar").addClass('hide-sidebar');
