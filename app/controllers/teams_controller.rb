@@ -70,14 +70,17 @@ class TeamsController < ApplicationController
   def add_member_to_team
     #Necesito id del equipo y id del usuario
     user = User.find(params[:user_id])
-    if @user == nil
+    
+    if user == nil
       respond_to do |format|
         format.html{redirect_to team_path, notice: "User not found"}
         format.json {render json: {info: "User not found", status: :not_found}.to_json}
         format.js
       end
     end
+
     team = Team.find(params[:team_id])
+    
     if team == nil
       respond_to do |format|
         format.html{redirect_to team_path, notice: "Team not found"}
@@ -85,19 +88,31 @@ class TeamsController < ApplicationController
         format.js
       end
     end
+    
     course = team.course
-    course_users = CourseUser.where("user_id = ? AND course_id = ?", user.id, course.id)
-    if course_user.any?
+    
+    course_user = CourseUser.where("user_id = ? AND course_id = ?", user.id, course.id)
+    
+    if course_user != nil # Modificado, antes decia any?
+      course_user.rol = "MEMBER"
       course_user.team = team
-      respond_to do |format|
-        format.html{redirect_to team_path, notice: "Success"}
-        format.json {render json: {info: "Success", status: :ok}.to_json}
-        format.js
+
+      if course_user.save
+        respond_to do |format|
+          format.html{redirect_to team_path, notice: "Success"}
+          format.json {render json: {info: "Success", status: :ok}.to_json}
+          format.js
+        end
+      else  # CourseUser no actualizado, no se pudo asociar el usuario al curso
+        respond_to do |format|
+          format.html{redirect_to team_path, notice: "Success"}
+          format.json {render json: {info: "Course user not updated", status: :unprocessable_entity}.to_json}
+          format.js
       end
-    else
+    else  # Error, el usuario no pertenece al curso
       respond_to do |format|
-        format.html{redirect_to team_path, notice: "not found"}
-        format.json {render json: {info: "not found", status: :not_found}.to_json}
+        format.html{redirect_to team_path, notice: "The user is not member of this course"}
+        format.json {render json: {info: "The user is not member of the course", status: :unprocessable_entity}.to_json}
         format.js
       end
     end
@@ -106,6 +121,7 @@ class TeamsController < ApplicationController
   def delete_member
     #Necesito id del usuario y id del equipo
     user = User.find(params[:user_id])
+
     if user == nil
       respond_to do |format|
         format.html{redirect_to team_path, notice: "User not found"}
@@ -113,7 +129,9 @@ class TeamsController < ApplicationController
         format.js
       end
     end
+
     team = Team.find(params[:team_id])
+
     if team == nil
       respond_to do |format|
         format.html{redirect_to team_path, notice: "Team not found"}
@@ -121,10 +139,15 @@ class TeamsController < ApplicationController
         format.js
       end
     end
+
     course = team.course
-    course_users = CourseUser.where("user_id = ? AND course_id = ?", user.id, course.id)
-    if course_user.any?
+    course_user = CourseUser.where("user_id = ? AND course_id = ?", user.id, course.id)
+
+    if course_user.any? # != nil
       course_user.team = nil
+
+      # OJO Hay que guardar el cambio en el CourseUser
+
       respond_to do |format|
         format.html{redirect_to team_path, notice: "Success"}
         format.json {render json: {info: "Success", status: :ok}.to_json}
@@ -140,8 +163,9 @@ class TeamsController < ApplicationController
   end
 
   #Obtener todos los equipos de un curso
-  def find_teams_by_course
+  def find_teams_by_course 
     course = Course.find(params[:id])
+
     if course == nil
       respond_to do |format|
         format.html{redirect_to team_path, notice: "Course not found"}
@@ -159,11 +183,19 @@ class TeamsController < ApplicationController
         aux_list = CourseUser.where(team_id: team.id)
 
         if aux_list.any?
+          aux_list.each do |auxCU|  
+            if auxCU.rol == "LEADER" # Es decir donde el rol es lider
+              team.leader = auxCU.user.names
+              team.leader_id = auxCU.user.id
+            end
+          end
           team.studentsAmount = aux_list.length
+
           @team_list << team
         end
       end
     end
+
     respond_to do |format|
       format.html{redirect_to teams_path, notice: "Success"}
       format.json {render json: {teams: @team_list, status: :ok}.to_json}
@@ -174,6 +206,7 @@ class TeamsController < ApplicationController
   #Obtener miembros de un equipo
   def find_members_by_team
     team = Team.find(params[:id])
+
     if team == nil
       respond_to do |format|
         format.html{redirect_to team_path, notice: "Team not found"}
@@ -181,7 +214,9 @@ class TeamsController < ApplicationController
         format.js
       end
     end
+
     @users = User.joins(:course_users).where(course_users: {team_id: team.id})
+
     respond_to do |format|
       format.html{redirect_to teams_path, notice: "Success"}
       format.json {render json: {users: @users, status: :ok}.to_json}
@@ -192,6 +227,7 @@ class TeamsController < ApplicationController
   #Obtener los equipos de un usuario
   def find_teams_by_user
     user = User.find(params[:id])
+    
     if user == nil
       respond_to do |format|
         format.html{redirect_to team_path, notice: "User not found"}
@@ -199,7 +235,26 @@ class TeamsController < ApplicationController
         format.js
       end
     end
+
     @teams = Team.joins(:course_users).where(course_users: {user_id: user.id})
+
+    if @teams.any?
+      @teams.each do |team|
+        aux_list = CourseUser.where(team_id: team.id)
+
+        if aux_list.any?
+          aux_list.each do |auxCU|  
+            if auxCU.rol == "LEADER" # Es decir donde el rol es lider
+              team.leader = auxCU.user.names
+              team.leader_id = auxCU.user.id
+            end
+          end
+
+          team.studentsAmount = aux_list.length
+        end
+      end
+    end
+
     respond_to do |format|
       format.html{redirect_to teams_path, notice: "Success"}
       format.json {render json: {teams: @teams, status: :ok}.to_json}
