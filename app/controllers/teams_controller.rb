@@ -93,21 +93,23 @@ class TeamsController < ApplicationController
     
     course_user = CourseUser.where("user_id = ? AND course_id = ?", user.id, course.id)
     
-    if course_user != nil # Modificado, antes decia any?
-      course_user.rol = "MEMBER"
-      course_user.team = team
-
-      if course_user.save
-        respond_to do |format|
-          format.html{redirect_to team_path, notice: "Success"}
-          format.json {render json: {info: "Success", status: :ok}.to_json}
-          format.js
+    if course_user.any?
+      course_user.each do |cu|
+        cu.rol = "MEMBER"
+        cu.team = team
+        if cu.save
+          respond_to do |format|
+            format.html{redirect_to team_path, notice: "Success"}
+            format.json {render json: {info: "Success", status: :ok}.to_json}
+            format.js
+          end
+        else  # CourseUser no actualizado, no se pudo asociar el usuario al curso
+          respond_to do |format|
+            format.html{redirect_to team_path, notice: "Course user not updated"}
+            format.json {render json: {info: "Course user not updated", status: :unprocessable_entity}.to_json}
+            format.js
+          end
         end
-      else  # CourseUser no actualizado, no se pudo asociar el usuario al curso
-        respond_to do |format|
-          format.html{redirect_to team_path, notice: "Success"}
-          format.json {render json: {info: "Course user not updated", status: :unprocessable_entity}.to_json}
-          format.js
       end
     else  # Error, el usuario no pertenece al curso
       respond_to do |format|
@@ -144,21 +146,28 @@ class TeamsController < ApplicationController
     course_user = CourseUser.where("user_id = ? AND course_id = ?", user.id, course.id)
 
     if course_user.any? # != nil
-      course_user.team = nil
-
-      # OJO Hay que guardar el cambio en el CourseUser
-
-      respond_to do |format|
-        format.html{redirect_to team_path, notice: "Success"}
-        format.json {render json: {info: "Success", status: :ok}.to_json}
-        format.js
+      course_user.each do |cu|
+        cu.team = nil
+        if cu.save
+          respond_to do |format|
+            format.html{redirect_to team_path, notice: "Success"}
+            format.json {render json: {info: "Success", status: :ok}.to_json}
+            format.js
+          end
+        else
+          respond_to do |format|
+            format.html{redirect_to team_path, notice: "not found"}
+            format.json {render json: {info: "not found", status: :not_found}.to_json}
+            format.js
+          end
+        end
       end
-    else
+    else  # Error, el usuario no pertenece al curso
       respond_to do |format|
-        format.html{redirect_to team_path, notice: "not found"}
-        format.json {render json: {info: "not found", status: :not_found}.to_json}
+        format.html{redirect_to team_path, notice: "The user is not member of this course"}
+        format.json {render json: {info: "The user is not member of the course", status: :unprocessable_entity}.to_json}
         format.js
-      end
+      end     
     end
   end
 

@@ -13,6 +13,7 @@
         <nav class="z-depth-0">
           <div class="nav__content">
             <div class="nav-wrapper">
+              <a href="#" data-activates="slide-out" class="sidenavbar"><i class="material-icons left">menu</i></a>
               <%= link_to "LOGO", root_url, class:"brand-logo white-text left"%> 
               <a href="#" data-activates="mobile-demo" class="button-collapse hide-on-med-and-up right" style="padding: 0;">
                 <div class="user-img">
@@ -64,7 +65,23 @@
     <main class="wrapper-main" style="padding-top: 20px; padding-left: 20px;">
       <%= content_for?(:main) ? yield(:main) : yield %>
     </main>
-    <%= yield :modal_option %>
+    
+    <ul id="slide-out" class="side-nav">
+      <li><div class="userView">
+        <div class="background">
+          <img src="images/office.jpg">
+        </div>
+        <a href="#!user"><img class="circle" src="images/yuna.jpg"></a>
+        <a href="#!name"><span class="white-text name">John Doe</span></a>
+        <a href="#!email"><span class="white-text email">jdandturk@gmail.com</span></a>
+      </div></li>
+      <li><a href="#!"><i class="material-icons">cloud</i>First Link With Icon</a></li>
+      <li><a href="#!">Second Link</a></li>
+      <li><div class="divider"></div></li>
+      <li><a class="subheader">Subheader</a></li>
+      <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
+    </ul>
+    
     <script type="text/javascript">
       $( document ).ready(function(){
         $('.modal').modal();

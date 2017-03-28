@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
 
   #Rutas de prueba
-  get '/courses/:id/teams', to: 'teams#find_teams_by_course', as: 'teams_course'
+  #get '/courses/:id/teams', to: 'teams#find_teams_by_course', as: 'teams_course'
   #get '/courses/all', to:'courses#all', as: 'all_courses'
   #resources :teams, :defaults => { :format => 'json' }, :except => [ :create,:update, :destroy, :edit, :index, :show, :new] do
     #collection do
@@ -59,9 +59,12 @@ Rails.application.routes.draw do
     collection do
       post :all #TODO: Esto deberia ser un get pero hay otra ruta por defecto que toma el request si se hace get
     end
+    collection do
+      post :add_member_to_course
+    end
   end
 
-  resources :teams, :defaults => { :format => 'json' }, :except => [ :create,:update, :destroy, :edit, :index, :show, :new] do
+  resources :teams, :defaults => { :format => 'json' }, :except => [ :create, :update, :destroy, :edit, :index, :show, :new] do
     collection do
       post :add_member_to_team
     end

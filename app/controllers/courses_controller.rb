@@ -323,7 +323,7 @@ class CoursesController < ApplicationController
 
     course_user = CourseUser.where("user_id = ? AND course_id = ?", user.id, course.id)
 
-    if course_user != nil
+    if course_user.any?
         respond_to do |format|
           format.json {render json: {info: "The user is already a member", status: :unprocessable_entity}.to_json}
         end
@@ -331,12 +331,16 @@ class CoursesController < ApplicationController
       course_user = CourseUser.new
       course_user.user = user
       course_user.course = course
-      course_users.rol = "MEMBER"
+      course_user.rol = "MEMBER"
 
       if course_user.save
-        format.json {render json:  {course_user: course_user, status: :ok}.to_json}
+        respond_to do |format|
+          format.json {render json:  {course_user: course_user, status: :ok}.to_json}
+        end
       else
-        format.json {render json: { info: "Failed to create course_user",  status: :unprocessable_entity}.to_json}
+        respond_to do |format|
+          format.json {render json: { info: "Failed to create course_user",  status: :unprocessable_entity}.to_json}
+        end
       end
     end
   end
