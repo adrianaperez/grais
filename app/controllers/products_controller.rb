@@ -80,6 +80,7 @@ class ProductsController < ApplicationController
     if @course.teams.any?  
       @course.teams.each do |t|
         products = t.products
+        puts products.inspect
         
         if products.any?
           products.each do |pd|
@@ -122,7 +123,7 @@ class ProductsController < ApplicationController
     end
   
     respond_to do |format|
-      format.html{redirect_to course_path, notice: "Success"}Products not found
+      format.html{redirect_to course_path, notice: "Success"}
       format.json {render json: {products: @product_list, status: :ok}.to_json}
       format.js
     end

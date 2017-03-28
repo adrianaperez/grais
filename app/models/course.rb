@@ -8,12 +8,12 @@ class Course < ApplicationRecord
   #has_and_belongs_to_many :course_users #new
 
 
-  attr_accessor :studentsAmount, :ceo, :ceo_id # Agregar cualquier otro al metodo as_json de abajo
+  attr_accessor :studentsAmount, :ceo, :ceo_id, :is_member # Agregar cualquier otro al metodo as_json de abajo
 
   # Sobreescribir la funcion as_json
   def as_json options=nil
     options ||= {}
-    options[:methods] = ((options[:methods] || []) + [:studentsAmount, :ceo, :ceo_id])
+    options[:methods] = ((options[:methods] || []) + [:studentsAmount, :ceo, :ceo_id, :is_member])
     super options
   end
 
