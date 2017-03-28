@@ -2,6 +2,9 @@ class CoursesController < ApplicationController
 
   layout "base"
 
+  # Usado para comunicarse con el sistema de notificaciones
+  require 'net/http'
+
   #skip_before_action :verify_authenticity_token #esto es para hacer pruebas, preguntar antes si necesitas eliminarlo
 
 
@@ -60,12 +63,31 @@ class CoursesController < ApplicationController
 
   # get all the courses
   def all
+
+
+
+  ##############################
+    #Prueba: Manejo de notificaciones
+    #uri = URI('https://fcm.googleapis.com/fcm/send')
+    #http = Net::HTTP.new(uri.host, uri.port)
+    #http.use_ssl = true
+    #req = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json', 'Authorization' => 'key=AAAAe3BYdgo:APA91bF13EtVd07IZdv-9XTSATSwd-d1J1n2gKjVWpppTuz7Uj1R2hnwTCL3ioL4e7F4YVhU-iMzDI66Czu9mRT3A9sqQ-HVmb24wyda-lwEukaL7eCLjJHAvnEsi8foZ2_Bsh44wtN8'})
+    #req.body = {:to => 'dhwQI0eA_90:APA91bG0E_rRUI7u5puL_jeGH3DWwbArQv8UlCtKJlkA9FVw7OljH_i3b28gbyVIAOG5WW5S6mlhSyzAEPCuf27sCidD8XB7zY-TO0kZcguEedVILWyUIvW2akBFigawWd4IBA1pAs8R', :notification => {:title => 'Hola, soy ruby', :body => 'Ya podemos enviar notificaciones desde ruby!'}, :data => {:name => 'Adri', :lastname => 'Perez'}}.to_json
+
+    #response = http.request(req)
+    #puts 'Response:'
+    #puts response.inspect
+  ##############################
+
     list = Array.new
 
     Course.all.each do |course|
       auxList = CourseUser.where(:course => course) # Y para obtener el numero de miembros de ese curso, buscamos todos los registros
                                                     # en CourseUSer donde aparece dicho curso (miembros)
       course.studentsAmount = auxList.length - 1
+
+      #Esta variable es una bandera para saber si el usuario es miembro o no, si es que nos lo pasan
+      is_member = false
 
       # Encontrar el CEO del curso en el cual aparece el usuario
       # Buscar el registro del CEO en la lista de registros en CourseUSer donde aparece dicho curso (miembros)
@@ -74,7 +96,15 @@ class CoursesController < ApplicationController
           course.ceo = auxCU.user.names
           course.ceo_id = auxCU.user.id
         end
+
+        # si nos pasan el id de usuario, lo comparamos con cada miembro, y si lo conseguimos ponemos
+        # la bandera en true
+        if(params[:user_id] != nil and auxCU.user.id == Integer(params[:user_id]))
+          is_member = true;
+        end
       end
+
+      course.is_member = is_member
 
       list << course
     end
@@ -104,45 +134,49 @@ class CoursesController < ApplicationController
         end
       end
 
-      c = Course.new
-      c.name = params[:name]
-      c.initials = params[:initials]
-      c.period_type = params[:period_type]
-      c.section = params[:section]
-      c.category = params[:category]
-      c.institute = params[:institute]
-      c.content = params[:content]
-      c.privacy = params[:privacy]
-      c.inscriptions_activated = params[:inscriptions_activated]
-      c.evaluate_teacher = params[:evaluate_teacher]
-      c.strict_mode_isa = params[:strict_mode_isa]
-      c.code_confirmed = params[:code_confirmed]
-      c.logo = "489563.png"
-      c.period_length = params[:period_length]
-      c.description = params[:description]
-       
-      if c.save
-        cu = CourseUser.new(:user => u,:course => c,:rol => "CEO")
+      created_courses = Array.new
+      
+      for i in 0..(Integer(params[:section]) - 1)
+        c = Course.new
+        c.name = params[:name]
+        c.initials = params[:initials]
+        c.period_type = params[:period_type]
+        c.section = i+1
+        c.category = params[:category]
+        c.institute = params[:institute]
+        c.content = params[:content]
+        c.privacy = params[:privacy]
+        c.inscriptions_activated = params[:inscriptions_activated]
+        c.evaluate_teacher = params[:evaluate_teacher]
+        c.strict_mode_isa = params[:strict_mode_isa]
+        c.code_confirmed = params[:code_confirmed]
+        c.logo = "489563.png"
+        c.period_length = params[:period_length]
+        c.description = params[:description]
 
-        if cu.save
-          respond_to do |format|
+        if c.save
+          cu = CourseUser.new(:user => u,:course => c,:rol => "CEO")
 
-            format.json {render json: {course: c, status: :ok}.to_json}
+          if cu.save
+            created_courses << c
+            next
+          else
+            respond_to do |format|
+              format.json {render json:  {info: "Curso-Usuario no creado", course: c, status: :unprocessable_entity}.to_json}
+            end
           end
         else
           respond_to do |format|
-            format.json {render json:  {info: "Curso-Usuario no creado", status: :unprocessable_entity}.to_json}
+            format.json  {render json: {course: c, status: :unprocessable_entity}.to_json}
           end
         end
-      else
-        respond_to do |format|
+      end #for
 
-          format.json  {render json: {course: c, status: :unprocessable_entity}.to_json}
-        end
+      respond_to do |format|
+
+        format.json {render json: {courses: created_courses, status: :ok}.to_json} ### revisar, se cambio el nombre a plural
       end
-
-     
-   end
+   end  #action
 
    #update 1 course
    def update_course
@@ -214,6 +248,8 @@ class CoursesController < ApplicationController
         end
       end
 
+      course.is_member = true
+
       list << course
     end
     
@@ -235,10 +271,10 @@ class CoursesController < ApplicationController
     listSearch.each do |course| #Buscar cursos dado el nombre del curso
       auxList = CourseUser.where(:course => course) # Y para obtener el numero de miembros de ese curso, buscamos todos los registros
                                                     # en CourseUSer donde aparece dicho curso (miembros)
-      puts course.inspect
-      puts auxList.length
       course.studentsAmount = auxList.length - 1     # El menos uno es para no inluir a quien creo el curso                                               
-    
+
+      is_member = false
+
       # Encontrar el CEO del curso en el cual aparece el usuario
       # Buscar el registro del CEO en la lista de registros en CourseUSer donde aparece dicho curso (miembros)
       auxList.each do |auxCU|
@@ -246,7 +282,13 @@ class CoursesController < ApplicationController
           course.ceo = auxCU.user.names
           course.ceo_id = auxCU.user.id 
         end
+
+        if (params[:user_id] == nil && Integer(params[:user_id]) == auxCU.user_id)
+          is_member = true
+        end
       end
+
+      course.is_member = is_member
 
       list << course
     end
@@ -258,6 +300,43 @@ class CoursesController < ApplicationController
     else
       respond_to do |format|
         format.json {render json: {info: "Unprocessable entity", status: :unprocessable_entity}.to_json}
+      end
+    end
+  end
+  #Agregar miembros a un curso
+  def add_member_to_course
+    user = User.find(params[:user_id])
+
+    if user == nil
+      respond_to do |format|
+        format.json {render json: {info: "User not found", status: :not_found}.to_json}
+      end
+    end
+
+    course = Course.find(params[:course_id])
+
+    if course == nil
+      respond_to do |format|
+        format.json {render json: {info: "Course not found", status: :not_found}.to_json}
+      end
+    end
+
+    course_user = CourseUser.where("user_id = ? AND course_id = ?", user.id, course.id)
+
+    if course_user != nil
+        respond_to do |format|
+          format.json {render json: {info: "The user is already a member", status: :unprocessable_entity}.to_json}
+        end
+    else
+      course_user = CourseUser.new
+      course_user.user = user
+      course_user.course = course
+      course_users.rol = "MEMBER"
+
+      if course_user.save
+        format.json {render json:  {course_user: course_user, status: :ok}.to_json}
+      else
+        format.json {render json: { info: "Failed to create course_user",  status: :unprocessable_entity}.to_json}
       end
     end
   end
