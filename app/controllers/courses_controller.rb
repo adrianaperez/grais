@@ -345,6 +345,34 @@ class CoursesController < ApplicationController
     end
   end
 
+  #Obtener miembros de un curso
+  def find_members_by_course
+    course = Course.find(params[:id])
+
+    if course == nil
+      respond_to do |format|
+        format.json {render json: {info: "Course not found", status: :not_found}.to_json}
+      end
+    end
+
+    course_users = CourseUser.where(:course => course)
+
+
+    course_users.each do |cu| #Pasando campos necesarios para armar la lista de los miembros
+      cu.names_user = cu.user.names
+      cu.lastnames_user = cu.user.lastnames
+      cu.image_user = cu.user.image_user
+      if cu.team != nil
+        cu.name_team = cu.team.name
+      end 
+    end    
+
+    respond_to do |format|
+      format.json {render json: {course_users: course_users, status: :ok}.to_json}
+    end
+  end
+
+
   # Se coloco al final para que no de peos con las acciones de la app, tambien se agrego los campos faltantes
   private
 
