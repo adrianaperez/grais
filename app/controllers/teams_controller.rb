@@ -15,16 +15,37 @@ class TeamsController < ApplicationController
   end
 
   def create
-    #Se necesita el id del curso
+    #Se necesita el id del curso,
     #yo lo puedo pasar desde el formulario como hidden
-    #el id del usuario
-    @team = Team.new(team_params);
-    respond_to do |format|
-      if @team.save
-        format.html{redirect_to teams_path , notice: "Team was created successfully"}
-        format.json {render json:  {team: @team, status: :ok}.to_json}
-        format.js
+    #el id del usuario, user_id, se debe pasar en el post como un campo mas del objeto
+    @team = Team.new();
+    #Del objeto completo que se pasa en el post "team" (con sus respectivos campos + user_id)", obtengo los campos del Team
+    @team.name = params[:team][:name]
+    @team.description = params[:team][:description]
+    @team.initials = params[:team][:initials]
+    @team.logo = params[:team][:logo]
+    @team.course_id = params[:team][:course_id]
+
+    course_users = CourseUser.where("user_id = ? AND course_id = ?", params[:team][:user_id], params[:team][:course_id])
+  
+    #Como se supone que hay un solo course_user en que coincidan usuario y curso, obtenemos el primer elemento
+    course_user = course_users[0]
+
+    if @team.save
+      course_user.rol = "LEADER"
+      course_user.team_id = @team.id
+      
+      if course_user.save
+        respond_to do |format|
+          format.json {render json:  {course_user: course_user, status: :ok}.to_json}
+        end
       else
+        respond_to do |format|
+          format.json {render json: { info: "Failed to create course_user",  status: :unprocessable_entity}.to_json}
+        end
+      end
+    else
+      respond_to do |format|
         format.html { render "new", error: "Failed to create team" }
         format.json {render json: { info: "Failed to create team",  status: :unprocessable_entity}.to_json}
         format.js

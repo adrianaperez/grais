@@ -62,9 +62,12 @@ Rails.application.routes.draw do
     collection do
       post :add_member_to_course
     end
+     collection do
+      post :find_members_by_course
+    end
   end
 
-  resources :teams, :defaults => { :format => 'json' }, :except => [ :create, :update, :destroy, :edit, :index, :show, :new] do
+  resources :teams, :defaults => { :format => 'json' }, :except => [:update, :destroy, :edit, :index, :show, :new] do
     collection do
       post :add_member_to_team
     end
