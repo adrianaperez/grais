@@ -114,7 +114,7 @@ class ProductsController < ApplicationController
     if course_users.any?
       course_users.each do |cu|
         products_by_course = Product.joins(:product_users).where(product_users:{course_user_id: cu.id}) 
-        if products_by_course > 0
+        if products_by_course.any?
           products_by_course.each do |product|
             @product_list << product
           end  
@@ -140,11 +140,17 @@ class ProductsController < ApplicationController
       end
     end
 
-    @products = @team.products
-    
+    products = team.products
+    @products_list = Array.new
+    if products.any?
+      products.each do |pd|
+        @products_list << pd
+      end
+    end
+
     respond_to do |format|
-      format.html{redirect_to teams_path, notice: "Success"}
-      format.json {render json: {products: @products, status: :ok}.to_json}
+      format.html{redirect_to teams_path, notice: "Products"}
+      format.json {render json: {products:@products_list, status: :ok}.to_json}
       format.js
     end
   end
