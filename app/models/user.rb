@@ -20,7 +20,13 @@ class User < ApplicationRecord
 
   validates :password, presence: true, length: { maximum: 65 }
 
-  attr_accessor :reset_token
+  attr_accessor :reset_token,:rol
+
+  def as_json options=nil
+    options ||= {}
+    options[:methods] = ((options[:methods] || []) + [:rol])
+    super options
+  end
 
   # Returns the hash digest of the given string.
   def User.digest(string)

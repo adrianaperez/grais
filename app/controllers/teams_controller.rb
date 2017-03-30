@@ -31,26 +31,34 @@ class TeamsController < ApplicationController
     #Como se supone que hay un solo course_user en que coincidan usuario y curso, obtenemos el primer elemento
     course_user = course_users[0]
 
-    if @team.save
-      course_user.rol = "LEADER"
-      course_user.team_id = @team.id
-      
-      if course_user.save
-        respond_to do |format|
-          format.json {render json:  {course_user: course_user, status: :ok}.to_json}
+    if course_user.team_id == nil
+      if @team.save
+        course_user.rol = "LEADER"
+        course_user.team_id = @team.id
+            
+        if course_user.save
+          respond_to do |format|
+            format.json {render json:  {course_user: course_user, status: :ok}.to_json}
+          end
+        else
+          respond_to do |format|
+            format.json {render json: { info: "Failed to create course_user",  status: :unprocessable_entity}.to_json}
+          end
         end
       else
         respond_to do |format|
-          format.json {render json: { info: "Failed to create course_user",  status: :unprocessable_entity}.to_json}
+          format.html { render "new", error: "Failed to create team" }
+          format.json {render json: { info: "Failed to create team",  status: :unprocessable_entity}.to_json}
+          format.js
         end
       end
     else
       respond_to do |format|
-        format.html { render "new", error: "Failed to create team" }
-        format.json {render json: { info: "Failed to create team",  status: :unprocessable_entity}.to_json}
-        format.js
+        format.json {render json: {info: "The user already have a team in this course", status: :bad_request}.to_json}
       end
     end
+
+    
   end
 
   def edit
@@ -247,6 +255,14 @@ class TeamsController < ApplicationController
 
     @users = User.joins(:course_users).where(course_users: {team_id: team.id})
 
+    @users.each do |u|
+      course_users = CourseUser.where("user_id = ? AND course_id = ?", u.id, team.course.id)
+      
+      course_user = course_users[0]
+
+      u.rol = course_user.rol
+    end
+  
     respond_to do |format|
       format.html{redirect_to teams_path, notice: "Success"}
       format.json {render json: {users: @users, status: :ok}.to_json}
