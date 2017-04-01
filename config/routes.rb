@@ -83,6 +83,9 @@ Rails.application.routes.draw do
     collection do
       post :find_teams_by_user
     end
+    collection do
+      post :update_team
+    end
   end
 
   resources :products, :defaults => { :format => 'json' }, :except => [ :create,:update, :destroy, :edit, :index, :show, :new] do

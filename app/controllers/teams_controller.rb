@@ -121,22 +121,31 @@ class TeamsController < ApplicationController
     course = team.course
     
     course_user = CourseUser.where("user_id = ? AND course_id = ?", user.id, course.id)
-    
+
     if course_user.any?
-      course_user.each do |cu|
-        cu.rol = "MEMBER"
-        cu.team = team
-        if cu.save
-          respond_to do |format|
-            format.html{redirect_to team_path, notice: "Success"}
-            format.json {render json: {info: "Success", status: :ok}.to_json}
-            format.js
-          end
-        else  # CourseUser no actualizado, no se pudo asociar el usuario al curso
-          respond_to do |format|
-            format.html{redirect_to team_path, notice: "Course user not updated"}
-            format.json {render json: {info: "Course user not updated", status: :unprocessable_entity}.to_json}
-            format.js
+      # Validar si el usuario ya tiene un equipo en este curso
+      if course_user[0].team_id != nil    
+        respond_to do |format|
+          format.html{redirect_to team_path, notice: "Success"}
+          format.json {render json: {info: "This user is member of another team in this course", course_user: course_user, status: :unprocessable_entity}.to_json}
+          format.js
+        end
+      else
+        course_user.each do |cu|  #Aca entrara una sola vez! No hace falta un .each
+          cu.rol = "MEMBER"
+          cu.team = team
+          if cu.save
+            respond_to do |format|
+              format.html{redirect_to team_path, notice: "Success"}
+              format.json {render json: {course_user: course_user, status: :ok}.to_json}
+              format.js
+            end
+          else  # CourseUser no actualizado, no se pudo asociar el usuario al curso
+            respond_to do |format|
+              format.html{redirect_to team_path, notice: "Course user not updated"}
+              format.json {render json: {info: "Course user not updated", status: :bad_request}.to_json}
+              format.js
+            end
           end
         end
       end
@@ -305,6 +314,18 @@ class TeamsController < ApplicationController
       format.html{redirect_to teams_path, notice: "Success"}
       format.json {render json: {teams: @teams, status: :ok}.to_json}
       format.js
+    end
+  end
+
+  def update_team
+    @team = Team.find(params[:team][:id])
+    
+    respond_to do |format|
+      if @team.update_attributes(team_params)
+        format.json {render json:{team: @team, status: :ok}.to_json}
+      else
+        format.json {render json: {info: "Failed to update this team", status: :unprocessable_entity}.to_json}
+      end
     end
   end
 
