@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   include SessionsHelper #comentar para pruebas en Android
   include CoursesHelper
+  include TeamsHelper
 
   before_action :require_login #comentar para pruebas en Android
 

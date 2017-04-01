@@ -1,2 +1,17 @@
-<h1>Products#show</h1>
-<p>Find me in app/views/products/show.html.erb</p>
+<% content_for :sidebar_option do %>
+  <%= render "product_sidebar" %>
+<% end %>
+
+<% content_for :bar_option do %>
+  <ul class="tabs">
+    <li class="tab hide-on-med-and-up"><a href="#product_information" style="outline: none;">información</a></li>
+    <li class="tab"><a id="get_product_commitments" class="active" href="#product_commitments" style="outline: none;">compromisos</a></li>
+  </ul>      
+<% end %>
+
+<div id="product_information">
+  informacion del producto
+</div>
+<div id="product_commitments">
+  Aqui los compromisos del producto
+</div>

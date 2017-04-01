@@ -1,14 +1,23 @@
+<% content_for :parax_option do %>
+  <div class="parallax-container hide-on-med-and-up">
+    <div class="parallax"><%= image_tag "e-learning.png"%></div>
+    <span style="position: absolute; bottom: 0; font-weight: bold; font-size: 20px;color: #424242; padding: 0 10px; background-color: rgba(204, 255, 255, 0.4)"><%= @team.name%></span>
+  </div>
+<% end %>
+
 <% content_for :sidebar_option do %>
   <%= render "team_sidebar" %>
 <% end %>
 
 <% content_for :bar_option do %>
-  <ul class="tabs">
-    <li class="tab"><a href="#team_information" style="outline: none;">información</a></li>
-    <li class="tab"><a id="get_members_team" class="active" href="#team_members" style="outline: none;">miembros</a></li>
-    <li class="tab"><a id="get_team_products" href="#team_products" style="outline: none;">productos</a></li>
+  <ul class="tabs ">
+    <li class="tab hide-on-med-and-up"><a href="#team_information" style="outline: none;">información</a></li>
+    <li class="tab"><a id="get_team_products" class="active" href="#team_products" style="outline: none;">productos</a></li>
+    <li class="tab"><a id="get_team_members" href="#team_members" style="outline: none;">miembros</a></li> 
   </ul>      
 <% end %>
+
+<div id="team_id" data-id = "<%= @team.id %>" style="display: none;"></div>
 
 <div id="team_information">
   <h6>Información del curso</h6>
@@ -19,13 +28,22 @@
   <%end%>
 </div>
 
-<div id="team_members">
-  <ul class="collection"> 
-  </ul>
-</div>
-
 <div id="team_products">
   <h6>Productos del equipo</h6>
+  <ul class="collection"> 
+  </ul>
+
+  <div class="fixed-action-btn">
+    <a href="#modal1" class="btn-floating btn-large tooltipped indigo"
+    data-position="left" data-delay="50" data-tooltip="Nuevo producto">
+      <i class="large material-icons">add</i>
+    </a>
+  </div>
+
+</div>
+
+<div id="team_members">
+  <h6>Miembros del equipo</h6>
   <ul class="collection"> 
   </ul>
 </div>

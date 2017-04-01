@@ -1,16 +1,14 @@
-<% content_for :img_option do %>
+<% content_for :parax_option do %>
   <div class="parallax-container hide-on-med-and-up">
     <div class="parallax"><%= image_tag "Neuschwanstein.jpg"%></div>
     <span style="position: absolute; bottom: 0; font-weight: bold; font-size: 20px;color: #424242; padding: 0 10px; background-color: rgba(204, 255, 255, 0.4)"><%= @course.name%></span>
   </div>
 <% end %>
-<% content_for :menu do %> 
-  <a href="#" data-activates="slide-out" class="sidenavbar"><i class="material-icons left">list</i></a>
-<% end %>
 
 <% content_for :sidebar_option do %>
   <%= render "course_sidebar" %>
 <% end %>
+
 <% content_for :bar_option do %>
   <ul class="tabs">
     <li class="tab hide-on-med-and-up"><a href="#information" style="outline: none;">información</a></li>
@@ -21,11 +19,6 @@
   </ul>      
 <% end %>
 
-<% content_for :option_option do %>  
-  <div class="sidecourse">
-    
-  </div>      
-<% end %>
 <!--SideNav-->
 <ul id="slide-out" class="side-nav">
   <li><a href="#!"><i class="material-icons">cloud</i>First Link With Icon</a></li>
@@ -43,6 +36,8 @@
   </li>
 </ul>
 
+<div id="course_id" data-id = "<%= @course.id %>" style="display: none;"></div>
+
 <div id="information" class="hide-on-med-and-up">
   <h4><%= @course.name%></h4>
   <h5>Descripción del curso</h5>
@@ -55,6 +50,14 @@
 <div id="teams">
   <ul class="collection"> 
   </ul>
+  <% if is_member? current_user.id, @course.id %>
+    <div class="fixed-action-btn">
+      <a href="#modal1" class="btn-floating btn-large tooltipped indigo"
+      data-position="left" data-delay="50" data-tooltip="Nuevo equipo">
+        <i class="large material-icons">add</i>
+      </a>
+    </div>
+  <% end %>
 </div>
 
 <div id="members">
@@ -114,7 +117,6 @@
     </div>
   <% end %>
 </div>
-
 
 <% content_for :js do %>
   $(".sidebar").addClass('hide-sidebar');

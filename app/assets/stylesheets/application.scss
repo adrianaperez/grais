@@ -111,17 +111,9 @@ body {
   }
 }
 
-//=================
-// Side Navigation
-//=================
 
-//#sidenav-overlay {
-  //z-index: -1;
-//}
-
-//======
-// Form
-//======
+// Icon inside Form
+// ================
 
 .input__icon--color {
   color: #607d8b;
@@ -143,9 +135,8 @@ body {
   color: red;
 }
 
-//================
 // Menu dashboard
-//================
+// ==============
 
 .full-height {
   height: 100%;
@@ -188,9 +179,8 @@ body {
   height: 100%;
 }
 
-//==================
 // Color background
-//==================
+// ================
 
 .color-panal {
   background-color: #9ed8d2!important;
@@ -234,249 +224,10 @@ body {
   color: #9ed8d2!important;
 }
 
-
-//==================
-// Version 2
-//==================
-
-.color-panal2 {
-  background:  #dcefed; /* For browsers that do not support gradients */
-  background: -webkit-linear-gradient(left,  #dcefed ,#ffffff); /* For Safari 5.1 to 6.0 */
-  background: -o-linear-gradient(right, #dcefed, #ffffff); /* For Opera 11.1 to 12.0 */
-  background: -moz-linear-gradient(right, #dcefed, #ffffff); /* For Firefox 3.6 to 15 */
-  background: linear-gradient(to right, #dcefed, #ffffff); /* Standard syntax */
-  border-left: 5px solid #49b6ab;
-}
-
-.color-chat2 {
-  background: #cceac8; /* For browsers that do not support gradients */
-  background: -webkit-linear-gradient(left, #cceac8 ,#ffffff); /* For Safari 5.1 to 6.0 */
-  background: -o-linear-gradient(right, #cceac8, #ffffff); /* For Opera 11.1 to 12.0 */
-  background: -moz-linear-gradient(right,#cceac8, #ffffff); /* For Firefox 3.6 to 15 */
-  background: linear-gradient(to right, #cceac8 , #ffffff); /* Standard syntax */
-  border-left: 5px solid #54b946;
-}
-
-.color-product2 { 
-  background: #d4edab; /* For browsers that do not support gradients */
-  background: -webkit-linear-gradient(left, #d4edab ,#ffffff); /* For Safari 5.1 to 6.0 */
-  background: -o-linear-gradient(right, #d4edab, #ffffff); /* For Opera 11.1 to 12.0 */
-  background: -moz-linear-gradient(right, #d4edab, #ffffff); /* For Firefox 3.6 to 15 */
-  background: linear-gradient(to right, #d4edab, #ffffff); /* Standard syntax */
-  border-left: 5px solid #93d12e;
-}
-
-.color-compromises2 {
-  background: #d0d2e2; /* For browsers that do not support gradients */
-  background: -webkit-linear-gradient(left, #d0d2e2 ,#ffffff); /* For Safari 5.1 to 6.0 */
-  background: -o-linear-gradient(right, #d0d2e2, #ffffff); /* For Opera 11.1 to 12.0 */
-  background: -moz-linear-gradient(right, #d0d2e2, #ffffff); /* For Firefox 3.6 to 15 */
-  background: linear-gradient(to right, #d0d2e2, #ffffff); /* Standard syntax */
-  border-left: 5px solid #61689e;
-}
-
-.color-task2 {
-  background: #a6b1f2; /* For browsers that do not support gradients */
-  background: -webkit-linear-gradient(left, #a6b1f2 ,#ffffff); /* For Safari 5.1 to 6.0 */
-  background: -o-linear-gradient(right, #a6b1f2, #ffffff); /* For Opera 11.1 to 12.0 */
-  background: -moz-linear-gradient(right, #a6b1f2, #ffffff); /* For Firefox 3.6 to 15 */
-  background: linear-gradient(to right, #a6b1f2, #ffffff); /* Standard syntax */
-  border-left: 5px solid #203ddf;
-}
-
-.color-isa2 {
-  background: #d7d7db; /* For browsers that do not support gradients */
-  background: -webkit-linear-gradient(left, #d7d7db ,#ffffff); /* For Safari 5.1 to 6.0 */
-  background: -o-linear-gradient(right, #d7d7db, #ffffff); /* For Opera 11.1 to 12.0 */
-  background: -moz-linear-gradient(right, #d7d7db, #ffffff); /* For Firefox 3.6 to 15 */
-  background: linear-gradient(to right, #d7d7db, #ffffff); /* Standard syntax */
-  border-left: 5px solid #797986;
-}
-
-.color-evaluation2 {
-  background: #a6b1f2; /* For browsers that do not support gradients */
-  background: -webkit-linear-gradient(left, #a6b1f2 ,#ffffff); /* For Safari 5.1 to 6.0 */
-  background: -o-linear-gradient(right, #a6b1f2, #ffffff); /* For Opera 11.1 to 12.0 */
-  background: -moz-linear-gradient(right, #a6b1f2, #ffffff); /* For Firefox 3.6 to 15 */
-  background: linear-gradient(to right, #a6b1f2, #ffffff); /* Standard syntax */
-  border-left: 5px solid #699691;
-}
-
-.color-indigo {
-  background-color: #5c6bc0;
-}
-
-
-.color-gradient {
-  background: #4c59cd; /* For browsers that do not support gradients */
-  background: -webkit-linear-gradient(left top, #4c59cd, #5c6bc0); /* For Safari 5.1 to 6.0 */
-  background: -o-linear-gradient(bottom right, #4c59cd, #5c6bc0); /* For Opera 11.1 to 12.0 */
-  background: -moz-linear-gradient(bottom right, #4c59cd, #5c6bc0); /* For Firefox 3.6 to 15 */
-  background: linear-gradient(to bottom right,#4c59cd, #5c6bc0); 
-}
-
-//===============
-// Vertical menu
-//===============
-
-
-
-/*
-$width-small: 72px;
-$width-big: 210px;
-.sidetoolbar {
-  position: fixed;
-  width: $width-small;
-  height: 100%;
-  background-color: lightblue;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
-  transition: all .3s;
-
-  &:hover {
-    width: $width-big;
-  }
-  nav {
-    height: 100%;
-    background-color: lightblue;
-    padding-bottom: 55px;
-  }
-  nav ul {
-    float: none;
-    height: 100%;
-    background-color: white;
-    overflow: auto;
-  }
-  nav ul li {
-    float: none;
-    position: relative;
-    height: 72px;
-    line-height: 72px;
-  }
-  nav ul li a {
-    position: absolute;
-    width: 100%;
-    height: 72px;
-    white-space:nowrap;
-  }
-  nav ul li a i, nav ul li a span {
-    display: inline-block;
-    vertical-align: middle;
-    color: black;
-  }
-  nav ul li a i {
-    text-align: center;
-    width:100%;
-    height: 72px;
-    line-height: 72px;
-    margin-right: 20px;
-  }
-  nav ul li a span {
-    max-width: 100px;
-    visibility: hidden;
-    opacity: 0;
-    text-overflow: ellipsis;
-  }
-  &:hover nav ul li a i, &:hover nav ul li a span {
-    width: auto;
-    text-align: left;
-  }
-  &:hover nav ul li a span {
-    visibility: visible;
-    opacity: 1;
-  }
-  & + main {
-    margin-left: $width-small;
-  }
-}
-*/
+// Sidebar general
+// ===============
 
 .sidebar {
-  position: fixed;
-  top: 112px;
-  width: 210px;
-  height: 100%;
-  background-color: lightblue;
-  transform: translateX(0);
-  transition: transform .3s linear;
-  nav {
-    height: 100%;
-    background-color: lightblue;
-    padding-bottom: 55px;
-  }
-  nav ul {
-    float: none;
-    height: 100%;
-    background-color: white;
-    overflow: auto;
-  }
-  nav ul li {
-    float: none;
-    position: relative;
-    height: 48px;
-    line-height: 48px;
-  }
-  nav ul li a {
-    position: absolute;
-    width: 100%;
-    height: 48px;
-    white-space:nowrap;
-  }
-  nav ul li a i, nav ul li a span {
-    display: inline-block;
-    vertical-align: middle;
-    color: black;
-  }
-  nav ul li a span {
-    margin-left: 10px;
-  }
-  + main {
-    margin-left: 210px;
-    transition: margin-left .4s linear;
-  }
-  @media screen and (max-width: 767px) {
-    display: none;
-    + main {
-      margin-left: 0;
-    }
-  }
-  @media screen and (min-width: 992px) {
-    width: 240px;
-    + main {
-      margin-left: 240px;
-    }
-  }
-}
-
-.hide-sidebar{
-  transform: translateX(-100%);
-  + main {
-    margin-left: 0;
-  }
-}
-
-.sidecourse {
-  position: fixed;
-  top: 112px;
-  width: 280px;
-  height: 100%;
-  background-color: white;
-  padding-bottom: 112px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
-  & + main {
-    margin-left: 280px;
-  }
-  @media screen and (max-width: 767px) {
-    display: none;
-    & + main {
-      margin-left: 0px;
-    }
-  }
-  @media screen and (min-width: 992px) {
-    width: 300px;
-  }
-}
-
-#sidebar {
   position: fixed;
   top: 64px;
   width: 280px;
@@ -485,26 +236,42 @@ $width-big: 210px;
   padding-bottom: 64px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
   z-index: 997;
-  & ~ main, & ~ div#parax, & ~ div#menu {
+  & ~ main, & ~ div#parax, & ~ div.wrapper-submenu {
     margin-left: 280px;
   }
   @media screen and (max-width: 767px) {
     display: none;
-    & ~ main, & ~ div#parax, & ~ div#menu {
+    & ~ main, & ~ div#parax, & ~ div.wrapper-submenu {
       margin-left: 0px;
     }
   }
   @media screen and (min-width: 992px) {
     width: 300px;
-    & ~ main, & ~ div#parax, & ~ div#menu {
+    & ~ main, & ~ div#parax, & ~ div.wrapper-submenu {
       margin-left: 300px;
     }
   }
 }
 
+.hidden-sidebar {
+  display: none;
+  & ~ main, & ~ div#parax, & ~ div.wrapper-submenu {
+    margin-left: 0;
+  }
+}
+
+// Submenu
+// =======
+
 .wrapper-submenu {
   height: 48px;
   line-height: 48px;
+  .submenu {
+    width: 100%;
+    height: 48px;
+    z-index: 997;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
+  }
 }
 
 .wrapper-card {
@@ -591,37 +358,6 @@ $width-big: 210px;
     }
   }
 }
-/*
-.w-g {
-  float: left;
-  position: relative;
-  width: 100%;
-  padding: 10px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.15), 0 6px 20px 0 rgba(0, 0, 0, 0.15);
-  .w-i {
-    position: relative;
-    width: 50%;
-    padding-bottom: 50%;
-    overflow: hidden;
-    img {
-      position: absolute;
-      object-fit: cover;
-      width: 100%;
-      height: 100%;
-    }
-  }
-  .w-c {
-    position: absolute;
-    width: 50%;
-    left: 50%;
-    height: 100%;
-    background-color: white;
-  }
-  @media screen and (min-width: 767px) {
-    width: 50%;
-  }
-}*/
-
 
 .card-vertical {
   display: inline-block;

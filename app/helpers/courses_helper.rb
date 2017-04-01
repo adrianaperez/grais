@@ -6,4 +6,9 @@ module CoursesHelper
     course_user.any?
   end
 
+  #Retorna true si el usuario es Miembro dentro del curso
+  def is_member?(user_id, course_id)
+    course_user = CourseUser.where(user_id: user_id, rol:"MEMBER", course_id:course_id)
+    course_user.any?
+  end
 end

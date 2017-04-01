@@ -3,9 +3,17 @@
   <div class="wrapper-image-square">
     <%= image_tag "e-learning.png"%>
   </div>
-  <div style="padding: 20px;">
+
+  <div style="position: relative; padding: 20px;">
+  
+    <a class="btn-floating blue" style="position: absolute; top: -20px; right: 5px;"><i class="material-icons">done</i></a>
     <div style="margin-bottom: : 10px;">
       <span style="font-weight: bold; color: #424242; font-size: 28px;"><%= @team.name%></span>
+    </div>
+    <div>
+      <%= link_to( course_path @team.course.id ) do %>
+        <span><%= @team.course.name %></span>
+      <%end%>
     </div>
     <div class="">
       <%= @team.description %>

@@ -2,7 +2,16 @@
   <div class="wrapper-image-square">
     <%= image_tag "Neuschwanstein.jpg"%>
   </div>
-  <div style="padding: 20px;">
+  <div style="position: relative; padding: 20px;">
+    <% if is_ceo? current_user.id, @course.id %>
+      <%= link_to( "#modal2", class:"btn-floating blue", style:"position: absolute; top: -20px; right: 5px;") do %>
+        <i class="material-icons">mode_edit</i> 
+      <% end %>
+    <% else %>
+      <% if !is_member? current_user.id, @course.id %>
+        <a class="btn-floating blue" style="position: absolute; top: -20px; right: 5px;"><i class="material-icons">done</i></a>
+      <% end %>
+    <%end%>
     <div style="margin-bottom: : 10px;">
       <span style="font-weight: bold; color: #424242; font-size: 28px;"><%= @course.name%></span>
     </div>
@@ -10,10 +19,4 @@
       <%= @course.description %>
     </div>
   </div>
-  <!--<%= link_to "EditarEditar", edit_course_path( @course.id )%>-->
-  <% if is_ceo? current_user.id, @course.id %>
-    <%= link_to("#modal2") do %>
-      <span>Editar</span> <i class="material-icons" style="color: #85adad;">mode_edit</i>
-    <% end %>
-  <% end %>
 </div>

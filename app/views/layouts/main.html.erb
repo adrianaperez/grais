@@ -13,9 +13,9 @@
         <nav class="z-depth-0">
           <div class="nav__content">
             <div class="nav-wrapper">
-              <a href="#" data-activates="slide-out" class="sidenavbar"><i class="material-icons left">menu</i></a>
-              <%= link_to "LOGO", root_url, class:"brand-logo white-text left"%> 
-              <a href="#" data-activates="mobile-demo" class="button-collapse hide-on-med-and-up right" style="padding: 0;">
+              <%= link_to "LOGO", dashboard_path, class:"brand-logo white-text"%>
+              <a href="#" id="hamburger_menu" data-activates="slide-out" class="sidebarr"><i class="material-icons left">menu</i></a>
+              <a href="#" data-activates="mobile-demo" class="button-collapse hide-on-med-and-up right" style="margin: 0;">
                 <div class="user-img">
                   <div class="wrapper-image">
                     <%= image_tag "Neuschwanstein.jpg"%>
@@ -36,9 +36,6 @@
                   <% end %>
                 </li>
               </ul>
-              <ul class="side-nav" id="mobile-demo">
-                <li><%= link_to "Cerrar sesión", logout_path, method: "delete" %></li>
-              </ul>
             </div>
           </div>
         </nav>
@@ -51,60 +48,47 @@
         <li><%= link_to "Cerrar sesión", logout_path, method: "delete" %></li>
       </ul>
     </header>
-    <div id= "sidebar" class="hide-on-small-only">
+    <div class="sidebar hide-on-small-only">
       <%= yield :sidebar_option %>
     </div>
-    <div id="parax" style="display: none; background-color: blue;">
-      
+    <div id="parax">
+      <%= yield :parax_option %>
     </div>
-    <div id="menu" style="height: 48px; line-height: 48px;">
-      <div id="submenu" style="width: 100%; height: 48px; z-index: 997; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);">
+    <div class="wrapper-submenu">
+      <div class="submenu">
         <%= yield :bar_option %>
       </div>
     </div>
-    <main class="wrapper-main" style="padding-top: 20px; padding-left: 20px;">
+    <main class="wrapper-main" style="padding: 20px;">
       <%= content_for?(:main) ? yield(:main) : yield %>
     </main>
     
+    <!--SideNav mobile-->
+    <ul class="side-nav" id="mobile-demo">
+      <li><%= link_to "Cerrar sesión", logout_path, method: "delete" %></li>
+    </ul>
+
+    <!--SideNav-->
     <ul id="slide-out" class="side-nav">
-      <li><div class="userView">
-        <div class="background">
-          <img src="images/office.jpg">
-        </div>
-        <a href="#!user"><img class="circle" src="images/yuna.jpg"></a>
-        <a href="#!name"><span class="white-text name">John Doe</span></a>
-        <a href="#!email"><span class="white-text email">jdandturk@gmail.com</span></a>
-      </div></li>
+      
       <li><a href="#!"><i class="material-icons">cloud</i>First Link With Icon</a></li>
       <li><a href="#!">Second Link</a></li>
       <li><div class="divider"></div></li>
-      <li><a class="subheader">Subheader</a></li>
-      <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
+      <li>
+        <%= link_to( dashboard_path ) do %>
+          <i class="material-icons color-text-panal">dashboard</i><span style="color: black;">Dashboard</span>
+        <% end %>
+      </li>
+      <li>
+        <%= link_to( courses_path ) do %>
+          <i class="material-icons color-text-course">apps</i><span style="color: black;">Courses</span>
+        <% end %>
+      </li>
     </ul>
     
     <script type="text/javascript">
       $( document ).ready(function(){
-        $('.modal').modal();
-
-        //Sticky Header
-        $(window).scroll(function(){
-          var height_header = $("header").height();
-          var p = $("#parax").height();
-          var current_position = $(this).scrollTop();
-          var position_menu = $("#menu").offset();
-          console.log("*************************");
-          console.log("menu: "+position_menu.top);
-          console.log("scroll: "+current_position);
-          console.log("p: "+p);
-          console.log(height_header);
-          if (current_position > p) {
-            $("#submenu").addClass("pinned");
-            $("#submenu").css("top", height_header);
-          } else {
-            $("#submenu").removeClass("pinned");
-            $("#submenu").css("top", "auto");
-          }
-        });
+        <%= yield :js %>
       });
     </script>
   </body>

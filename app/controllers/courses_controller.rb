@@ -386,7 +386,7 @@ class CoursesController < ApplicationController
       when "show"
         "main"
       when "index"
-        "base"
+        "main"
       else
         "application"
       end

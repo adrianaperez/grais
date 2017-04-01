@@ -1,0 +1,18 @@
+<div style="width: 100%; height: 100%; overflow: auto;">
+  <div class="wrapper-image-square">
+    <%= image_tag "typewriter-01.svg"%>
+  </div>
+  <div style="padding: 20px;">
+    <div style="margin-bottom: : 10px;">
+      <span style="font-weight: bold; color: #424242; font-size: 28px;"><%= @product.name%></span>
+    </div>
+    <div>
+      <%= link_to( team_path @product.team.id ) do %>
+        <span><%= @product.team.name %></span>
+      <%end%>
+    </div>
+    <div class="">
+      <%= @product.description %>
+    </div>
+  </div>
+</div>

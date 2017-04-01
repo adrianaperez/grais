@@ -1,16 +1,16 @@
 document.addEventListener("turbolinks:load", function() {
 
-  //Obtener 
+  //Obtener el tab inicialmente activado
   var tab_members_team = $("ul.tabs li a.active");
-  if(tab_members_team .attr('href')=="#team_members"){
-    console.log("Entró");
-    get_team_members(); 
+  if(tab_members_team .attr('href')=="#team_products"){
+    $("#team_products .collection").empty();
+    get_team_products(); 
   }
 
   //Obtener productos del equipo
-  $('#get_team_products').click(function(){
-    $("#team_products .collection").empty();
-    get_team_products();
+  $('#get_team_members').click(function(){
+    $("#team_members .collection").empty();
+    get_team_members();
   });
 
 });
@@ -20,20 +20,19 @@ document.addEventListener("turbolinks:load", function() {
 
 function get_team_members (){
 
+  var team_id = $('div#team_id').attr('data-id');
+
   $.ajax({
 
     url: '/teams/find_members_by_team',
     type: 'POST',
     dataType: 'json',
-    data:{id:1},
+    data:{id:team_id},
 
     success:function(data){
-      tab_initial="true";
-      console.log("funciono!");
+
       $.each( data , function( index, item ) {
          $.each(item, function(key, value){
-          //$('div#teams').append("<h5>"+value.name+"</h5>");
-          //$('div#teams .collection').append('<li class="collection-item"><a href="/teams/' + value.id + '">' + value.name + '</a></li>');
           $('div#team_members .collection').append(
             '<li class="collection-item avatar">' +
                 '<img src="/assets/user_boy.svg" alt="user_boy" class= "circle">' +
@@ -42,7 +41,6 @@ function get_team_members (){
             );
          });
       });
-
     },
 
     error: function(data){
@@ -52,31 +50,35 @@ function get_team_members (){
   });
 }
 
+
+////////////////////////////////////
+//Obtener los productos de un equipo
+
 function get_team_products (){
+
+  var team_id = $('div#team_id').attr('data-id');
 
   $.ajax({
 
     url: '/products/find_products_by_team',
     type: 'POST',
     dataType: 'json',
-    data:{id:1},
+    data:{id:team_id},
 
     success:function(data){
-      tab_initial="true";
-      console.log("funciono!");
+      
       $.each( data , function( index, item ) {
          $.each(item, function(key, value){
-          //$('div#teams').append("<h5>"+value.name+"</h5>");
-          //$('div#teams .collection').append('<li class="collection-item"><a href="/teams/' + value.id + '">' + value.name + '</a></li>');
           $('div#team_products .collection').append(
-            '<li class="collection-item avatar">' +
-                '<img src="/assets/typewriter-01.svg" alt="user_boy" class= "circle">' +
-                '<span class="title">'+ value.name +'</span>' +
-            '</li>'
+            '<a href="/products/' + value.id + '">' +
+              '<li class="collection-item avatar">' +
+                  '<img src="/assets/typewriter-01.svg" alt="user_boy" class= "circle">' +
+                  '<span class="title">'+ value.name +'</span>' +
+              '</li>'+
+            '</a>'
             );
          });
       });
-
     },
 
     error: function(data){
