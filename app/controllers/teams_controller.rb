@@ -31,26 +31,34 @@ class TeamsController < ApplicationController
     #Como se supone que hay un solo course_user en que coincidan usuario y curso, obtenemos el primer elemento
     course_user = course_users[0]
 
-    if @team.save
-      course_user.rol = "LEADER"
-      course_user.team_id = @team.id
-      
-      if course_user.save
-        respond_to do |format|
-          format.json {render json:  {course_user: course_user, status: :ok}.to_json}
+    if course_user.team_id == nil
+      if @team.save
+        course_user.rol = "LEADER"
+        course_user.team_id = @team.id
+            
+        if course_user.save
+          respond_to do |format|
+            format.json {render json:  {course_user: course_user, status: :ok}.to_json}
+          end
+        else
+          respond_to do |format|
+            format.json {render json: { info: "Failed to create course_user",  status: :unprocessable_entity}.to_json}
+          end
         end
       else
         respond_to do |format|
-          format.json {render json: { info: "Failed to create course_user",  status: :unprocessable_entity}.to_json}
+          format.html { render "new", error: "Failed to create team" }
+          format.json {render json: { info: "Failed to create team",  status: :unprocessable_entity}.to_json}
+          format.js
         end
       end
     else
       respond_to do |format|
-        format.html { render "new", error: "Failed to create team" }
-        format.json {render json: { info: "Failed to create team",  status: :unprocessable_entity}.to_json}
-        format.js
+        format.json {render json: {info: "The user already have a team in this course", status: :bad_request}.to_json}
       end
     end
+
+    
   end
 
   def edit
@@ -113,22 +121,31 @@ class TeamsController < ApplicationController
     course = team.course
     
     course_user = CourseUser.where("user_id = ? AND course_id = ?", user.id, course.id)
-    
+
     if course_user.any?
-      course_user.each do |cu|
-        cu.rol = "MEMBER"
-        cu.team = team
-        if cu.save
-          respond_to do |format|
-            format.html{redirect_to team_path, notice: "Success"}
-            format.json {render json: {info: "Success", status: :ok}.to_json}
-            format.js
-          end
-        else  # CourseUser no actualizado, no se pudo asociar el usuario al curso
-          respond_to do |format|
-            format.html{redirect_to team_path, notice: "Course user not updated"}
-            format.json {render json: {info: "Course user not updated", status: :unprocessable_entity}.to_json}
-            format.js
+      # Validar si el usuario ya tiene un equipo en este curso
+      if course_user[0].team_id != nil    
+        respond_to do |format|
+          format.html{redirect_to team_path, notice: "Success"}
+          format.json {render json: {info: "This user is member of another team in this course", course_user: course_user, status: :unprocessable_entity}.to_json}
+          format.js
+        end
+      else
+        course_user.each do |cu|  #Aca entrara una sola vez! No hace falta un .each
+          cu.rol = "MEMBER"
+          cu.team = team
+          if cu.save
+            respond_to do |format|
+              format.html{redirect_to team_path, notice: "Success"}
+              format.json {render json: {course_user: course_user, status: :ok}.to_json}
+              format.js
+            end
+          else  # CourseUser no actualizado, no se pudo asociar el usuario al curso
+            respond_to do |format|
+              format.html{redirect_to team_path, notice: "Course user not updated"}
+              format.json {render json: {info: "Course user not updated", status: :bad_request}.to_json}
+              format.js
+            end
           end
         end
       end
@@ -247,6 +264,14 @@ class TeamsController < ApplicationController
 
     @users = User.joins(:course_users).where(course_users: {team_id: team.id})
 
+    @users.each do |u|
+      course_users = CourseUser.where("user_id = ? AND course_id = ?", u.id, team.course.id)
+      
+      course_user = course_users[0]
+
+      u.rol = course_user.rol
+    end
+  
     respond_to do |format|
       format.html{redirect_to teams_path, notice: "Success"}
       format.json {render json: {users: @users, status: :ok}.to_json}
@@ -289,6 +314,18 @@ class TeamsController < ApplicationController
       format.html{redirect_to teams_path, notice: "Success"}
       format.json {render json: {teams: @teams, status: :ok}.to_json}
       format.js
+    end
+  end
+
+  def update_team
+    @team = Team.find(params[:team][:id])
+    
+    respond_to do |format|
+      if @team.update_attributes(team_params)
+        format.json {render json:{team: @team, status: :ok}.to_json}
+      else
+        format.json {render json: {info: "Failed to update this team", status: :unprocessable_entity}.to_json}
+      end
     end
   end
 
