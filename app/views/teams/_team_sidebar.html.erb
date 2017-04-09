@@ -3,10 +3,16 @@
   <div class="wrapper-image-square">
     <%= image_tag "e-learning.png"%>
   </div>
-
   <div style="position: relative; padding: 20px;">
-  
-    <a class="btn-floating blue" style="position: absolute; top: -20px; right: 5px;"><i class="material-icons">done</i></a>
+    <%if is_leader? current_user.id, @team.id %>
+      <%= link_to( "#modal_edit_team", class:"btn-floating blue", style:"position: absolute; top: -20px; right: 5px;") do %>
+        <i class="material-icons">mode_edit</i> 
+      <% end %>
+    <%else%>
+      <% if is_member?(current_user.id, @team.course.id) && !has_team?(current_user.id, @team.course.id) && !is_ceo?(current_user.id, @team.course.id) %>
+        <a class="btn-floating blue" style="position: absolute; top: -20px; right: 5px;"><i class="material-icons">done</i></a>
+      <%end%>
+    <%end%>
     <div style="margin-bottom: : 10px;">
       <span style="font-weight: bold; color: #424242; font-size: 28px;"><%= @team.name%></span>
     </div>

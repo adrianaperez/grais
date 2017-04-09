@@ -1,0 +1,12 @@
+var errors = <%= @user.errors.count %>
+<% @user.errors.full_messages.each do |msg| %>
+  console.log(<%= escape_javascript msg %>);
+<% end %>
+
+if(errors > 0){
+  console.log("NO se actualizo el curso");
+  
+}else{
+
+  $('#modal_edit_profile').modal('close');
+}

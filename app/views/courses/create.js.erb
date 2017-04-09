@@ -1,21 +1,14 @@
 var error= <%= @course_user.errors.count %>;
-//var v = "<%= @course.description %>";
-//console.log(v);
+
 if(error>0){
   console.log("NO se creo el curso");
-  <% @course_user.errors.full_messages.each do |msg| %>
-      <li><%= msg %></li>
-  <% end %>
+  
 }else{
   
   console.log("Se creo el curso");
-  $('#modal1').modal('close');
-  $('.modal-content input').val('');
-  if($('input:checkbox').is(':checked')){
-    $('input:checkbox').removeAttr('checked').val('0');
-    $('course_strict_isa').val('0');
-  }
-  $("#my_courses").prepend("<%= j render @course %>");  
+  $('#msm_new_course').hide();
+  $('#modal_new_course').modal_success(); // Función definida en course.js
+  $("#my_courses").prepend("<%= j render @courses %>");  
 }
 
 

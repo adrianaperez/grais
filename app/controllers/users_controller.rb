@@ -3,7 +3,7 @@ class UsersController < ApplicationController
   # TODO: Esta validacion login da prolemas para las peticiones desde la app
   skip_before_action :require_login, only: [:new, :create]
 
-  layout "base", only: [:show]
+  layout "main", only: [:show]
 
   def index
   end
@@ -31,9 +31,33 @@ class UsersController < ApplicationController
   end
 
   def update
+    @user = User.find(params[:id])
+    respond_to do |format|
+      if @user.update_attributes(user_params)
+        format.html{redirect_to user_path, notice: "User was successfully updated"}
+        format.json {render json:{user: @user, status: :ok}.to_json}
+        format.js
+      else
+        format.html { render "edit", error: "Failed to update this user"}
+        format.json {render json: {info: "Failed to update this user", status: :unprocessable_entity}.to_json}
+        format.js
+      end
+    end
   end
 
   def destroy
+    @user = User.find(params[:id])
+    respond_to do |format|
+      if @user.destroy
+        format.html{redirect_to teams_path, notice: "User delete"}
+        format.json {render json: {info: "User delete", status: :ok}.to_json}
+        format.js
+      else
+        format.html { redirect_to users_path, error: "Failed to delete this user"}
+        format.json {render json: {info: "Failed to delete this user", status: :unprocessable_entity}.to_json}
+        format.js
+      end
+    end
   end
 
   # get all the users

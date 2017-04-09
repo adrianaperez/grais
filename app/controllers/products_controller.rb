@@ -39,7 +39,7 @@ class ProductsController < ApplicationController
     @product = Product.find(params[:id])
     
     respond_to do |format|
-      if @product.update_attributes(team_params)
+      if @product.update_attributes(product_params)
         format.html{redirect_to team_path, notice: "Product was successfully updated"}
         format.json {render json: {product: @product, status: :ok}.to_json}
         format.js
@@ -160,6 +160,6 @@ class ProductsController < ApplicationController
   private
 
     def product_params
-        params.require(:team).permit(:name,:description, :logo, :team_id)
+        params.require(:product).permit(:name,:description, :logo, :team_id)
     end
 end

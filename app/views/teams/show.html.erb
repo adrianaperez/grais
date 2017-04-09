@@ -32,14 +32,23 @@
   <h6>Productos del equipo</h6>
   <ul class="collection"> 
   </ul>
-
-  <div class="fixed-action-btn">
-    <a href="#modal1" class="btn-floating btn-large tooltipped indigo"
-    data-position="left" data-delay="50" data-tooltip="Nuevo producto">
-      <i class="large material-icons">add</i>
-    </a>
-  </div>
-
+  <%if (is_leader? current_user.id, @team.id) %>
+    <div class="fixed-action-btn">
+      <a href="#modal_new_product" class="btn-floating btn-large tooltipped indigo"
+      data-position="left" data-delay="50" data-tooltip="Nuevo producto">
+        <i class="large material-icons">add</i>
+      </a>
+    </div>
+  <%else%>
+    <%if (is_ceo? current_user.id, @team.course.id) %>
+      <div class="fixed-action-btn">
+        <a href="#modal_new_product" class="btn-floating btn-large tooltipped indigo"
+        data-position="left" data-delay="50" data-tooltip="Nuevo producto prototipo">
+          <i class="large material-icons">add</i>
+        </a>
+      </div>
+    <%end%>
+  <%end%>
 </div>
 
 <div id="team_members">
@@ -47,3 +56,16 @@
   <ul class="collection"> 
   </ul>
 </div>
+
+<!-- Modal Structure - New product -->
+<div id="modal_new_product" class="modal">
+  <h5 style="padding-left: 20px;">Nuevo producto</h5>
+  <%= render "products/form" %>
+</div>
+
+<!-- Modal Structure - Edit team -->
+<div id="modal_edit_team" class="modal">
+  <h5 style="padding-left: 20px;">Editar equipo</h5>
+  <%= render "edit_form" %>
+</div>
+

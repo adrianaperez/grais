@@ -50,9 +50,10 @@
 <div id="teams">
   <ul class="collection"> 
   </ul>
-  <% if is_member? current_user.id, @course.id %>
-    <div class="fixed-action-btn">
-      <a href="#modal1" class="btn-floating btn-large tooltipped indigo"
+  <!-- New Team -->
+  <% if is_member?(current_user.id, @course.id) && !has_team?(current_user.id, @course.id) && !is_ceo?(current_user.id, @course.id)%>
+    <div id="link_new_team" class="fixed-action-btn">
+      <a href="#modal_new_team" class="btn-floating btn-large tooltipped indigo"
       data-position="left" data-delay="50" data-tooltip="Nuevo equipo">
         <i class="large material-icons">add</i>
       </a>
@@ -89,33 +90,26 @@
     </li>
   </ul>
 </div>
+
 <div id="products">
   <h4>Productos del curso</h4>
+  
 </div>
+
 <div id="conversations">
   <h4>Aqui van las conversaciones curso</h4>
 </div>
 
 <!-- Modal Structure - Edit course -->
-<div id="modal2" class="modal">
-  <%= form_for(@course, url: courses_path, remote: true) do |f| %>
-    <div class="modal-content">
-      <h4>Edit course</h4>
-    
-      <div class="input-field ">
-        <%= f.label :name %>
-        <%= f.text_field :name %>
-      </div>
-      <div class="input-field ">
-        <%= f.label :description %>
-        <%= f.text_field :description %>
-      </div>   
-    </div>
-    <div class="modal-footer">
-      <%= f.submit "Create", class: "btn" %>
-      <a href="#!" data-turbolinks="false" class=" modal-action modal-close waves-effect waves-green btn-flat red lighten-2" >Cancel</a> 
-    </div>
-  <% end %>
+<div id="modal_edit_course" class="modal">
+  <h5 style="padding-left: 20px;">Editar curso</h5>
+  <%= render "edit_form" %>
+</div>
+
+<!-- Modal Structure - New team -->
+<div id="modal_new_team" class="modal">
+  <h5 style="padding-left: 20px;">Nuevo equipo</h5>
+  <%= render "teams/form" %>
 </div>
 
 <% content_for :js do %>

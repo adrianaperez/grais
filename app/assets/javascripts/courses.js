@@ -7,6 +7,7 @@ document.addEventListener("turbolinks:load", function() {
   $(".sidebarr").sideNav();
   $('.parallax').parallax();
   $('.modal').modal();
+  $('select').material_select();
 
   /////////////////////////////////////////////////
   //Sticky Header para mobile
@@ -24,19 +25,6 @@ document.addEventListener("turbolinks:load", function() {
     $("#all_courses").empty();
     getAllCourses();
   });  
-
-
-  //////////////////////////////
-  //Checkbox del form del curso
-
-  $('input:checkbox').on( 'change', function() {
-
-      if( $(this).is(':checked') ) {
-          $(this).val('1');
-      } else {
-          $(this).val('0');  
-      }
-  });
 
 });
 
@@ -77,7 +65,13 @@ function getAllCourses(){
 
     success:function(data){
 
+      var count_course = 0;
       $.each( data , function( index, item ) {
+
+        if (index =="courses") {
+          count_course = item.length;
+        }
+
         $.each(item, function(key, value){
           $('#all_courses').append(
             '<a href="/courses/' + value.id + '">' +
@@ -98,6 +92,9 @@ function getAllCourses(){
           );   
         });
       });
+      if (count_course==0) {
+        $('#all_courses').append('<h4 class="center" style="color: #94b8b8; font-weight: bold;">No hay cursos disponibles en la herramienta</h4>');
+      }
     },
 
     error: function(data){
@@ -133,7 +130,7 @@ function getCourseTeams(){
                 '<p> Cantidad de estudiantes '+ value.studentsAmount +'</p>' +
               '</a>'+
             '</li>'
-            );
+          );
          });
       });
     },
@@ -144,3 +141,16 @@ function getCourseTeams(){
     }
   });
 }
+
+/////////////////////////////////////////////////////////////
+//Función para reiniciar el modal si el resultado es exitoso
+
+(function($) {
+
+  $.fn.modal_success = function(){
+
+    this.modal('close'); // Función de Materialize
+    this.find('form input[type="text"]').val('');
+    this.find('form input[type="checkbox"]').removeAttr('checked');
+  };
+}(jQuery));

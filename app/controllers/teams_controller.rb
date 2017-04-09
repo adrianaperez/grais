@@ -8,6 +8,7 @@ class TeamsController < ApplicationController
 
   def show
     @team = Team.find(params[:id])
+    @product = Product.new
   end
 
   def new
@@ -15,6 +16,50 @@ class TeamsController < ApplicationController
   end
 
   def create
+    @team = Team.new(team_params);
+    @course_users = CourseUser.where("user_id = ? AND course_id = ?", params[:team][:user_id], params[:team][:course_id])
+    @error = 0
+
+    if @course_users.any?
+
+      @course_user = @course_users.first
+      if @course_user.team_id == nil
+        
+        if @team.save
+          @course_user.rol = "LEADER"
+          @course_user.team_id = @team.id
+          if @course_user.save
+            @team.studentsAmount = 1
+            @team.leader = @course_user.user.names
+            @team.leader_id = @course_user.user.id
+            respond_to do |format|
+              if @team.save
+                format.js
+              else
+                format.js
+              end
+            end
+          else
+            #@team.destroy #Creo que deberia ir en caso de que no se pueda establecer la asociación
+            respond_to do |format|
+              format.js
+            end
+          end
+        else
+          respond_to do |format|
+            format.html { render "new", error: "The team was not created" }
+            format.js
+          end
+        end  
+      else
+        @error=1
+      end
+    else
+      @error=1
+    end
+  end
+
+  def create_team
     #Se necesita el id del curso,
     #yo lo puedo pasar desde el formulario como hidden
     #el id del usuario, user_id, se debe pasar en el post como un campo mas del objeto

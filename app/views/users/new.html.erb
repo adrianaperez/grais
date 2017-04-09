@@ -12,59 +12,7 @@
         <div class="notice"><%= flash[:notice] %></div>
       <% end %>
       <%= render "shared/error_messages" %>
-      <form accept-charset="UTF-8" action="<%= signup_path %>" class="col s12"
-            id="new_user" method="post">
-        <input name="utf8" type="hidden" value="&#x2713;" />
-        <input name="authenticity_token" type="hidden"
-               value="<%= form_authenticity_token %>" />
-               
-        <div class="input-field ">
-          <i class="material-icons prefix input__icon--color">account_box</i>
-          <input id="user_names" name="user[names]" type="text" />
-          <label for="user_names">Name</label>
-        </div>
-        <div class="input-field ">
-          <i class="material-icons prefix input__icon--color">account_box</i>
-          <input id="user_lastnames" name="user[lastnames]" type="text" />
-          <label for="user_lastnames">Lastname</label>
-        </div>
-        <div class="input-field ">
-          <i class="material-icons prefix input__icon--color">email</i>
-          <input id="user_email" name="user[email]" type="email" />
-          <label for="user_email">Email</label>
-        </div>
-        <div class="input-field ">
-          <i class="material-icons prefix input__icon--color">phone</i>
-          <input id="user_phone" name="user[phone]" type="text" />
-          <label for="user_phone">Phone</label>
-        </div>
-        <select>
-          <option value="" disabled selected>Country</option>
-          <option value="1">Option 1</option>
-          <option value="2">Option 2</option>
-          <option value="3">Option 3</option>
-        </select>
-        <select disabled>
-          <option value="" disabled selected>State</option>
-          <option value="1">Option 1</option>
-          <option value="2">Option 2</option>
-          <option value="3">Option 3</option>
-        </select>
-        <div class="input-field ">
-          <i class="material-icons prefix input__icon--color">lock</i>
-          <input id="user_password" name="user[password]"
-                 type="password" />
-          <label for="user_password">Password</label>
-        </div>
-        <div class="input-field ">
-          <i class="material-icons prefix input__icon--color">confirmation_number</i>
-          <input id="user_password_confirmation"
-                 name="user[password_confirmation]" type="password" />
-          <label for="user_password_confirmation">Confirmation</label>
-        </div>
-        <button class="btn waves-effect waves-light" type="submit" name="action">Log in
-        </button> 
-      </form>
+      <%= render "form" %>
     </div>
   </div>
 </div>

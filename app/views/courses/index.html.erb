@@ -1,3 +1,4 @@
+
 <% content_for :bar_option do %> 
   <ul class="tabs center-block">
     <li class="tab"><a class="active" href="#my_courses" style="outline: none;">creados</a></li>
@@ -8,30 +9,65 @@
 
 <div id="my_courses">
   <% if @my_courses.any? %>
-    <%= render @my_courses %>
-    <div class="fixed-action-btn">
-      <a href="#modal1" class="btn-floating btn-large tooltipped indigo"
-      data-position="left" data-delay="50" data-tooltip="Nuevo curso">
-        <i class="large material-icons">add_circle_outline</i>
-      </a>
-    </div>
+    <% count_course = 0%>
+    <% @my_courses.each do |course|%>
+      <%if course.ceo_id == current_user.id %>
+        <%= render course %>
+        <%count_course +=1 %>
+      <%end%>
+    <%end%>
+    <% if count_course == 0 %>
+      <div id="msm_new_course">
+        <h4 class="center" style="color: #94b8b8; font-weight: bold;">Crea un curso</h4>
+        <div class="center">
+          <a href="#modal_new_course" style="outline: none; display: inline-flex; flex-direction: column;">
+            <i class="material-icons circle center" style="color: #85adad; font-size: 56px;">add_circle_outline</i>
+            <span style="color: #85adad; font-size: 28px;">Nuevo curso</span>
+          </a>
+        </div>
+      </div>
+    <%else%>
+      <div class="fixed-action-btn">
+        <a href="#modal_new_course" class="btn-floating btn-large tooltipped indigo"
+        data-position="left" data-delay="50" data-tooltip="Nuevo curso">
+          <i class="large material-icons">add</i>
+        </a>
+      </div>
+    <%end%>
   <%else%>
-    <h4 class="center" style="color: #94b8b8; font-weight: bold;">You don't have any courses</h4>
-    <div class="center">
-      <a href="#modal1" style="outline: none; display: inline-flex; flex-direction: column;">
-        <i class="material-icons circle center" style="color: #85adad; font-size: 56px;">add_circle_outline</i>
-        <span style="color: #85adad; font-size: 28px;">Nuevo curso</span>
-      </a>
+    <div id="msm_new_course">
+      <h4 class="center" style="color: #94b8b8; font-weight: bold;">Crea un curso</h4>
+      <div class="center">
+        <a href="#modal_new_course" style="outline: none; display: inline-flex; flex-direction: column;">
+          <i class="material-icons circle center" style="color: #85adad; font-size: 56px;">add_circle_outline</i>
+          <span style="color: #85adad; font-size: 28px;">Nuevo curso</span>
+        </a>
+      </div>
     </div>    
   <%end%>
 </div>
+
 <!-- Modal Structure - New course -->
-<div id="modal1" class="modal">
+<div id="modal_new_course" class="modal">
+  <h5 style="padding-left: 20px;">Nuevo curso</h5>
   <%= render "form" %>
 </div>
 </div>
 <div id="member">
-
+  <% if @my_courses.any? %>
+    <% count_course = 0%>
+    <% @my_courses.each do |course|%>
+      <%if course.ceo_id != current_user.id %>
+        <%= render course %>
+        <%count_course +=1 %>
+      <%end%>
+    <%end%>
+    <%if count_course == 0%>
+      <h4 class="center" style="color: #94b8b8; font-weight: bold;">No estás asociado a ningun curso</h4> 
+    <%end%>
+  <% else %>
+    <h4 class="center" style="color: #94b8b8; font-weight: bold;">No estás asociado a ningun curso</h4>
+  <% end %>
 </div>
 <div id="all_courses">
 

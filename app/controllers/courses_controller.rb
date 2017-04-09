@@ -27,26 +27,39 @@ class CoursesController < ApplicationController
 
   def show
     @course = Course.find(params[:id])
+    @team = Team.new
   end
 
   def new
+    @course = Course.new
   end
 
   def create
 
-    @course = Course.create(course_params)
-    @course_user = CourseUser.new
-    @course_user.rol = "CEO"
-    @course_user.user = current_user
-    @course_user.course = @course
-    
-    respond_to do |format|
-      if @course_user.save
-        format.html{redirect_to dashboard_path}
-        format.js
+    @courses = Array.new
+    for i in 1..(Integer(params[:course][:section]))
+      @course = Course.new(course_params);
+      @course.section = i
+      if @course.save
+        @course_user = CourseUser.new
+        @course_user.rol = "CEO"
+        @course_user.user = current_user
+        @course_user.course = @course
+        
+        respond_to do |format|
+          if @course_user.save
+            @courses << @course
+            format.html{redirect_to dashboard_path}
+            format.js
+          else
+            format.html { render "new" }
+            format.js
+          end
+        end
       else
-        format.html { render "new" }
-        format.js
+        respond_to do |format|
+          format.js
+        end
       end
     end
   end
@@ -56,9 +69,34 @@ class CoursesController < ApplicationController
   end
 
   def update
+    @course = Course.find(params[:id])
+    
+    respond_to do |format|
+      if @course.update_attributes(course_params)
+        format.html{redirect_to courses_path, notice: "Course was successfully updated"}
+        format.json {render json:{team: @course, status: :ok}.to_json}
+        format.js
+      else
+        format.html { render "edit", error: "Failed to update this course"}
+        format.json {render json: {info: "Failed to update this course", status: :unprocessable_entity}.to_json}
+        format.js
+      end
+    end
   end
 
-  def delete
+  def destroy
+    @course = Course.find(params[:id])
+    respond_to do |format|
+      if @course.destroy
+        format.html{redirect_to courses_path, notice: "Course delete"}
+        format.json {render json: {info: "Course delete", status: :ok}.to_json}
+        format.js
+      else
+        format.html { redirect_to courses_path, error: "Failed to delete this course"}
+        format.json {render json: {info: "Failed to delete this course", status: :unprocessable_entity}.to_json}
+        format.js
+      end
+    end
   end
 
   # get all the courses

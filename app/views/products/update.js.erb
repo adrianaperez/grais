@@ -1,0 +1,11 @@
+var errors = <%= @product.errors.count %>;
+
+if(errors > 0){
+  console.log("NO se actualizo el curso");
+  
+}else{
+
+  $('#modal_edit_product').modal('close'); // Función definida en course.js
+  $('.sidebar').empty();
+  $('.sidebar').html("<%= escape_javascript (render partial: 'product_sidebar') %>"); 
+}

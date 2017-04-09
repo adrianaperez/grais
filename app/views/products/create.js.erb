@@ -1,0 +1,11 @@
+var errors_product = <%= @product.errors.count %>;
+
+if(errors_product > 0){
+  console.log("NO se creo el equipo");
+  
+}else{
+
+  $('#modal_new_product').modal('close');
+  $('#modal_new_product').find('form input[type="text"]').val('');
+  $('div#team_products .collection').prepend("<%= j render @product %>");  
+}

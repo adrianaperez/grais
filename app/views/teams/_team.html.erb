@@ -1,1 +1,7 @@
-<h1>Hola</h1>
+<%= link_to( team_path team.id ) do %> 
+  <li class="collection-item avatar">
+    <img src="/assets/e-learning.png" alt="e-learning" class= "circle">
+    <span class="title"><%= team.name %> </span>
+    <p> Cantidad de estudiantes: <%=team.studentsAmount %></p>
+  </li>
+<%end%>

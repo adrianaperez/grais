@@ -2,7 +2,12 @@
   <div class="wrapper-image-square">
     <%= image_tag "typewriter-01.svg"%>
   </div>
-  <div style="padding: 20px;">
+  <div style="position: relative; padding: 20px;">
+    <%if is_leader? current_user.id, @product.team.course.id %>
+      <%= link_to( "#modal_edit_product", class:"btn-floating blue", style:"position: absolute; top: -20px; right: 5px;") do %>
+        <i class="material-icons">mode_edit</i> 
+      <% end %>
+    <%end%>
     <div style="margin-bottom: : 10px;">
       <span style="font-weight: bold; color: #424242; font-size: 28px;"><%= @product.name%></span>
     </div>

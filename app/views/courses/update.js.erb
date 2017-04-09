@@ -1,0 +1,11 @@
+var error= <%= @course.errors.count %>;
+
+if(error>0){
+  console.log("NO se creo el curso");
+  
+}else{
+
+  $('#modal_edit_course').modal('close'); // Función definida en course.js
+  $('.sidebar').empty();
+  $('.sidebar').html("<%= escape_javascript (render partial: 'course_sidebar') %>"); 
+}

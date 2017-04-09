@@ -1,0 +1,14 @@
+var error_team = <%= @team.errors.count %>;
+var error=<%=@error%>;
+
+
+if(error_team>0 || error==1){
+  console.log("NO se creo el equipo");
+  
+}else{
+
+  $('#modal_new_team').modal('close');
+  $('#modal_new_team').find('form input[type="text"]').val('');
+  $('#link_new_team').hide();
+  $('div#teams .collection').prepend("<%= j render @team %>");  
+}

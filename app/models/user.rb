@@ -18,7 +18,7 @@ class User < ApplicationRecord
                     uniqueness: true
   has_secure_password
 
-  validates :password, presence: true, length: { maximum: 65 }
+  validates :password, presence: true, length: { maximum: 65 }, on: :create
 
   attr_accessor :reset_token,:rol
 

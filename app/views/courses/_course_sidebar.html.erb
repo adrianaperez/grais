@@ -4,7 +4,7 @@
   </div>
   <div style="position: relative; padding: 20px;">
     <% if is_ceo? current_user.id, @course.id %>
-      <%= link_to( "#modal2", class:"btn-floating blue", style:"position: absolute; top: -20px; right: 5px;") do %>
+      <%= link_to( "#modal_edit_course", class:"btn-floating blue", style:"position: absolute; top: -20px; right: 5px;") do %>
         <i class="material-icons">mode_edit</i> 
       <% end %>
     <% else %>

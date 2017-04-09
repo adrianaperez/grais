@@ -238,3 +238,9 @@
 		</nav>
 	</div>
 </div>
+
+
+<% content_for :js do %>
+  $(".sidebar").addClass('hidden-sidebar');
+  $('#hamburger_menu').hide();
+<% end %> 

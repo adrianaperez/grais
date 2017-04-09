@@ -8,6 +8,12 @@ Rails.application.routes.draw do
       #post :create
     #end
   #end
+  #post 'users/change_password/:id', to: 'users#change_password', as: 'change_password_users'
+  #resources :users do
+    #member do
+      #post 'change_password'
+    #end
+  #end
 
   resources :products
   resources :teams
@@ -67,7 +73,10 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :teams, :defaults => { :format => 'json' }, :except => [:update, :destroy, :edit, :index, :show, :new] do
+  resources :teams, :defaults => { :format => 'json' }, :except => [:create, :update, :destroy, :edit, :index, :show, :new] do
+    collection do
+      post :create_team
+    end
     collection do
       post :add_member_to_team
     end
