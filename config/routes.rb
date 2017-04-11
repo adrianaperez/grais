@@ -108,4 +108,40 @@ Rails.application.routes.draw do
       post :find_products_by_team
     end
   end
+
+
+  #exeptuar aquellas acciones que no son para la app 
+  resources :commitments, :defaults => { :format => 'json' }, :except => [:create, :update] do
+    collection do
+      post :find_by_user
+    end
+    collection do
+      post :find_by_product
+    end
+    collection do
+      post :find_by_team
+    end
+    collection do
+      post :create_commitment
+    end
+    collection do
+      post :update_commitment
+    end
+  end
+
+  #exeptuar aquellas acciones que no son para la app 
+  resources :tasks, :defaults => { :format => 'json' }, :except => [:create, :update] do
+    collection do
+      post :find_by_user
+    end
+    collection do
+      post :find_by_commitment
+    end
+    collection do
+      post :create_task
+    end
+    collection do
+      post :update_task
+    end
+  end
 end
