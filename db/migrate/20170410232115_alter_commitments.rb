@@ -5,7 +5,6 @@ class AlterCommitments < ActiveRecord::Migration[5.0]
   end
 
   def down
-  	remove_column("commitments", "logo")
   	add_column("commitments", "company_id", :integer)
   	add_column("commitments", "course", :integer)
   end

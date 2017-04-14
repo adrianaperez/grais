@@ -101,22 +101,6 @@ class CoursesController < ApplicationController
 
   # get all the courses
   def all
-
-
-
-  ##############################
-    #Prueba: Manejo de notificaciones
-    #uri = URI('https://fcm.googleapis.com/fcm/send')
-    #http = Net::HTTP.new(uri.host, uri.port)
-    #http.use_ssl = true
-    #req = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json', 'Authorization' => 'key=AAAAe3BYdgo:APA91bF13EtVd07IZdv-9XTSATSwd-d1J1n2gKjVWpppTuz7Uj1R2hnwTCL3ioL4e7F4YVhU-iMzDI66Czu9mRT3A9sqQ-HVmb24wyda-lwEukaL7eCLjJHAvnEsi8foZ2_Bsh44wtN8'})
-    #req.body = {:to => 'dhwQI0eA_90:APA91bG0E_rRUI7u5puL_jeGH3DWwbArQv8UlCtKJlkA9FVw7OljH_i3b28gbyVIAOG5WW5S6mlhSyzAEPCuf27sCidD8XB7zY-TO0kZcguEedVILWyUIvW2akBFigawWd4IBA1pAs8R', :notification => {:title => 'Hola, soy ruby', :body => 'Ya podemos enviar notificaciones desde ruby!'}, :data => {:name => 'Adri', :lastname => 'Perez'}}.to_json
-
-    #response = http.request(req)
-    #puts 'Response:'
-    #puts response.inspect
-  ##############################
-
     list = Array.new
 
     Course.all.each do |course|
@@ -341,6 +325,62 @@ class CoursesController < ApplicationController
       end
     end
   end
+
+  def request_course_access
+
+    user = User.find(params[:user_id])
+
+    if user == nil
+      respond_to do |format|
+        format.json {render json: {info: "User not found", status: :not_found}.to_json}
+      end
+    end
+
+    course = Course.find(params[:course_id])
+
+    if course == nil
+      respond_to do |format|
+        format.json {render json: {info: "Course not found", status: :not_found}.to_json}
+      end
+    else
+      c_u = CourseUser.where(course_id: course.id)
+      c_u.each do |cu|
+        if cu.rol == "CEO"
+          course.ceo = cu.user.names
+          course.ceo_id = cu.user.id
+        end
+      end
+
+      ##############################
+      tokens = FcmToken.where(:user_id => course.ceo_id)
+
+      if tokens.length > 0 && tokens[0] != nil
+        #Prueba: Manejo de notificaciones
+        uri = URI('https://fcm.googleapis.com/fcm/send')
+        http = Net::HTTP.new(uri.host, uri.port)
+        http.use_ssl = true
+        req = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json', 'Authorization' => 'key=AAAAe3BYdgo:APA91bF13EtVd07IZdv-9XTSATSwd-d1J1n2gKjVWpppTuz7Uj1R2hnwTCL3ioL4e7F4YVhU-iMzDI66Czu9mRT3A9sqQ-HVmb24wyda-lwEukaL7eCLjJHAvnEsi8foZ2_Bsh44wtN8'})
+        # AVD: csl75XXovhw:APA91bFrxbFQqHx2E7O_bfP9fbwwTdtrVbFcdGHDGQ1PILQ8IysP4CyW5-krQoOo4dNb3eMpvxvscrRAL1axZ7h6t6k17BMbIs65aj1deBlQWbc3doftupO1FDzwafh028xodkmLV8E-
+        # phone: fzMWjdyf0js:APA91bGL7_fX6tauaBlv2GelJEwOPTZdf9mzwNcSgGNn_73JocPGTGuqXTelk4gsRL-yf-ro9YrCzRVAY_0L2kEZzt7xF3Lx3spYLg-uiMBXDio97NgScpstU6Na52sBAcq4qDoykb4d
+
+        req.body = {:to => tokens[0].token,
+         :notification => {:title => 'Nueva solicitud de ingreso a tu curso', :body => user.names + ' ha solicitado unirse a tu curso: ' + course.name},
+          :data => {:type => 'NEW_COURSE_MEMBER', :user_id => user.id, :user_name => user.names, :course_id => course.id, :course_name => course.name}}.to_json
+
+        response = http.request(req)
+        ##############################
+
+        respond_to do |format|
+          format.json {render json: {info: "Request sended", status: :ok}.to_json}
+        end
+      else
+        respond_to do |format|
+          format.json {render json: {info: "There is no device for this user", status: :unprocessable_entity}.to_json}
+        end
+      end
+    end
+  end
+
   #Agregar miembros a un curso
   def add_member_to_course
     user = User.find(params[:user_id])
@@ -373,7 +413,7 @@ class CoursesController < ApplicationController
 
       if course_user.save
         respond_to do |format|
-          format.json {render json:  {course_user: course_user, status: :ok}.to_json}
+          format.json {render json:  {info: "User added to the course", course_user: course_user, status: :ok}.to_json}
         end
       else
         respond_to do |format|

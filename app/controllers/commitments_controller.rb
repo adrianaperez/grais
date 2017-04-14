@@ -42,7 +42,7 @@ class CommitmentsController < ApplicationController
 		    	format.json {render json:  {info: "Commitment not found", status: :not_found}.to_json}
 		  	end
 	  	else
-	    	#commitment.description = params[:description]
+	    	commitment.description = params[:description]
 	    	
 	    	if commitment.deadline != params[:deadline]
 	    		commitment.count = commitment.count + 1	#  count every change in the expiration date

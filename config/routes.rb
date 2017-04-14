@@ -71,6 +71,9 @@ Rails.application.routes.draw do
      collection do
       post :find_members_by_course
     end
+     collection do
+      post :request_course_access
+    end
   end
 
   resources :teams, :defaults => { :format => 'json' }, :except => [:create, :update, :destroy, :edit, :index, :show, :new] do
