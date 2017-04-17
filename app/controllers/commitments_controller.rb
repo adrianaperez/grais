@@ -7,11 +7,13 @@ class CommitmentsController < ApplicationController
     	commitment.execution = 0
     	commitment.count = 0
 
-    	commitment.user = User.find(params[:user_id]).id ####
+    	currUser = User.find(params[:user_id])
+    	commitment.user = currUser.id
     	commitment.product = Product.find(params[:product_id])
 
+
     	# validate if the user and the product were found
-    	if commitment.user == nil
+    	if currUser == nil
 	        respond_to do |format|
 	            format.json {render json: { info: "User not found",  status: :not_found}.to_json}
 	        end
@@ -22,6 +24,29 @@ class CommitmentsController < ApplicationController
         else
         	#commitment.user = commitment.user.id
 	        if commitment.save
+	        	# Notificar a todo el resto del equipo
+	          	c_u = CourseUser.where(course_id: commitment.product.team.course.id)
+	          	c_u.each do |cu|
+		            if ((cu.user_id != currUser.id && cu.team_id == commitment.product.team.id) || cu.rol == "CEO")
+		              	##############################
+		              	tokens = FcmToken.where(:user_id => cu.user_id)
+
+		              	if tokens.length > 0 && tokens[0] != nil
+			                uri = URI('https://fcm.googleapis.com/fcm/send')
+			                http = Net::HTTP.new(uri.host, uri.port)
+			                http.use_ssl = true
+			                req = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json', 'Authorization' => 'key=AAAAe3BYdgo:APA91bF13EtVd07IZdv-9XTSATSwd-d1J1n2gKjVWpppTuz7Uj1R2hnwTCL3ioL4e7F4YVhU-iMzDI66Czu9mRT3A9sqQ-HVmb24wyda-lwEukaL7eCLjJHAvnEsi8foZ2_Bsh44wtN8'})
+
+			                req.body = {:to => tokens[0].token,
+			                 :notification => {:title => 'Han creado un compromiso en uno de tus equipos', :body => currUser.names + ' ha creado un compromiso en el equipo ' + commitment.product.team.name + ' del curso ' + cu.course.name},
+			                  :data => {:type => 'NEW_COMMITMENT', :commitment_id => commitment.id, :commitment_desc => commitment.description,:user_id => currUser.id, :user_name => currUser.names, :course_id => cu.course.id, :course_name => cu.course.name, :team_id => commitment.product.team.id, :team_name => commitment.product.team.name}}.to_json
+
+			                response = http.request(req)
+			                ##############################
+	              		end
+		            end
+	          	end
+
 	          	respond_to do |format|
 	            	format.json {render json:  {commitment: commitment, status: :ok}.to_json}
 	          	end
@@ -51,9 +76,33 @@ class CommitmentsController < ApplicationController
 	    	commitment.deadline = params[:deadline]
 
 	        if commitment.save
-	          respond_to do |format|
-	            format.json {render json:  {commitment: commitment, status: :ok}.to_json}
-	          end
+		    	currUser = User.find(commitment.user)
+
+	        	# Notificar a todo el resto del equipo
+	          	c_u = CourseUser.where(course_id: commitment.product.team.course.id)
+	          	c_u.each do |cu|
+		            if cu.user_id != commitment.user && cu.team_id == commitment.product.team.id || cu.rol == "CEO"
+		              	##############################
+		              	tokens = FcmToken.where(:user_id => cu.user_id)
+
+		              	if tokens.length > 0 && tokens[0] != nil
+			                uri = URI('https://fcm.googleapis.com/fcm/send')
+			                http = Net::HTTP.new(uri.host, uri.port)
+			                http.use_ssl = true
+			                req = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json', 'Authorization' => 'key=AAAAe3BYdgo:APA91bF13EtVd07IZdv-9XTSATSwd-d1J1n2gKjVWpppTuz7Uj1R2hnwTCL3ioL4e7F4YVhU-iMzDI66Czu9mRT3A9sqQ-HVmb24wyda-lwEukaL7eCLjJHAvnEsi8foZ2_Bsh44wtN8'})
+
+			                req.body = {:to => tokens[0].token,
+			                 :notification => {:title => 'Han editado un compromiso en uno de tus equipos', :body => 'Se ha editado un compromiso en el equipo ' + commitment.product.team.name + ' del curso ' + cu.course.name},
+			                  :data => {:type => 'COMMITMENT_UPDATE', :commitment_id => commitment.id, :commitment_desc => commitment.description, :user_id => currUser.id, :user_name => currUser.names, :course_id => cu.course.id, :course_name => cu.course.name, :team_id => commitment.product.team.id, :team_name => commitment.product.team.name}}.to_json
+
+			                response = http.request(req)
+			                ##############################
+	              		end
+		            end
+	          	end
+	          	respond_to do |format|
+		        	format.json {render json:  {commitment: commitment, status: :ok}.to_json}
+		        end
 	        else
 	          respond_to do |format|
 	            format.json {render json: { info: "Error updating commitment",  status: :unprocessable_entity}.to_json}

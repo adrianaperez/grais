@@ -31,8 +31,48 @@ class ProductsController < ApplicationController
     end
   end
 
+  def create_product
+    product = Product.new();
+    product.name = params[:name]
+    product.description = params[:description]
+    product.logo = params[:logo]
+    product.team_id = params[:team_id]
+
+    respond_to do |format|
+      if product.save
+        format.html{redirect_to products_path , notice: "Product was created successfully"}
+        format.json {render json: {product: product, status: :ok}.to_json}
+        format.js
+      else
+        format.html { render "new", error: "The product was not created" }
+        format.json {render json: {product: product,  status: :unprocessable_entity}.to_json }
+        format.js
+      end
+    end
+  end
+
   def edit
     @product = Product.find(params[:id])
+  end
+
+  def update_product
+    product = Product.find(params[:id])
+    product.name = params[:name]
+    product.description = params[:description]
+    product.logo = params[:logo]
+    #product.team_id = params[:team_id]
+
+    respond_to do |format|
+      if product.save
+        format.html{redirect_to team_path, notice: "Product was successfully updated"}
+        format.json {render json: {product: product, status: :ok}.to_json}
+        format.js
+      else
+        format.html { render "edit", error: "Failed to edit product"}
+        format.json {render json: {product: product, status: :unprocessable_entity}.to_json}
+        format.js
+      end
+    end
   end
 
   def update
