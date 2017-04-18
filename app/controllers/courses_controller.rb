@@ -138,82 +138,32 @@ class CoursesController < ApplicationController
         format.js
       end
     else
-        respond_to do |format|
-          format.json {render json: {info: "Unprocessable entity", status: :unprocessable_entity}.to_json}
-          format.js
-        end
+      respond_to do |format|
+        format.json {render json: {info: "Unprocessable entity", status: :unprocessable_entity}.to_json}
+        format.js
+      end
     end
   end
 
   #create 1 course
   def create_course
 
-      u = User.find(params[:user_id])
-      #verificando que el usuario existe
-      if u == nil
-        respond_to do |format|
-          format.json {render json:  {info: "Not found user", status: :not_found}.to_json}
-        end
-      end
-
-      created_courses = Array.new
-      
-      for i in 0..(Integer(params[:section]) - 1)
-        c = Course.new
-        c.name = params[:name]
-        c.initials = params[:initials]
-        c.period_type = params[:period_type]
-        c.section = i+1
-        c.category = params[:category]
-        c.institute = params[:institute]
-        c.content = params[:content]
-        c.privacy = params[:privacy]
-        c.inscriptions_activated = params[:inscriptions_activated]
-        c.evaluate_teacher = params[:evaluate_teacher]
-        c.strict_mode_isa = params[:strict_mode_isa]
-        c.code_confirmed = params[:code_confirmed]
-        c.logo = "489563.png"
-        c.period_length = params[:period_length]
-        c.description = params[:description]
-
-        if c.save
-          cu = CourseUser.new(:user => u,:course => c,:rol => "CEO")
-
-          if cu.save
-            created_courses << c
-            next
-          else
-            respond_to do |format|
-              format.json {render json:  {info: "Curso-Usuario no creado", course: c, status: :unprocessable_entity}.to_json}
-            end
-          end
-        else
-          respond_to do |format|
-            format.json  {render json: {course: c, status: :unprocessable_entity}.to_json}
-          end
-        end
-      end #for
-
+    u = User.find(params[:user_id])
+    #verificando que el usuario existe
+    if u == nil
       respond_to do |format|
-
-        format.json {render json: {courses: created_courses, status: :ok}.to_json} ### revisar, se cambio el nombre a plural
+        format.json {render json:  {info: "Not found user", status: :not_found}.to_json}
       end
-   end  #action
+    end
 
-   #update 1 course
-   def update_course
-      c = Course.find(params[:id])
-
-      if c == nil
-         respond_to do |format|
-            format.json {render json: c, status: :not_found}
-         end
-      end
-
+    created_courses = Array.new
+    
+    for i in 0..(Integer(params[:section]) - 1)
+      c = Course.new
       c.name = params[:name]
       c.initials = params[:initials]
       c.period_type = params[:period_type]
-      c.section = params[:section]
+      c.section = i+1
       c.category = params[:category]
       c.institute = params[:institute]
       c.content = params[:content]
@@ -227,25 +177,74 @@ class CoursesController < ApplicationController
       c.description = params[:description]
 
       if c.save
-         respond_to do |format|
+        cu = CourseUser.new(:user => u,:course => c,:rol => "CEO")
 
-            format.json {render json: {course: c, status: :ok}.to_json}
-         end
+        if cu.save
+          created_courses << c
+          next
+        else
+          respond_to do |format|
+            format.json {render json:  {info: "Curso-Usuario no creado", course: c, status: :unprocessable_entity}.to_json}
+          end
+        end
       else
-         respond_to do |format|
-         
-            format.json  {render json: {course: c, status: :unprocessable_entity}.to_json}
-         end
+        respond_to do |format|
+          format.json  {render json: {course: c, status: :unprocessable_entity}.to_json}
+        end
       end
-   end
+    end #for
+
+    respond_to do |format|
+
+      format.json {render json: {courses: created_courses, status: :ok}.to_json} ### revisar, se cambio el nombre a plural
+    end
+  end  #action
+
+   #update 1 course
+  def update_course
+    c = Course.find(params[:id])
+
+    if c == nil
+      respond_to do |format|
+        format.json {render json: c, status: :not_found}
+      end
+    end
+
+    c.name = params[:name]
+    c.initials = params[:initials]
+    c.period_type = params[:period_type]
+    c.section = params[:section]
+    c.category = params[:category]
+    c.institute = params[:institute]
+    c.content = params[:content]
+    c.privacy = params[:privacy]
+    c.inscriptions_activated = params[:inscriptions_activated]
+    c.evaluate_teacher = params[:evaluate_teacher]
+    c.strict_mode_isa = params[:strict_mode_isa]
+    c.code_confirmed = params[:code_confirmed]
+    c.logo = "489563.png"
+    c.period_length = params[:period_length]
+    c.description = params[:description]
+
+    if c.save
+      respond_to do |format|
+
+        format.json {render json: {course: c, status: :ok}.to_json}
+      end
+    else
+      respond_to do |format|
+        format.json  {render json: {course: c, status: :unprocessable_entity}.to_json}
+      end
+    end
+  end
 
   #Obtener todos los cursos de un usuario
   def find_courses_by_user
     u = User.find(params[:id])
     if u == nil
-        respond_to do |format|
-          format.json {render json: {info: "User not found", status: :not_found}.to_json}
-        end
+      respond_to do |format|
+        format.json {render json: {info: "User not found", status: :not_found}.to_json}
+      end
     end
 
     list = Array.new
@@ -280,9 +279,9 @@ class CoursesController < ApplicationController
         format.json {render json: {courses: list, status: :ok}.to_json}
       end
     else
-        respond_to do |format|
-          format.json {render json: {info: "Unprocessable entity", status: :unprocessable_entity}.to_json}
-        end
+      respond_to do |format|
+        format.json {render json: {info: "Unprocessable entity", status: :unprocessable_entity}.to_json}
+      end
     end
   end
 
@@ -434,7 +433,6 @@ class CoursesController < ApplicationController
     end
 
     course_users = CourseUser.where(:course => course)
-
 
     course_users.each do |cu| #Pasando campos necesarios para armar la lista de los miembros
       cu.names_user = cu.user.names

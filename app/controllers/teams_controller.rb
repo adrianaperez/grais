@@ -125,8 +125,6 @@ class TeamsController < ApplicationController
         format.json {render json: {info: "The user already have a team in this course", status: :bad_request}.to_json}
       end
     end
-
-    
   end
 
   def edit

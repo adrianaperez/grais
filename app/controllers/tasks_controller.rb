@@ -7,42 +7,42 @@ class TasksController < ApplicationController
 		task.user = User.find(params[:user_id])		
 
 		if task.user == nil
-	        respond_to do |format|
-	            format.json {render json: { info: "User not found",  status: :not_found}.to_json}
-	        end
-      	elsif task.commitment == nil
-          	respond_to do |format|
-            	format.json {render json: { info: "Commitment not found",  status: :not_found}.to_json}
-          	end
-        else
-	        if task.save
-        	 	# Notificar al usuario al que le fue asignada la tarea 
-              	##############################
-              	tokens = FcmToken.where(:user_id => task.user.id)
+      respond_to do |format|
+        format.json {render json: { info: "User not found",  status: :not_found}.to_json}
+      end
+  	elsif task.commitment == nil
+    	respond_to do |format|
+      	format.json {render json: { info: "Commitment not found",  status: :not_found}.to_json}
+    	end
+    else
+      if task.save
+	 			#Notificar al usuario al que le fue asignada la tarea 
+      	##############################
+      	tokens = FcmToken.where(:user_id => task.user.id)
 
-              	if tokens.length > 0 && tokens[0] != nil
-                	uri = URI('https://fcm.googleapis.com/fcm/send')
-	                http = Net::HTTP.new(uri.host, uri.port)
-	                http.use_ssl = true
-	                req = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json', 'Authorization' => 'key=AAAAe3BYdgo:APA91bF13EtVd07IZdv-9XTSATSwd-d1J1n2gKjVWpppTuz7Uj1R2hnwTCL3ioL4e7F4YVhU-iMzDI66Czu9mRT3A9sqQ-HVmb24wyda-lwEukaL7eCLjJHAvnEsi8foZ2_Bsh44wtN8'})
+      	if tokens.length > 0 && tokens[0] != nil
+        	uri = URI('https://fcm.googleapis.com/fcm/send')
+          http = Net::HTTP.new(uri.host, uri.port)
+          http.use_ssl = true
+          req = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json', 'Authorization' => 'key=AAAAe3BYdgo:APA91bF13EtVd07IZdv-9XTSATSwd-d1J1n2gKjVWpppTuz7Uj1R2hnwTCL3ioL4e7F4YVhU-iMzDI66Czu9mRT3A9sqQ-HVmb24wyda-lwEukaL7eCLjJHAvnEsi8foZ2_Bsh44wtN8'})
 
-	                req.body = {:to => tokens[0].token,
-	                 :notification => {:title => 'Se ha creado una tarea para ti', :body => task.user.names + ' te ha asignado la siguiente tarea: ' + task.description},
-	                  :data => {:type => 'NEW_TASK', :user_id => task.user.id, :user_name => task.user.names, :task_id => task.id, :task_desc => task.name, :commitment_id => task.commitment.id}}.to_json
+          req.body = {:to => tokens[0].token,
+           :notification => {:title => 'Se ha creado una tarea para ti', :body => task.user.names + ' te ha asignado la siguiente tarea: ' + task.description},
+            :data => {:type => 'NEW_TASK', :user_id => task.user.id, :user_name => task.user.names, :task_id => task.id, :task_desc => task.name, :commitment_id => task.commitment.id}}.to_json
 
-	                response = http.request(req)
-	                ##############################
-              	end
-	          	
-	          	respond_to do |format|
-	            	format.json {render json:  {task: task, status: :ok}.to_json}
-	          	end
-	        else
-	          	respond_to do |format|
-	            	format.json {render json: { info: "Error creating task",  status: :unprocessable_entity}.to_json}
-	          	end
-	        end
-	    end
+          response = http.request(req)
+          ##############################
+      	end
+    	
+	    	respond_to do |format|
+	      	format.json {render json:  {task: task, status: :ok}.to_json}
+	    	end
+      else
+      	respond_to do |format|
+        	format.json {render json: { info: "Error creating task",  status: :unprocessable_entity}.to_json}
+      	end
+      end
+	  end
 	end
 
 	def update_task
@@ -50,39 +50,39 @@ class TasksController < ApplicationController
 		task.description = params[:description]
 		task.execution = params[:execution]
 
-    	if task == nil
-		  	respond_to do |format|
-		    	format.json {render json:  {info: "Task not found", status: :not_found}.to_json}
-		  	end
-	  	else
-	        if task.save
-	        	# Notificar al usuario al que le fue asignada la tarea 
-              	##############################
-              	tokens = FcmToken.where(:user_id => task.user.id)
+  	if task == nil
+	  	respond_to do |format|
+	    	format.json {render json:  {info: "Task not found", status: :not_found}.to_json}
+	  	end
+  	else
+      if task.save
+  			#Notificar al usuario al que le fue asignada la tarea 
+      	##############################
+      	tokens = FcmToken.where(:user_id => task.user.id)
 
-              	if tokens.length > 0 && tokens[0] != nil
-                	uri = URI('https://fcm.googleapis.com/fcm/send')
-	                http = Net::HTTP.new(uri.host, uri.port)
-	                http.use_ssl = true
-	                req = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json', 'Authorization' => 'key=AAAAe3BYdgo:APA91bF13EtVd07IZdv-9XTSATSwd-d1J1n2gKjVWpppTuz7Uj1R2hnwTCL3ioL4e7F4YVhU-iMzDI66Czu9mRT3A9sqQ-HVmb24wyda-lwEukaL7eCLjJHAvnEsi8foZ2_Bsh44wtN8'})
+      	if tokens.length > 0 && tokens[0] != nil
+        	uri = URI('https://fcm.googleapis.com/fcm/send')
+          http = Net::HTTP.new(uri.host, uri.port)
+          http.use_ssl = true
+          req = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json', 'Authorization' => 'key=AAAAe3BYdgo:APA91bF13EtVd07IZdv-9XTSATSwd-d1J1n2gKjVWpppTuz7Uj1R2hnwTCL3ioL4e7F4YVhU-iMzDI66Czu9mRT3A9sqQ-HVmb24wyda-lwEukaL7eCLjJHAvnEsi8foZ2_Bsh44wtN8'})
 
-	                req.body = {:to => tokens[0].token,
-	                 :notification => {:title => 'Se ha editado una de tus tareas', :body => 'Ahora tu tarea es: ' + task.description},
-	                  :data => {:type => 'TASK_UPDATE', :user_id => task.user.id, :user_name => task.user.names, :task_id => task.id, :task_desc => task.name, :commitment_id => task.commitment.id}}.to_json
+          req.body = {:to => tokens[0].token,
+           :notification => {:title => 'Se ha editado una de tus tareas', :body => 'Ahora tu tarea es: ' + task.description},
+            :data => {:type => 'TASK_UPDATE', :user_id => task.user.id, :user_name => task.user.names, :task_id => task.id, :task_desc => task.name, :commitment_id => task.commitment.id}}.to_json
 
-	                response = http.request(req)
-	                ##############################
-              	end
+          response = http.request(req)
+          ##############################
+      	end
 
-	          	respond_to do |format|
-	            	format.json {render json:  {task: task, status: :ok}.to_json}
-	          	end
-	        else
-	          	respond_to do |format|
-	            	format.json {render json: { info: "Error updating task",  status: :unprocessable_entity}.to_json}
-	          	end
-	        end
-	    end
+      	respond_to do |format|
+        	format.json {render json:  {task: task, status: :ok}.to_json}
+      	end
+      else
+      	respond_to do |format|
+        	format.json {render json: { info: "Error updating task",  status: :unprocessable_entity}.to_json}
+      	end
+      end
+    end
 	end
 
 	def find_by_user
@@ -92,9 +92,9 @@ class TasksController < ApplicationController
 			c.user_name = c.user.names
 		end
 
-      	respond_to do |format|
-	        format.json {render json: { tasks: tasks,  status: :ok}.to_json}
-      	end
+  	respond_to do |format|
+      format.json {render json: { tasks: tasks,  status: :ok}.to_json}
+  	end
 	end
 
 	def find_by_commitment
@@ -104,8 +104,8 @@ class TasksController < ApplicationController
 			c.user_name = c.user.names
 		end
 
-      	respond_to do |format|
-	        format.json {render json: { tasks: tasks,  status: :ok}.to_json}
-      	end
+  	respond_to do |format|
+      format.json {render json: { tasks: tasks,  status: :ok}.to_json}
+  	end
 	end
 end
