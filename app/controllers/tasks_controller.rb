@@ -4,7 +4,8 @@ class TasksController < ApplicationController
 		task.description = params[:description]
 		task.execution = 0
 		task.commitment = Commitment.find(params[:commitment_id])
-		task.user = User.find(params[:user_id])		
+		task.user = User.find(params[:user_id])	
+    task.due_date = params[:due_date]	
 
 		if task.user == nil
       respond_to do |format|
@@ -28,7 +29,7 @@ class TasksController < ApplicationController
 
           req.body = {:to => tokens[0].token,
            :notification => {:title => 'Se ha creado una tarea para ti', :body => task.user.names + ' te ha asignado la siguiente tarea: ' + task.description},
-            :data => {:type => 'NEW_TASK', :user_id => task.user.id, :user_name => task.user.names, :task_id => task.id, :task_desc => task.name, :commitment_id => task.commitment.id}}.to_json
+            :data => {:type => 'NEW_TASK', :user_id => task.user.id, :user_name => task.user.names, :task_id => task.id, :task_desc => task.description, :commitment_id => task.commitment.id}}.to_json
 
           response = http.request(req)
           ##############################
@@ -49,6 +50,7 @@ class TasksController < ApplicationController
 		task = Task.find(params[:id])
 		task.description = params[:description]
 		task.execution = params[:execution]
+    task.user = User.find(params[:user_id]) 
 
   	if task == nil
 	  	respond_to do |format|
@@ -68,7 +70,7 @@ class TasksController < ApplicationController
 
           req.body = {:to => tokens[0].token,
            :notification => {:title => 'Se ha editado una de tus tareas', :body => 'Ahora tu tarea es: ' + task.description},
-            :data => {:type => 'TASK_UPDATE', :user_id => task.user.id, :user_name => task.user.names, :task_id => task.id, :task_desc => task.name, :commitment_id => task.commitment.id}}.to_json
+            :data => {:type => 'TASK_UPDATE', :user_id => task.user.id, :user_name => task.user.names, :task_id => task.id, :task_desc => task.description, :commitment_id => task.commitment.id}}.to_json
 
           response = http.request(req)
           ##############################
@@ -101,7 +103,7 @@ class TasksController < ApplicationController
 		tasks = Task.where( commitment_id: params[:commitment_id])
 
 		tasks.each do |c|
-			c.user_name = c.user.names
+			c.user_name = c.user.names + " "+ c.user.lastnames
 		end
 
   	respond_to do |format|
