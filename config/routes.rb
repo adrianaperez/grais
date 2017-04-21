@@ -110,6 +110,12 @@ Rails.application.routes.draw do
     collection do
       post :find_products_by_team
     end
+    collection do
+      post :create_product
+    end
+    collection do
+      post :update_product
+    end
   end
 
 

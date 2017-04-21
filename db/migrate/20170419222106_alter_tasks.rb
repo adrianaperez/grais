@@ -1,5 +1,5 @@
 class AlterTasks < ActiveRecord::Migration[5.0]
-   def up
+  def up
     add_column("tasks", "due_date", :date)
   end
 

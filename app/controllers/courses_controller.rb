@@ -304,16 +304,17 @@ class CoursesController < ApplicationController
           course.ceo_id = auxCU.user.id 
         end
 
-        if (params[:user_id] == nil && Integer(params[:user_id]) == auxCU.user_id)
+        #Pasar el user_id para saber si es miembro o no
+        if (params[:user_id] != nil && Integer(params[:user_id]) == auxCU.user_id)
           is_member = true
         end
       end
 
       course.is_member = is_member
-
       list << course
     end
 
+    puts list.inspect
     if (list != nil)
       respond_to do |format|
         format.json {render json: {courses: list, status: :ok}.to_json}
