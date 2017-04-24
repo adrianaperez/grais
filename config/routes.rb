@@ -153,4 +153,30 @@ Rails.application.routes.draw do
       post :update_task
     end
   end
+
+   #exeptuar aquellas acciones que no son para la app 
+  resources :prototypes, :defaults => { :format => 'json' }, :except => [:create, :update] do
+    collection do
+      post :create_prototype
+    end
+    collection do
+      post :update_prototype
+    end
+    collection do
+      post :find_by_course
+    end
+  end
+
+  #exeptuar aquellas acciones que no son para la app 
+  resources :commitments_prototypes, :defaults => { :format => 'json' }, :except => [:create, :update] do
+    collection do
+      post :create_commitment_prototypes
+    end
+    collection do
+      post :update_commitment_prototypes
+    end
+    collection do
+      post :find_by_prototype
+    end
+  end
 end
