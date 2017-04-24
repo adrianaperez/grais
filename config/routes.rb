@@ -71,6 +71,9 @@ Rails.application.routes.draw do
      collection do
       post :find_members_by_course
     end
+     collection do
+      post :request_course_access
+    end
   end
 
   resources :teams, :defaults => { :format => 'json' }, :except => [:create, :update, :destroy, :edit, :index, :show, :new] do
@@ -106,6 +109,74 @@ Rails.application.routes.draw do
     end
     collection do
       post :find_products_by_team
+    end
+    collection do
+      post :create_product
+    end
+    collection do
+      post :update_product
+    end
+  end
+
+
+  #exeptuar aquellas acciones que no son para la app 
+  resources :commitments, :defaults => { :format => 'json' }, :except => [:create, :update] do
+    collection do
+      post :find_by_user
+    end
+    collection do
+      post :find_by_product
+    end
+    collection do
+      post :find_by_team
+    end
+    collection do
+      post :create_commitment
+    end
+    collection do
+      post :update_commitment
+    end
+  end
+
+  #exeptuar aquellas acciones que no son para la app 
+  resources :tasks, :defaults => { :format => 'json' }, :except => [:create, :update] do
+    collection do
+      post :find_by_user
+    end
+    collection do
+      post :find_by_commitment
+    end
+    collection do
+      post :create_task
+    end
+    collection do
+      post :update_task
+    end
+  end
+
+   #exeptuar aquellas acciones que no son para la app 
+  resources :prototypes, :defaults => { :format => 'json' }, :except => [:create, :update] do
+    collection do
+      post :create_prototype
+    end
+    collection do
+      post :update_prototype
+    end
+    collection do
+      post :find_by_course
+    end
+  end
+
+  #exeptuar aquellas acciones que no son para la app 
+  resources :commitments_prototypes, :defaults => { :format => 'json' }, :except => [:create, :update] do
+    collection do
+      post :create_commitment_prototypes
+    end
+    collection do
+      post :update_commitment_prototypes
+    end
+    collection do
+      post :find_by_prototype
     end
   end
 end

@@ -109,6 +109,16 @@ class UsersController < ApplicationController
 
     if(mailLists.length == 0)
       if u.save
+
+        if params[:fcm_token] != nil
+          fcm_token = FcmToken.new()
+          fcm_token.token = params[:fcm_token]
+          fcm_token.user_id = u.id
+          
+          # validate ?
+          fcm_token.save
+        end
+
         @user = u
         log_in @user
         
