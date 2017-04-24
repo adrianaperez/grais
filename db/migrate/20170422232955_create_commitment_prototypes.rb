@@ -9,6 +9,7 @@ class CreateCommitmentPrototypes < ActiveRecord::Migration[5.0]
   end
 
   def down
-  	remove_table("commitment_prototypes")
+  	#remove_table("commitment_prototypes")
+    drop_table :commitment_prototypes
   end
 end

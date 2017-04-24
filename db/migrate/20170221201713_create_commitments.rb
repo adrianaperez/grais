@@ -7,6 +7,7 @@ class CreateCommitments < ActiveRecord::Migration[5.0]
       t.integer :count
       t.integer :user
       t.integer :course
+      t.belongs_to :company, index: true
       t.belongs_to :product, index: true
       t.timestamps
     end

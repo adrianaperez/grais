@@ -4,6 +4,7 @@ class DropCompanies < ActiveRecord::Migration[5.0]
   end
 
   def down
-  	raise ActiveRecord::IrreversibleMigration
+  	#raise ActiveRecord::IrreversibleMigration
+    create_table(:companies)
   end
 end

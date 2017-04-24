@@ -9,7 +9,7 @@ class CreatePrototypes < ActiveRecord::Migration[5.0]
   end
   
   def down
-  		remove_table("prototypes")
-      #drop_table :prototypes
+  		#remove_table("prototypes")
+      drop_table :prototypes
   end
 end

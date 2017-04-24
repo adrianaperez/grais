@@ -10,15 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170319140948) do
+ActiveRecord::Schema.define(version: 20170422232955) do
+
+  create_table "commitment_prototypes", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+    t.string   "description"
+    t.date     "deadline"
+    t.integer  "prototype_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["prototype_id"], name: "index_commitment_prototypes_on_prototype_id", using: :btree
+  end
 
   create_table "commitments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string   "description"
     t.date     "deadline"
-    t.integer  "execution"
     t.integer  "count"
     t.integer  "user"
-    t.integer  "course"
     t.integer  "product_id"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
@@ -56,6 +63,14 @@ ActiveRecord::Schema.define(version: 20170319140948) do
     t.datetime "updated_at",                           null: false
   end
 
+  create_table "fcm_tokens", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+    t.string   "token",      limit: 300
+    t.integer  "user_id"
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+    t.index ["user_id"], name: "index_fcm_tokens_on_user_id", using: :btree
+  end
+
   create_table "product_users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.integer  "product_id"
     t.datetime "created_at",     null: false
@@ -72,18 +87,28 @@ ActiveRecord::Schema.define(version: 20170319140948) do
     t.datetime "updated_at",              null: false
     t.integer  "team_id"
     t.string   "logo",        limit: 120
+    t.string   "initials",    limit: 8
     t.index ["team_id"], name: "index_products_on_team_id", using: :btree
+  end
+
+  create_table "prototypes", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+    t.string  "name",        limit: 80
+    t.string  "description"
+    t.integer "course_id"
+    t.string  "logo",        limit: 120
+    t.string  "initials",    limit: 8
+    t.index ["course_id"], name: "index_prototypes_on_course_id", using: :btree
   end
 
   create_table "tasks", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string   "description"
-    t.date     "deadline"
     t.integer  "execution"
     t.integer  "weight"
     t.integer  "commitment_id"
     t.integer  "user_id"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
+    t.date     "due_date"
     t.index ["commitment_id"], name: "index_tasks_on_commitment_id", using: :btree
     t.index ["user_id"], name: "index_tasks_on_user_id", using: :btree
   end
