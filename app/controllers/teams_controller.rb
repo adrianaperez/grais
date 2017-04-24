@@ -82,6 +82,29 @@ class TeamsController < ApplicationController
         course_user.team_id = @team.id
             
         if course_user.save
+          # Notificar al ceo  
+          c_u = CourseUser.where(course_id: course_user.course.id)
+          c_u.each do |cu|
+            if cu.rol == "CEO"
+              ##############################
+              tokens = FcmToken.where(:user_id => cu.user.id)
+
+              if tokens.length > 0 && tokens[0] != nil
+                uri = URI('https://fcm.googleapis.com/fcm/send')
+                http = Net::HTTP.new(uri.host, uri.port)
+                http.use_ssl = true
+                req = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json', 'Authorization' => 'key=AAAAe3BYdgo:APA91bF13EtVd07IZdv-9XTSATSwd-d1J1n2gKjVWpppTuz7Uj1R2hnwTCL3ioL4e7F4YVhU-iMzDI66Czu9mRT3A9sqQ-HVmb24wyda-lwEukaL7eCLjJHAvnEsi8foZ2_Bsh44wtN8'})
+
+                req.body = {:to => tokens[0].token,
+                 :notification => {:title => 'Se ha creado un equipo en tu curso', :body => course_user.user.names + ' ha creado en ' + course_user.course.name + ' el equipo: ' + @team.name},
+                  :data => {:type => 'NEW_TEAM_CREATED', :user_id => course_user.user.id, :user_name => course_user.user.names, :course_id => course_user.course.id, :course_name => course_user.course.name, :team_id => @team.id, :team_name => @team.name}}.to_json
+
+                response = http.request(req)
+                ##############################
+              end
+            end
+          end
+
           respond_to do |format|
             format.json {render json:  {course_user: course_user, status: :ok}.to_json}
           end
@@ -102,8 +125,6 @@ class TeamsController < ApplicationController
         format.json {render json: {info: "The user already have a team in this course", status: :bad_request}.to_json}
       end
     end
-
-    
   end
 
   def edit

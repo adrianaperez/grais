@@ -1,0 +1,3 @@
+class FcmTokensController < ApplicationController
+
+end

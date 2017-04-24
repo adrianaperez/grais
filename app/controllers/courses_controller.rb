@@ -101,22 +101,6 @@ class CoursesController < ApplicationController
 
   # get all the courses
   def all
-
-
-
-  ##############################
-    #Prueba: Manejo de notificaciones
-    #uri = URI('https://fcm.googleapis.com/fcm/send')
-    #http = Net::HTTP.new(uri.host, uri.port)
-    #http.use_ssl = true
-    #req = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json', 'Authorization' => 'key=AAAAe3BYdgo:APA91bF13EtVd07IZdv-9XTSATSwd-d1J1n2gKjVWpppTuz7Uj1R2hnwTCL3ioL4e7F4YVhU-iMzDI66Czu9mRT3A9sqQ-HVmb24wyda-lwEukaL7eCLjJHAvnEsi8foZ2_Bsh44wtN8'})
-    #req.body = {:to => 'dhwQI0eA_90:APA91bG0E_rRUI7u5puL_jeGH3DWwbArQv8UlCtKJlkA9FVw7OljH_i3b28gbyVIAOG5WW5S6mlhSyzAEPCuf27sCidD8XB7zY-TO0kZcguEedVILWyUIvW2akBFigawWd4IBA1pAs8R', :notification => {:title => 'Hola, soy ruby', :body => 'Ya podemos enviar notificaciones desde ruby!'}, :data => {:name => 'Adri', :lastname => 'Perez'}}.to_json
-
-    #response = http.request(req)
-    #puts 'Response:'
-    #puts response.inspect
-  ##############################
-
     list = Array.new
 
     Course.all.each do |course|
@@ -154,82 +138,32 @@ class CoursesController < ApplicationController
         format.js
       end
     else
-        respond_to do |format|
-          format.json {render json: {info: "Unprocessable entity", status: :unprocessable_entity}.to_json}
-          format.js
-        end
+      respond_to do |format|
+        format.json {render json: {info: "Unprocessable entity", status: :unprocessable_entity}.to_json}
+        format.js
+      end
     end
   end
 
   #create 1 course
   def create_course
 
-      u = User.find(params[:user_id])
-      #verificando que el usuario existe
-      if u == nil
-        respond_to do |format|
-          format.json {render json:  {info: "Not found user", status: :not_found}.to_json}
-        end
-      end
-
-      created_courses = Array.new
-      
-      for i in 0..(Integer(params[:section]) - 1)
-        c = Course.new
-        c.name = params[:name]
-        c.initials = params[:initials]
-        c.period_type = params[:period_type]
-        c.section = i+1
-        c.category = params[:category]
-        c.institute = params[:institute]
-        c.content = params[:content]
-        c.privacy = params[:privacy]
-        c.inscriptions_activated = params[:inscriptions_activated]
-        c.evaluate_teacher = params[:evaluate_teacher]
-        c.strict_mode_isa = params[:strict_mode_isa]
-        c.code_confirmed = params[:code_confirmed]
-        c.logo = "489563.png"
-        c.period_length = params[:period_length]
-        c.description = params[:description]
-
-        if c.save
-          cu = CourseUser.new(:user => u,:course => c,:rol => "CEO")
-
-          if cu.save
-            created_courses << c
-            next
-          else
-            respond_to do |format|
-              format.json {render json:  {info: "Curso-Usuario no creado", course: c, status: :unprocessable_entity}.to_json}
-            end
-          end
-        else
-          respond_to do |format|
-            format.json  {render json: {course: c, status: :unprocessable_entity}.to_json}
-          end
-        end
-      end #for
-
+    u = User.find(params[:user_id])
+    #verificando que el usuario existe
+    if u == nil
       respond_to do |format|
-
-        format.json {render json: {courses: created_courses, status: :ok}.to_json} ### revisar, se cambio el nombre a plural
+        format.json {render json:  {info: "Not found user", status: :not_found}.to_json}
       end
-   end  #action
+    end
 
-   #update 1 course
-   def update_course
-      c = Course.find(params[:id])
-
-      if c == nil
-         respond_to do |format|
-            format.json {render json: c, status: :not_found}
-         end
-      end
-
+    created_courses = Array.new
+    
+    for i in 0..(Integer(params[:section]) - 1)
+      c = Course.new
       c.name = params[:name]
       c.initials = params[:initials]
       c.period_type = params[:period_type]
-      c.section = params[:section]
+      c.section = i+1
       c.category = params[:category]
       c.institute = params[:institute]
       c.content = params[:content]
@@ -243,25 +177,74 @@ class CoursesController < ApplicationController
       c.description = params[:description]
 
       if c.save
-         respond_to do |format|
+        cu = CourseUser.new(:user => u,:course => c,:rol => "CEO")
 
-            format.json {render json: {course: c, status: :ok}.to_json}
-         end
+        if cu.save
+          created_courses << c
+          next
+        else
+          respond_to do |format|
+            format.json {render json:  {info: "Curso-Usuario no creado", course: c, status: :unprocessable_entity}.to_json}
+          end
+        end
       else
-         respond_to do |format|
-         
-            format.json  {render json: {course: c, status: :unprocessable_entity}.to_json}
-         end
+        respond_to do |format|
+          format.json  {render json: {course: c, status: :unprocessable_entity}.to_json}
+        end
       end
-   end
+    end #for
+
+    respond_to do |format|
+
+      format.json {render json: {courses: created_courses, status: :ok}.to_json} ### revisar, se cambio el nombre a plural
+    end
+  end  #action
+
+   #update 1 course
+  def update_course
+    c = Course.find(params[:id])
+
+    if c == nil
+      respond_to do |format|
+        format.json {render json: c, status: :not_found}
+      end
+    end
+
+    c.name = params[:name]
+    c.initials = params[:initials]
+    c.period_type = params[:period_type]
+    c.section = params[:section]
+    c.category = params[:category]
+    c.institute = params[:institute]
+    c.content = params[:content]
+    c.privacy = params[:privacy]
+    c.inscriptions_activated = params[:inscriptions_activated]
+    c.evaluate_teacher = params[:evaluate_teacher]
+    c.strict_mode_isa = params[:strict_mode_isa]
+    c.code_confirmed = params[:code_confirmed]
+    c.logo = "489563.png"
+    c.period_length = params[:period_length]
+    c.description = params[:description]
+
+    if c.save
+      respond_to do |format|
+
+        format.json {render json: {course: c, status: :ok}.to_json}
+      end
+    else
+      respond_to do |format|
+        format.json  {render json: {course: c, status: :unprocessable_entity}.to_json}
+      end
+    end
+  end
 
   #Obtener todos los cursos de un usuario
   def find_courses_by_user
     u = User.find(params[:id])
     if u == nil
-        respond_to do |format|
-          format.json {render json: {info: "User not found", status: :not_found}.to_json}
-        end
+      respond_to do |format|
+        format.json {render json: {info: "User not found", status: :not_found}.to_json}
+      end
     end
 
     list = Array.new
@@ -296,9 +279,9 @@ class CoursesController < ApplicationController
         format.json {render json: {courses: list, status: :ok}.to_json}
       end
     else
-        respond_to do |format|
-          format.json {render json: {info: "Unprocessable entity", status: :unprocessable_entity}.to_json}
-        end
+      respond_to do |format|
+        format.json {render json: {info: "Unprocessable entity", status: :unprocessable_entity}.to_json}
+      end
     end
   end
 
@@ -321,16 +304,17 @@ class CoursesController < ApplicationController
           course.ceo_id = auxCU.user.id 
         end
 
-        if (params[:user_id] == nil && Integer(params[:user_id]) == auxCU.user_id)
+        #Pasar el user_id para saber si es miembro o no
+        if (params[:user_id] != nil && Integer(params[:user_id]) == auxCU.user_id)
           is_member = true
         end
       end
 
       course.is_member = is_member
-
       list << course
     end
 
+    puts list.inspect
     if (list != nil)
       respond_to do |format|
         format.json {render json: {courses: list, status: :ok}.to_json}
@@ -341,6 +325,62 @@ class CoursesController < ApplicationController
       end
     end
   end
+
+  def request_course_access
+
+    user = User.find(params[:user_id])
+
+    if user == nil
+      respond_to do |format|
+        format.json {render json: {info: "User not found", status: :not_found}.to_json}
+      end
+    end
+
+    course = Course.find(params[:course_id])
+
+    if course == nil
+      respond_to do |format|
+        format.json {render json: {info: "Course not found", status: :not_found}.to_json}
+      end
+    else
+      c_u = CourseUser.where(course_id: course.id)
+      c_u.each do |cu|
+        if cu.rol == "CEO"
+          course.ceo = cu.user.names
+          course.ceo_id = cu.user.id
+        end
+      end
+
+      ##############################
+      tokens = FcmToken.where(:user_id => course.ceo_id)
+
+      if tokens.length > 0 && tokens[0] != nil
+        #Prueba: Manejo de notificaciones
+        uri = URI('https://fcm.googleapis.com/fcm/send')
+        http = Net::HTTP.new(uri.host, uri.port)
+        http.use_ssl = true
+        req = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json', 'Authorization' => 'key=AAAAe3BYdgo:APA91bF13EtVd07IZdv-9XTSATSwd-d1J1n2gKjVWpppTuz7Uj1R2hnwTCL3ioL4e7F4YVhU-iMzDI66Czu9mRT3A9sqQ-HVmb24wyda-lwEukaL7eCLjJHAvnEsi8foZ2_Bsh44wtN8'})
+        # AVD: csl75XXovhw:APA91bFrxbFQqHx2E7O_bfP9fbwwTdtrVbFcdGHDGQ1PILQ8IysP4CyW5-krQoOo4dNb3eMpvxvscrRAL1axZ7h6t6k17BMbIs65aj1deBlQWbc3doftupO1FDzwafh028xodkmLV8E-
+        # phone: fzMWjdyf0js:APA91bGL7_fX6tauaBlv2GelJEwOPTZdf9mzwNcSgGNn_73JocPGTGuqXTelk4gsRL-yf-ro9YrCzRVAY_0L2kEZzt7xF3Lx3spYLg-uiMBXDio97NgScpstU6Na52sBAcq4qDoykb4d
+
+        req.body = {:to => tokens[0].token,
+         :notification => {:title => 'Nueva solicitud de ingreso a tu curso', :body => user.names + ' ha solicitado unirse a tu curso: ' + course.name},
+          :data => {:type => 'NEW_COURSE_MEMBER', :user_id => user.id, :user_name => user.names, :course_id => course.id, :course_name => course.name}}.to_json
+
+        response = http.request(req)
+        ##############################
+
+        respond_to do |format|
+          format.json {render json: {info: "Request sended", status: :ok}.to_json}
+        end
+      else
+        respond_to do |format|
+          format.json {render json: {info: "There is no device for this user", status: :unprocessable_entity}.to_json}
+        end
+      end
+    end
+  end
+
   #Agregar miembros a un curso
   def add_member_to_course
     user = User.find(params[:user_id])
@@ -373,7 +413,7 @@ class CoursesController < ApplicationController
 
       if course_user.save
         respond_to do |format|
-          format.json {render json:  {course_user: course_user, status: :ok}.to_json}
+          format.json {render json:  {info: "User added to the course", course_user: course_user, status: :ok}.to_json}
         end
       else
         respond_to do |format|
@@ -394,7 +434,6 @@ class CoursesController < ApplicationController
     end
 
     course_users = CourseUser.where(:course => course)
-
 
     course_users.each do |cu| #Pasando campos necesarios para armar la lista de los miembros
       cu.names_user = cu.user.names

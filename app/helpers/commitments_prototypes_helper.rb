@@ -1,0 +1,2 @@
+module CommitmentsPrototypesHelper
+end
