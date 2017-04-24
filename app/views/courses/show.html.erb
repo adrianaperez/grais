@@ -13,8 +13,8 @@
   <ul class="tabs">
     <li class="tab hide-on-med-and-up"><a href="#information" style="outline: none;">información</a></li>
     <li class="tab"><a class="active" href="#teams" style="outline: none;">equipos</a></li>
-    <li class="tab"><a href="#members" style="outline: none;">miembros</a></li>
-    <li class="tab"><a href="#products" style="outline: none;">productos</a></li>
+    <li class="tab"><a id="get_course_members" href="#course_members" style="outline: none;">miembros</a></li>
+    <li class="tab"><a id="get_course_products" href="#course_products" style="outline: none;">productos</a></li>
     <li class="tab"><a href="#conversations" style="outline: none;">muro</a></li>
   </ul>      
 <% end %>
@@ -61,39 +61,16 @@
   <% end %>
 </div>
 
-<div id="members">
+<div id="course_members">
   <h4>Miembros del curso</h4>
   <ul class="collection">
-    <li class="collection-item avatar">
-      <%= image_tag "Neuschwanstein.jpg", class: "circle" %>
-      <span class="title">Name user</span>
-      <p>Name Team</p>
-      <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-    </li>
-    <li class="collection-item avatar">
-      <%= image_tag "user_boy.svg", class: "circle" %>
-      <span class="title">Name user</span>
-      <p>Name Team</p>
-      <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-    </li>
-    <li class="collection-item avatar">
-      <%= image_tag "user3.jpeg", class: "circle" %>
-      <span class="title">Name user</span>
-      <p>Name Team</p>
-      <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-    </li>
-    <li class="collection-item avatar">
-      <%= image_tag "user1.jpeg", class: "circle" %>
-      <span class="title">Name user</span>
-      <p>Name Team</p>
-      <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-    </li>
   </ul>
 </div>
 
-<div id="products">
+<div id="course_products">
   <h4>Productos del curso</h4>
-  
+  <ul class="collection"> 
+  </ul>
 </div>
 
 <div id="conversations">

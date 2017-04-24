@@ -7,7 +7,7 @@ document.addEventListener("turbolinks:load", function() {
     get_team_products(); 
   }
 
-  //Obtener productos del equipo
+  //Obtener los miembros del equipo
   $('#get_team_members').click(function(){
     $("#team_members .collection").empty();
     get_team_members();

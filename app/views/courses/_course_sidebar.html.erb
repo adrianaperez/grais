@@ -9,7 +9,17 @@
       <% end %>
     <% else %>
       <% if !is_member? current_user.id, @course.id %>
-        <a class="btn-floating blue" style="position: absolute; top: -20px; right: 5px;"><i class="material-icons">done</i></a>
+
+        <form accept-charset="UTF-8" action="<%= add_member_to_course_courses_path %>" method="post" id="add_member_to_course" >
+          <input name="utf8" type="hidden" value="&#x2713;" />
+          <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>" />
+          <%= hidden_field_tag :user_id, current_user.id %>
+          <%= hidden_field_tag :course_id, @course.id %>
+          <%= button_tag(name: "add_member", :class => "btn-floating blue", :style=>"position: absolute; top: -20px; right: 5px;") do %>
+            <i class="material-icons">done</i>
+          <% end %>
+        </form>
+
       <% end %>
     <%end%>
     <div style="margin-bottom: : 10px;">

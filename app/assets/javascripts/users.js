@@ -26,7 +26,7 @@ function changePassword() {
       success:function(data){
   
         if (data.status=="unprocessable_entity" || data.status=="unauthorized") {
-          console.log("Error al cambiar la contraseña");;
+          console.log("Error al cambiar la contraseña");
         } else {
           $('#modal_change_password').modal_success();
         }

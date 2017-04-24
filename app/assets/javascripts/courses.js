@@ -1,13 +1,6 @@
 document.addEventListener("turbolinks:load", function() {
 
-  //////////////////////////////////////////////////
-  //Inicializar elementos del framework Materialize
-
-  $(".button-collapse").sideNav();
-  $(".sidebarr").sideNav();
-  $('.parallax').parallax();
-  $('.modal').modal();
-  $('select').material_select();
+  
 
   /////////////////////////////////////////////////
   //Sticky Header para mobile
@@ -26,7 +19,24 @@ document.addEventListener("turbolinks:load", function() {
     getAllCourses();
   });  
 
+  //Obtener los miembros del curso
+  $('#get_course_members').click(function(){
+    $("#course_members .collection").empty();
+    getCourseMembers();
+  });
+
+  //Obtener los productos del curso
+  $('#get_course_products').click(function(){
+    $("#course_products .collection").empty();
+    getCourseProducts();
+  });
+
+  //Agregar miembros al curso
+  addMemberToCourse();
+
 });
+
+
 
 ///////////////////////////////////////////////
 //Sticky Header
@@ -139,6 +149,113 @@ function getCourseTeams(){
 
       console.log("ocurrio un error");
     }
+  });
+}
+
+/////////////////////////////////////////////
+// Obtener los miembros de un curso
+
+function getCourseMembers (){
+
+  var course_id = $('div#course_id').attr('data-id');
+
+  $.ajax({
+
+    url: '/courses/find_members_by_course',
+    type: 'POST',
+    dataType: 'json',
+    data:{id: course_id},
+
+    success:function(data){
+
+      $.each( data , function( index, item ) {
+         $.each(item, function(key, value){
+          $('div#course_members .collection').append(
+            '<li class="collection-item avatar">' +
+                '<img src="/assets/user_boy.svg" alt="user_boy" class= "circle">' +
+                '<span class="title">'+ value.names_user +'</span>' +
+            '</li>'
+            );
+         });
+      });
+    },
+
+    error: function(data){
+
+      console.log("ocurrio un error");
+    }
+  });
+}
+
+////////////////////////////////////
+//Obtener los productos de un curso
+
+function getCourseProducts (){
+
+  var course_id = $('div#course_id').attr('data-id');
+
+  $.ajax({
+
+    url: '/products/find_products_by_course',
+    type: 'POST',
+    dataType: 'json',
+    data:{id:course_id},
+
+    success:function(data){
+      
+      $.each( data , function( index, item ) {
+         $.each(item, function(key, value){
+          $('div#course_products .collection').append(
+            '<a href="/products/' + value.id + '">' +
+              '<li class="collection-item avatar">' +
+                  '<img src="/assets/typewriter-01.svg" alt="user_boy" class= "circle">' +
+                  '<span class="title">'+ value.name +'</span>' +
+              '</li>'+
+            '</a>'
+            );
+         });
+      });
+    },
+
+    error: function(data){
+
+      console.log("ocurrio un error");
+    }
+  });
+}
+
+///////////////////////////
+//Agregar miembros al curso
+
+function addMemberToCourse() {
+
+  $('form[id=add_member_to_course]').submit(function(event) {  
+    event.preventDefault();
+    var valuesToSubmit = $(this).serialize();
+    
+    console.log(valuesToSubmit);
+    console.log($(this).attr('action'));
+
+    $.ajax({
+
+      url: $(this).attr('action'),
+      type: 'POST',
+      dataType: 'json',
+      data: valuesToSubmit,
+
+      success:function(data){
+  
+        if (data.status=="unprocessable_entity" || data.status=="not_found") {
+          console.log("No se pudo inscribir");
+        } else {
+          console.log("Inscripción exitosa");
+        }
+      },
+      error: function(xhr){
+
+        console.log("Error al cambiar la contraseña");
+      }
+    });
   });
 }
 
