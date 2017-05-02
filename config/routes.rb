@@ -98,6 +98,10 @@ Rails.application.routes.draw do
     collection do
       post :update_team
     end
+    collection do
+      post :request_team_access
+    end
+    
   end
 
   resources :products, :defaults => { :format => 'json' }, :except => [ :create,:update, :destroy, :edit, :index, :show, :new] do

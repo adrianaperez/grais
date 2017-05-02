@@ -115,7 +115,7 @@ class CoursesController < ApplicationController
       # Buscar el registro del CEO en la lista de registros en CourseUSer donde aparece dicho curso (miembros)
       auxList.each do |auxCU|  
         if auxCU.rol == "CEO" # Es decir donde el rol es CEO
-          course.ceo = auxCU.user.names
+          course.ceo = auxCU.user.names + " " + auxCU.user.lastnames
           course.ceo_id = auxCU.user.id
         end
 
@@ -196,7 +196,7 @@ class CoursesController < ApplicationController
 
     respond_to do |format|
 
-      format.json {render json: {courses: created_courses, status: :ok}.to_json} ### revisar, se cambio el nombre a plural
+      format.json {render json: {course: created_courses, status: :ok}.to_json} ### revisar, se cambio el nombre a plural
     end
   end  #action
 
@@ -258,12 +258,12 @@ class CoursesController < ApplicationController
 
       # Encontrar el CEO del curso en el cual aparece el usuario
       if cu.rol == "CEO"  #Dado que estos registros de CourseUser son de el usuario actual, si el rol es CEO implica que u es el CEO
-        course.ceo = u.names
+        course.ceo = u.names + " " + u.lastnames
         course.ceo_id = u.id
       else  # Buscar el registro del CEO en la lista de registros en CourseUSer donde aparece dicho curso (miembros)
         auxList.each do |auxCU|  
           if auxCU.rol == "CEO" # Es decir donde el rol es CEO
-            course.ceo = auxCU.user.names
+            course.ceo = auxCU.user.names + " " + auxCU.user.lastnames
             course.ceo_id = auxCU.user.id
           end
         end
@@ -300,7 +300,7 @@ class CoursesController < ApplicationController
       # Buscar el registro del CEO en la lista de registros en CourseUSer donde aparece dicho curso (miembros)
       auxList.each do |auxCU|
         if auxCU.rol == "CEO"
-          course.ceo = auxCU.user.names
+          course.ceo = auxCU.user.names + " " + auxCU.user.lastnames
           course.ceo_id = auxCU.user.id 
         end
 
@@ -346,7 +346,7 @@ class CoursesController < ApplicationController
       c_u = CourseUser.where(course_id: course.id)
       c_u.each do |cu|
         if cu.rol == "CEO"
-          course.ceo = cu.user.names
+          course.ceo = cu.user.names + " " + cu.user.lastnames
           course.ceo_id = cu.user.id
         end
       end
@@ -355,6 +355,10 @@ class CoursesController < ApplicationController
       tokens = FcmToken.where(:user_id => course.ceo_id)
 
       if tokens.length > 0 && tokens[0] != nil
+        respond_to do |format|
+          format.json {render json: {info: "Request sended", status: :ok}.to_json}
+        end
+        
         #Prueba: Manejo de notificaciones
         uri = URI('https://fcm.googleapis.com/fcm/send')
         http = Net::HTTP.new(uri.host, uri.port)
@@ -370,9 +374,6 @@ class CoursesController < ApplicationController
         response = http.request(req)
         ##############################
 
-        respond_to do |format|
-          format.json {render json: {info: "Request sended", status: :ok}.to_json}
-        end
       else
         respond_to do |format|
           format.json {render json: {info: "There is no device for this user", status: :unprocessable_entity}.to_json}
@@ -414,6 +415,26 @@ class CoursesController < ApplicationController
       if course_user.save
         respond_to do |format|
           format.json {render json:  {info: "User added to the course", course_user: course_user, status: :ok}.to_json}
+        end
+
+        ##############################
+        tokens = FcmToken.where(:user_id => user.id)
+
+        if tokens.length > 0 && tokens[0] != nil
+          #Prueba: Manejo de notificaciones
+          uri = URI('https://fcm.googleapis.com/fcm/send')
+          http = Net::HTTP.new(uri.host, uri.port)
+          http.use_ssl = true
+          req = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json', 'Authorization' => 'key=AAAAe3BYdgo:APA91bF13EtVd07IZdv-9XTSATSwd-d1J1n2gKjVWpppTuz7Uj1R2hnwTCL3ioL4e7F4YVhU-iMzDI66Czu9mRT3A9sqQ-HVmb24wyda-lwEukaL7eCLjJHAvnEsi8foZ2_Bsh44wtN8'})
+          # AVD: csl75XXovhw:APA91bFrxbFQqHx2E7O_bfP9fbwwTdtrVbFcdGHDGQ1PILQ8IysP4CyW5-krQoOo4dNb3eMpvxvscrRAL1axZ7h6t6k17BMbIs65aj1deBlQWbc3doftupO1FDzwafh028xodkmLV8E-
+          # phone: fzMWjdyf0js:APA91bGL7_fX6tauaBlv2GelJEwOPTZdf9mzwNcSgGNn_73JocPGTGuqXTelk4gsRL-yf-ro9YrCzRVAY_0L2kEZzt7xF3Lx3spYLg-uiMBXDio97NgScpstU6Na52sBAcq4qDoykb4d
+
+          req.body = {:to => tokens[0].token,
+           :notification => {:title => 'Tu solicitud de acceso ha sido aprobada!', :body => 'Has sido aceptada tu solicitud, ya eres parte del curso: ' + course.name},
+            :data => {:type => 'ACCEPTED_IN_COURSE', :user_id => user.id, :user_name => user.names, :course_id => course.id, :course_name => course.name}}.to_json
+
+          response = http.request(req)
+          ##############################
         end
       else
         respond_to do |format|

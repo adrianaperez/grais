@@ -162,6 +162,62 @@ class TeamsController < ApplicationController
     end
   end
 
+
+  def request_team_access
+
+    user = User.find(params[:user_id])
+
+    if user == nil
+      respond_to do |format|
+        format.json {render json: {info: "User not found", status: :not_found}.to_json}
+      end
+    end
+
+    team = Team.find(params[:team_id])
+
+    if team == nil
+      respond_to do |format|
+        format.json {render json: {info: "Team not found", status: :not_found}.to_json}
+      end
+    else
+      leader_id = 0
+      c_u = CourseUser.where(team_id: team.id)
+      c_u.each do |cu|
+        if cu.rol == "LEADER"
+          leader_id = cu.user.id
+        end
+      end
+
+      ##############################
+      tokens = FcmToken.where(:user_id => leader_id)
+
+      if tokens.length > 0 && tokens[0] != nil
+        #Prueba: Manejo de notificaciones
+        uri = URI('https://fcm.googleapis.com/fcm/send')
+        http = Net::HTTP.new(uri.host, uri.port)
+        http.use_ssl = true
+        req = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json', 'Authorization' => 'key=AAAAe3BYdgo:APA91bF13EtVd07IZdv-9XTSATSwd-d1J1n2gKjVWpppTuz7Uj1R2hnwTCL3ioL4e7F4YVhU-iMzDI66Czu9mRT3A9sqQ-HVmb24wyda-lwEukaL7eCLjJHAvnEsi8foZ2_Bsh44wtN8'})
+        # AVD: csl75XXovhw:APA91bFrxbFQqHx2E7O_bfP9fbwwTdtrVbFcdGHDGQ1PILQ8IysP4CyW5-krQoOo4dNb3eMpvxvscrRAL1axZ7h6t6k17BMbIs65aj1deBlQWbc3doftupO1FDzwafh028xodkmLV8E-
+        # phone: fzMWjdyf0js:APA91bGL7_fX6tauaBlv2GelJEwOPTZdf9mzwNcSgGNn_73JocPGTGuqXTelk4gsRL-yf-ro9YrCzRVAY_0L2kEZzt7xF3Lx3spYLg-uiMBXDio97NgScpstU6Na52sBAcq4qDoykb4d
+
+        req.body = {:to => tokens[0].token,
+         :notification => {:title => 'Nueva solicitud de ingreso a tu equipo', :body => user.names + ' ha solicitado unirse a tu equipo: ' + team.name},
+          :data => {:type => 'NEW_TEAM_MEMBER', :user_id => user.id, :user_name => user.names, :course_id => team.course.id, :team_id => team.id, :team_name => team.name}}.to_json
+
+        response = http.request(req)
+        ##############################
+
+        respond_to do |format|
+          format.json {render json: {info: "Request sended", status: :ok}.to_json}
+        end
+      else
+        respond_to do |format|
+          format.json {render json: {info: "There is no device for this user", status: :unprocessable_entity}.to_json}
+        end
+      end
+    end
+  end
+
   def add_member_to_team
     #Necesito id del equipo y id del usuario
     user = User.find(params[:user_id])
@@ -205,6 +261,26 @@ class TeamsController < ApplicationController
               format.html{redirect_to team_path, notice: "Success"}
               format.json {render json: {course_user: course_user, status: :ok}.to_json}
               format.js
+            end
+
+            ##############################
+            tokens = FcmToken.where(:user_id => user.id)
+
+            if tokens.length > 0 && tokens[0] != nil
+              #Prueba: Manejo de notificaciones
+              uri = URI('https://fcm.googleapis.com/fcm/send')
+              http = Net::HTTP.new(uri.host, uri.port)
+              http.use_ssl = true
+              req = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json', 'Authorization' => 'key=AAAAe3BYdgo:APA91bF13EtVd07IZdv-9XTSATSwd-d1J1n2gKjVWpppTuz7Uj1R2hnwTCL3ioL4e7F4YVhU-iMzDI66Czu9mRT3A9sqQ-HVmb24wyda-lwEukaL7eCLjJHAvnEsi8foZ2_Bsh44wtN8'})
+              # AVD: csl75XXovhw:APA91bFrxbFQqHx2E7O_bfP9fbwwTdtrVbFcdGHDGQ1PILQ8IysP4CyW5-krQoOo4dNb3eMpvxvscrRAL1axZ7h6t6k17BMbIs65aj1deBlQWbc3doftupO1FDzwafh028xodkmLV8E-
+              # phone: fzMWjdyf0js:APA91bGL7_fX6tauaBlv2GelJEwOPTZdf9mzwNcSgGNn_73JocPGTGuqXTelk4gsRL-yf-ro9YrCzRVAY_0L2kEZzt7xF3Lx3spYLg-uiMBXDio97NgScpstU6Na52sBAcq4qDoykb4d
+
+              req.body = {:to => tokens[0].token,
+               :notification => {:title => 'Tu solicitud de acceso ha sido aprobada!', :body => 'Has sido aceptada tu solicitud, ya eres parte del equipo: ' + team.name},
+                :data => {:type => 'ACCEPTED_IN_TEAM', :user_id => user.id, :user_name => user.names, :team_id => team.id, :team_name => team.name}}.to_json
+
+              response = http.request(req)
+              ##############################
             end
           else  # CourseUser no actualizado, no se pudo asociar el usuario al curso
             respond_to do |format|
@@ -298,7 +374,7 @@ class TeamsController < ApplicationController
         if aux_list.any?
           aux_list.each do |auxCU|  
             if auxCU.rol == "LEADER" # Es decir donde el rol es lider
-              team.leader = auxCU.user.names
+              team.leader = auxCU.user.names + " " + auxCU.user.lastnames
               team.leader_id = auxCU.user.id
             end
           end
@@ -366,7 +442,7 @@ class TeamsController < ApplicationController
         if aux_list.any?
           aux_list.each do |auxCU|  
             if auxCU.rol == "LEADER" # Es decir donde el rol es lider
-              team.leader = auxCU.user.names
+              team.leader = auxCU.user.names + " " + auxCU.user.lastnames
               team.leader_id = auxCU.user.id
             end
           end
