@@ -404,7 +404,7 @@ class CoursesController < ApplicationController
 
     if course_user.any?
         respond_to do |format|
-          format.json {render json: {info: "The user is already a member", status: :unprocessable_entity}.to_json}
+          format.json {render json: {info: "The user is already a member", status: :bad_request}.to_json}
         end
     else
       course_user = CourseUser.new

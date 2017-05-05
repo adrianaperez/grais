@@ -37,24 +37,29 @@ class ProductsController < ApplicationController
     product = Product.new();
     product.name = params[:name]
     product.description = params[:description]
-    product.logo = params[:logo]
+    product.logo = params[:logo]  #extension
     product.team_id = params[:team_id]
     product.initials = params[:initials]
 
     respond_to do |format|
       if product.save
 
-        ########### Test for images
-        #if(params[:logo_file])
-        #  FileUtils.mkdir_p PRODUCT_LOGOS
-        #  path = File.join PRODUCT_LOGOS, product.logo 
-        #  File.open(path, 'wb') do |f|
-        #    f.write(params[:logo_file].read)
-        #  end
+        ########## Images
+        # validar si el archivo para la imagen fue cargado al post
+        if(params[:logo_file])
+          # creamos si no existe la carpeta product_logos, definida al principio de este archivo
+          FileUtils.mkdir_p PRODUCT_LOGOS
+          
+          # Creamos el path del archivo concatenando carpeta mas nombre del archivo 
+          path = File.join PRODUCT_LOGOS, product.id.inspect + "." + params[:logo]
 
-        #  params[:logo_file] = nil
-        #end
+          # Creamos el archivo y le copiamos el archivo pasado en el post 
+          File.open(path, 'wb') do |f|
+            f.write(params[:logo_file].read)
+          end
 
+          params[:logo_file] = nil
+        end
         ###########
 
         ceo_id = 0; 
@@ -121,7 +126,7 @@ class ProductsController < ApplicationController
         end
       else  # error con product.save
           format.html { render "new", error: "The product was not created" }
-          format.json {render json: {product: product,  status: :unprocessable_entity}.to_json }
+          format.json {render json: {product: product,  status: :bad_request}.to_json }
           format.js
       end
     end
@@ -135,12 +140,31 @@ class ProductsController < ApplicationController
     product = Product.find(params[:id])
     product.name = params[:name]
     product.description = params[:description]
-    product.logo = params[:logo]
+    product.logo = params[:logo] # extension
     product.initials = params[:initials]
     #product.team_id = params[:team_id]
 
     respond_to do |format|
       if product.save
+
+        ########## Images
+        # validar si el archivo para la imagen fue cargado al post
+        if(params[:logo_file])
+          # creamos si no existe la carpeta product_logos, definida al principio de este archivo
+          FileUtils.mkdir_p PRODUCT_LOGOS
+          
+          # Creamos el path del archivo concatenando carpeta mas nombre del archivo 
+          path = File.join PRODUCT_LOGOS, product.id.inspect + "." + params[:logo]
+
+          # Creamos el archivo y le copiamos el archivo pasado en el post 
+          File.open(path, 'wb') do |f|
+            f.write(params[:logo_file].read)
+          end
+
+          params[:logo_file] = nil
+        end
+        ###########
+
         # Obtener user del ceo para enviarle la notificacion
         ceo_id = 0;
         auxList = CourseUser.where(:course => product.team.course)
@@ -291,6 +315,10 @@ class ProductsController < ApplicationController
     @products_list = Array.new
     if products.any?
       products.each do |pd|
+        path = "http://localhost:3000/products_logos/#{pd.id}.#{pd.logo}"
+        image = open(path) { |io| io.read }
+        pd.logo_img = Base64.encode64(image)
+
         @products_list << pd
       end
     end
