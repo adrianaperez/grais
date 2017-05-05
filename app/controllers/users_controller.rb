@@ -77,11 +77,12 @@ class UsersController < ApplicationController
 
     if u != nil
       respond_to do |format|
-        format.json {render json: u, status: :ok}
+        format.json {render json: {user: u, status: :ok}.to_json}
       end
     else
       respond_to do |format|
-        format.json {render json: u, status: :not_found}
+        format.json {render json: {user: u, status: :not_found}.to_json}
+
       end
     end
   end

@@ -2,6 +2,8 @@ class ProductsController < ApplicationController
 
   layout "main"
 
+  PRODUCT_LOGOS = File.join Rails.root, 'public', 'products_logos'
+
   def index
     @products = Product.all
   end
@@ -77,31 +79,58 @@ class ProductsController < ApplicationController
     product = Product.new();
     product.name = params[:name]
     product.description = params[:description]
-    product.logo = params[:logo]
+    product.logo = params[:logo]  #extension
     product.team_id = params[:team_id]
     product.initials = params[:initials]
 
     respond_to do |format|
       if product.save
-        # Obtener user del lider
+
+        ########## Images
+        # validar si el archivo para la imagen fue cargado al post
+        if(params[:logo_file])
+          # creamos si no existe la carpeta product_logos, definida al principio de este archivo
+          FileUtils.mkdir_p PRODUCT_LOGOS
+          
+          # Creamos el path del archivo concatenando carpeta mas nombre del archivo 
+          path = File.join PRODUCT_LOGOS, product.id.inspect + "." + params[:logo]
+
+          # Creamos el archivo y le copiamos el archivo pasado en el post 
+          File.open(path, 'wb') do |f|
+            f.write(params[:logo_file].read)
+          end
+
+          params[:logo_file] = nil
+        end
+        ###########
+
+        ceo_id = 0; 
+        # Obtener user del ceo para enviarle la notificacion
+        auxList = CourseUser.where(:course => product.team.course)
+        auxList.each do |auxCU|  
+          if auxCU.rol == "CEO" # Es decir donde el rol es CEO
+            ceo_id = auxCU.user.id
+          end
+        end
+
         currUser = User.find(params[:user_id])
 
         ###############################
-        #tokens = FcmToken.where(:user_id => currUser.id)
-#
-#        #if tokens.length > 0 && tokens[0] != nil
-#        #  uri = URI('https://fcm.googleapis.com/fcm/send')
-#        #  http = Net::HTTP.new(uri.host, uri.port)
-#        #  http.use_ssl = true
-#        #  req = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json', 'Authorization' => 'key=AAAAe3BYdgo:APA91bF13EtVd07IZdv-9XTSATSwd-d1J1n2gKjVWpppTuz7Uj1R2hnwTCL3ioL4e7F4YVhU-iMzDI66Czu9mRT3A9sqQ-HVmb24wyda-lwEukaL7eCLjJHAvnEsi8foZ2_Bsh44wtN8'})
-#
-#        #  req.body = {:to => tokens[0].token,
-#        #   :notification => {:title => 'Han creado un producto en uno de tus equipos', :body => currUser.names + ' ha creado un producto en el equipo ' + product.team.name + ' del curso ' + product.team.course.name},
-#        #    :data => {:type => 'NEW_PRODUCT', :user_id => currUser.id, :user_name => currUser.names, :course_id => team.course.id, :course_name => product.team.course.name, :team_id => product.team.id, :team_name => product.team.name}}.to_json
-#
-#        #  response = http.request(req)
-#        #  ##############################
-        #end
+        tokens = FcmToken.where(:user_id => ceo_id)
+ 
+        if tokens.length > 0 && tokens[0] != nil
+          uri = URI('https://fcm.googleapis.com/fcm/send')
+          http = Net::HTTP.new(uri.host, uri.port)
+          http.use_ssl = true
+          req = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json', 'Authorization' => 'key=AAAAe3BYdgo:APA91bF13EtVd07IZdv-9XTSATSwd-d1J1n2gKjVWpppTuz7Uj1R2hnwTCL3ioL4e7F4YVhU-iMzDI66Czu9mRT3A9sqQ-HVmb24wyda-lwEukaL7eCLjJHAvnEsi8foZ2_Bsh44wtN8'})
+ 
+          req.body = {:to => tokens[0].token,
+           :notification => {:title => 'Han creado un producto en uno de tus equipos', :body => currUser.names + ' ha creado un producto en el equipo ' + product.team.name + ' del curso ' + product.team.course.name},
+            :data => {:type => 'NEW_PRODUCT', :user_id => currUser.id, :user_name => currUser.names, :course_id => product.team.course.id, :course_name => product.team.course.name, :team_id => product.team.id, :team_name => product.team.name, :product_id => product.id}}.to_json
+ 
+          response = http.request(req)
+          ##############################
+        end
 
         # Verofocar si el producto esta basado en un prototipo
         if params[:use_prototype] != nil && params[:use_prototype] == 'true'
@@ -139,7 +168,7 @@ class ProductsController < ApplicationController
         end
       else  # error con product.save
           format.html { render "new", error: "The product was not created" }
-          format.json {render json: {product: product,  status: :unprocessable_entity}.to_json }
+          format.json {render json: {product: product,  status: :bad_request}.to_json }
           format.js
       end
     end
@@ -153,16 +182,44 @@ class ProductsController < ApplicationController
     product = Product.find(params[:id])
     product.name = params[:name]
     product.description = params[:description]
-    product.logo = params[:logo]
+    product.logo = params[:logo] # extension
     product.initials = params[:initials]
     #product.team_id = params[:team_id]
 
     respond_to do |format|
       if product.save
+
+        ########## Images
+        # validar si el archivo para la imagen fue cargado al post
+        if(params[:logo_file])
+          # creamos si no existe la carpeta product_logos, definida al principio de este archivo
+          FileUtils.mkdir_p PRODUCT_LOGOS
+          
+          # Creamos el path del archivo concatenando carpeta mas nombre del archivo 
+          path = File.join PRODUCT_LOGOS, product.id.inspect + "." + params[:logo]
+
+          # Creamos el archivo y le copiamos el archivo pasado en el post 
+          File.open(path, 'wb') do |f|
+            f.write(params[:logo_file].read)
+          end
+
+          params[:logo_file] = nil
+        end
+        ###########
+
+        # Obtener user del ceo para enviarle la notificacion
+        ceo_id = 0;
+        auxList = CourseUser.where(:course => product.team.course)
+        auxList.each do |auxCU|  
+          if auxCU.rol == "CEO" # Es decir donde el rol es CEO
+            ceo_id = auxCU.user.id
+          end
+        end
+
         currUser = User.find(params[:user_id])
 
         ##############################
-        tokens = FcmToken.where(:user_id => currUser.id)
+        tokens = FcmToken.where(:user_id => ceo_id)
 
         if tokens.length > 0 && tokens[0] != nil
           uri = URI('https://fcm.googleapis.com/fcm/send')
@@ -171,8 +228,8 @@ class ProductsController < ApplicationController
           req = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json', 'Authorization' => 'key=AAAAe3BYdgo:APA91bF13EtVd07IZdv-9XTSATSwd-d1J1n2gKjVWpppTuz7Uj1R2hnwTCL3ioL4e7F4YVhU-iMzDI66Czu9mRT3A9sqQ-HVmb24wyda-lwEukaL7eCLjJHAvnEsi8foZ2_Bsh44wtN8'})
 
           req.body = {:to => tokens[0].token,
-           :notification => {:title => 'Han creado un producto en uno de tus equipos', :body => currUser.names + ' ha creado un producto en el equipo ' + product.team.name + ' del curso ' + product.team.course.name},
-            :data => {:type => 'PRODUCT_UPDATE', :user_id => currUser.id, :user_name => currUser.names, :course_id => team.course.id, :course_name => product.team.course.name, :team_id => product.team.id, :team_name => product.team.name}}.to_json
+           :notification => {:title => 'Han editado un producto en uno de tus equipos', :body => currUser.names + ' ha editado un producto en el equipo ' + product.team.name + ' del curso ' + product.team.course.name},
+            :data => {:type => 'PRODUCT_UPDATE', :user_id => currUser.id, :user_name => currUser.names, :course_id => product.team.course.id, :course_name => product.team.course.name, :team_id => product.team.id, :team_name => product.team.name, :product_id => product.id}}.to_json
 
           response = http.request(req)
           ##############################
@@ -301,6 +358,10 @@ class ProductsController < ApplicationController
     @products_list = Array.new
     if products.any?
       products.each do |pd|
+        path = "http://localhost:3000/products_logos/#{pd.id}.#{pd.logo}"
+        image = open(path) { |io| io.read }
+        pd.logo_img = Base64.encode64(image)
+
         @products_list << pd
       end
     end

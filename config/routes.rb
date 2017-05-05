@@ -103,6 +103,10 @@ Rails.application.routes.draw do
     collection do
       post :update_team
     end
+    collection do
+      post :request_team_access
+    end
+    
   end
 
   resources :products, :defaults => { :format => 'json' }, :except => [ :create,:update, :destroy, :edit, :index, :show, :new] do
@@ -188,6 +192,38 @@ Rails.application.routes.draw do
     end
     collection do
       post :find_by_prototype
+    end
+  end
+
+  #exeptuar aquellas acciones que no son para la app 
+  resources :tasks_abstracts, :defaults => { :format => 'json' }, :except => [:create, :update] do
+    collection do
+      post :create_task_abstract
+    end
+    collection do
+      post :update_task_abstract
+    end
+    collection do
+      post :find_by_user
+    end
+    collection do
+      post :find_by_task
+    end
+  end
+
+  #exeptuar aquellas acciones que no son para la app 
+  resources :commitment_abstracts, :defaults => { :format => 'json' }, :except => [:create, :update] do
+    collection do
+      post :create_commitment_abstract
+    end
+    collection do
+      post :update_commitment_abstract
+    end
+    collection do
+      post :find_by_product
+    end
+    collection do
+      post :find_by_commitment
     end
   end
 end

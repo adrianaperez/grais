@@ -80,6 +80,17 @@ class TasksController < ApplicationController
     	end
     else
       if task.save
+
+        ceo_id = 0;
+
+        c_u = CourseUser.where(course_id: task.commitment.product.team.course.id)
+        c_u.each do |cu|
+          puts 
+          if cu.rol == "CEO"
+            ceo_id = cu.user_id
+          end
+        end
+
 	 			#Notificar al usuario al que le fue asignada la tarea 
       	##############################
       	tokens = FcmToken.where(:user_id => task.user.id)

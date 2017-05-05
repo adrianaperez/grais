@@ -8,7 +8,7 @@ class FcmTokensController < ApplicationController
       token_fcm.first.token = params[:fcm_token]
 
       respond_to do |format|
-        if token_fcm.save
+        if token_fcm.first.save
           format.json {render json: {info: "ok", status: :not_found}.to_json}
         else
           format.json {render json: {info: "not", status: :unprocessable_entity}.to_json}
