@@ -1,4 +1,67 @@
 class TasksController < ApplicationController
+
+  def index
+    @tasks = Task.all
+  end
+
+  def show
+    @task = Task.find(params[:id])
+  end
+
+  def new
+    @task = Task.new
+  end
+
+  def create
+    @task = Task.new(task_params);
+    respond_to do |format|
+      if @task.save
+        #format.html{redirect_to commitment_prototypes_path , notice: "Commitment was created successfully"}
+        format.json {render json: {task: @task, status: :ok}.to_json}
+        format.js
+      else
+        #format.html { render "new", error: "The commitment was not created" }
+        format.json {render json: {task: @task,  status: :unprocessable_entity}.to_json }
+        format.js
+      end
+    end
+  end
+
+  def edit
+    @task = Task.find(params[:id])
+  end
+
+  def update
+    @task = Task.find(params[:id])
+    
+    respond_to do |format|
+      if @task.update_attributes(task_params)
+        format.html{redirect_to task_path, notice: "Task was successfully updated"}
+        format.json {render json: {task: @task, status: :ok}.to_json}
+        format.js
+      else
+        format.html { render "edit", error: "Failed to edit task"}
+        format.json {render json: {task: @task, status: :unprocessable_entity}.to_json}
+        format.js
+      end
+    end
+  end
+
+  def destroy
+    @task = Task.find(params[:id])
+    respond_to do |format|
+      if @task.destroy
+        format.html{redirect_to task_path, notice: "Task delete"}
+        format.json {render json: {task: @task, status: :ok}.to_json}
+        format.js
+      else
+        format.html { render "edit", error: "Failed to delete this task"}
+        format.json {render json: {task: @task, status: :unprocessable_entity}.to_json}
+        format.js
+      end
+    end
+  end
+
 	def create_task
 		task = Task.new()
 		task.description = params[:description]
@@ -110,4 +173,31 @@ class TasksController < ApplicationController
       format.json {render json: { tasks: tasks,  status: :ok}.to_json}
   	end
 	end
+
+  def find_user_task_by_product
+
+    product = Product.find(params[:product_id])
+    user = User.find(params[:user_id])
+    commitments = product.commitments
+    task_list = Array.new
+
+    commitments.each do |c|
+      tasks = c.tasks
+      tasks.each do |t|
+        if t.user_id == user.id
+          t.commitment_name = c.description
+          task_list << t
+        end
+      end
+    end
+    respond_to do |format|
+      format.json {render json: { tasks: task_list,  status: :ok}.to_json}
+    end
+  end
+
+  private
+
+    def task_params
+        params.require(:task).permit(:description, :weight, :due_date, :execution, :commitment_id, :user_id)
+    end
 end

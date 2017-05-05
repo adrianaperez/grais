@@ -1,0 +1,12 @@
+var error= <%= @commitment.errors.count %>;
+
+if(error>0){
+  console.log("NO se creo el curso");
+  
+}else{
+  
+  console.log("Se creo el curso");
+  $('#modal_new_commitment').modal('close');
+  $('#modal_new_commitment').find('form input[type="text"]').val('');
+  $("#product_commitments .collection").prepend("<%= j render @commitment %>");  
+}

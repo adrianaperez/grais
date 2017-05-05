@@ -1,0 +1,14 @@
+<%= form_for(@commitment_prototype, remote: true) do |f| %>
+  <div class="modal-content">
+    <%= hidden_field_tag 'commitment_prototype[prototype_id]', @prototype.id %> 
+    <div class="input-field ">
+      <%= f.label :description, "Descripción" %>
+      <%= f.text_field :description %>
+    </div>
+    <%= date_field(:commitment_prototype, :deadline, class:"datepicker") %>
+  </div>
+  <div class="modal-footer">
+    <%= f.submit "Guardar", class: "btn" %>
+    <a href="#!" data-turbolinks="false" class=" modal-action modal-close waves-effect waves-green btn-flat grey lighten-1" >Cancelar</a> 
+  </div>
+<% end %>

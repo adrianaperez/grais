@@ -15,6 +15,11 @@ Rails.application.routes.draw do
     #end
   #end
 
+  post 'commitment_prototypes', to: 'commitments_prototypes#create', as: 'commitment_prototypes'
+  post 'set_token', to: 'fcm_tokens#set_token', as: 'set_token'
+  resources :tasks
+  resources :commitments
+  resources :prototypes
   resources :products
   resources :teams
   resources :courses
@@ -152,6 +157,9 @@ Rails.application.routes.draw do
     collection do
       post :update_task
     end
+    collection do
+      post :find_user_task_by_product
+    end
   end
 
    #exeptuar aquellas acciones que no son para la app 
@@ -164,6 +172,9 @@ Rails.application.routes.draw do
     end
     collection do
       post :find_by_course
+    end
+    collection do
+      post :find_teams_by_prototype
     end
   end
 

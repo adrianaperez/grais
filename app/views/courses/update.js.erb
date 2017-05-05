@@ -8,4 +8,6 @@ if(error>0){
   $('#modal_edit_course').modal('close'); // Función definida en course.js
   $('.sidebar').empty();
   $('.sidebar').html("<%= escape_javascript (render partial: 'course_sidebar') %>"); 
+  var $toastContent = $('<span>Curso actualizado correctamente</span>');
+  Materialize.toast($toastContent, 3000);
 }

@@ -1,18 +1,18 @@
-<% provide(:title, "Log in") %>
+<% provide(:title, "Iniciar sesión") %>
 
 <% content_for :option do %>
-  <li><%= link_to "Sign up", signup_path, class:"indigo-text text-accent-4"%></li>
+  <li><%= link_to "Registrarse", signup_path, class:"indigo-text text-accent-4"%></li>
 <% end %>
 
 <div class="container">
   <div class="row">
     <div class="col s12 l6 offset-l3">
-      <h4 class=" indigo-text text-accent-4">Login</h4>
+      <h4 class=" indigo-text text-accent-4">Iniciar sesión</h4>
       <% flash.each do |message_type, message| %>
   			<div class="alert-<%= message_type %>"><%= message %></div>
 			<% end %>
 			<%= render "form_login" %>
-			<p>New user? <%= link_to "Sign up now!", signup_path %></p>
+			<p>Nuevo usuario? <%= link_to "Registrate ahora!", signup_path %></p>
     </div>
   </div>
 </div>

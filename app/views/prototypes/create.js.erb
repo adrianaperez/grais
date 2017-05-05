@@ -1,0 +1,11 @@
+var error_prototype = <%= @prototype.errors.count %>;
+
+if(error_prototype>0 ){
+  console.log("NO se creo el prototipo");
+  
+}else{
+
+  $('#modal_new_prototype').modal('close');
+  $('#modal_new_prototype').find('form input[type="text"]').val('');
+  $('div#course_products_prototypes .collection').prepend("<%= j render @prototype %>");  
+}

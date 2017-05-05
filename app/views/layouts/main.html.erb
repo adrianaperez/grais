@@ -6,6 +6,7 @@
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="manifest" href="/manifest.json">
   </head>
   <body>
     <header>
@@ -15,8 +16,8 @@
             <div class="nav-wrapper">
               <a href="#" id="hamburger_menu" data-activates="slide-out" class="sidebarr"><i class="material-icons left">menu</i></a>
               <%= link_to "LOGO", dashboard_path, class:"brand-logo white-text"%>
-              <a href="#" data-activates="mobile-demo" class="button-collapse hide-on-med-and-up right" style="margin: 0;">
-                <div class="user-img">
+              <a href="#" data-activates="mobile-demo" class="button-collapse hide-on-med-and-up right tooltipped" data-position="left" data-delay="50" data-tooltip="<%=current_user.names%>" style="margin: 0;">
+                <div class="user-img" >
                   <div class="wrapper-image">
                     <%= image_tag "Neuschwanstein.jpg"%>
                   </div>
@@ -27,7 +28,7 @@
                 <!-- Dropdown Trigger -->
                 <li><a href="#!"><i class="material-icons right">add_alert</i></a></li>
                 <li>
-                  <%= link_to("#!", data:{activates:"dropdown1"}, class:"dropdown-button img-height-size") do %>
+                  <%= link_to("#!", data:{activates:"dropdown1", position:"left", delay:"50", tooltip:current_user.names}, class:"dropdown-button img-height-size tooltipped") do %>
                     <div class="user-img">
                       <div class="wrapper-image">
                         <%= image_tag "Neuschwanstein.jpg"%>
@@ -65,14 +66,12 @@
     
     <!--SideNav mobile-->
     <ul class="side-nav" id="mobile-demo">
+      <li><%= link_to "Perfil", user_path(current_user)%></li>
       <li><%= link_to "Cerrar sesión", logout_path, method: "delete" %></li>
     </ul>
 
     <!--SideNav-->
     <ul id="slide-out" class="side-nav">
-      
-      <li><a href="#!"><i class="material-icons">cloud</i>First Link With Icon</a></li>
-      <li><a href="#!">Second Link</a></li>
       <li><div class="divider"></div></li>
       <li>
         <%= link_to( dashboard_path ) do %>
@@ -91,5 +90,7 @@
         <%= yield :js %>
       });
     </script>
+    <!-- Notificaciones -->
+    <script src="https://www.gstatic.com/firebasejs/3.9.0/firebase.js"></script>
   </body>
 </html>

@@ -1,6 +1,7 @@
 class CoursesController < ApplicationController
 
-  layout :resolve_layout
+  #layout :resolve_layout
+  layout "main"
 
   # Usado para comunicarse con el sistema de notificaciones
   require 'net/http'
@@ -28,6 +29,7 @@ class CoursesController < ApplicationController
   def show
     @course = Course.find(params[:id])
     @team = Team.new
+    @prototype = Prototype.new
   end
 
   def new
@@ -458,14 +460,14 @@ class CoursesController < ApplicationController
         :strict_mode_isa,:code_confirmed,:logo,:period_length,:description)
     end
 
-    def resolve_layout
-      case action_name
-      when "show"
-        "main"
-      when "index"
-        "main"
-      else
-        "application"
-      end
-    end
+    #def resolve_layout
+      #case action_name
+      #when "show"
+      #  "main"
+      #when "index"
+      #  "main"
+      #else
+      #  "application"
+      #end
+    #end
 end

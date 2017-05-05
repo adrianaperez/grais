@@ -1,7 +1,7 @@
 class Commitment < ApplicationRecord
   belongs_to :product
   has_many :tasks
-
+  belongs_to :commitment_prototype, optional: true
 
   attr_accessor :product_logo, :product_name, :execution # Agregar cualquier otro al metodo as_json de abajo
 

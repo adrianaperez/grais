@@ -1,0 +1,41 @@
+<% content_for :sidebar_option do %>
+  <%= render "prototype_sidebar" %>
+<% end %>
+
+<% content_for :bar_option do %>
+  <ul class="tabs">
+    <li class="tab hide-on-med-and-up"><a href="#product_prototype_information" style="outline: none;">información</a></li>
+    <li class="tab"><a id="get_product_prototype_commitments" class="active" href="#product_prototype_commitments" style="outline: none;">compromisos prototipos</a></li>
+  </ul>      
+<% end %>
+
+<div id="prototype_id" data-id = "<%= @prototype.id %>" style="display: none;"></div>
+
+<div id="product_prototype_information">
+  informacion del producto prtotipo
+</div>
+<div id="product_prototype_commitments">
+  Aqui los compromisos del producto prototipo
+  <ul class="collection">    
+  </ul>
+  <%if (is_ceo? current_user.id, @prototype.course.id) %>
+    <div class="fixed-action-btn">
+      <a href="#modal_new_commitment_prototype" class="btn-floating btn-large tooltipped indigo"
+      data-position="left" data-delay="50" data-tooltip="Nuevo compromiso">
+        <i class="large material-icons">add</i>
+      </a>
+    </div>
+  <%end%>
+</div>
+
+<!-- Modal Structure - New commitment -->
+<div id="modal_new_commitment_prototype" class="modal">
+  <h5 style="padding-left: 20px;">Nuevo compromiso</h5>
+  <%= render "commitments_prototypes/form" %>
+</div>
+
+<!-- Modal Structure - Edit product prototipo -->
+<div id="modal_edit_product_prototype" class="modal">
+  <h5 style="padding-left: 20px;">Editar producto</h5>
+  <%= render "edit_form" %>
+</div>

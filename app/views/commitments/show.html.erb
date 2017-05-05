@@ -1,0 +1,55 @@
+<% content_for :bar_option do %>
+  <ul class="tabs">
+    <li class="tab"><a href="#commitment_information" style="outline: none;">información del compromiso</a></li>
+    <li class="tab"><a id="get_product_commitments" class="active" href="#commitment_tasks" style="outline: none;">tareas en proceso</a></li>
+  </ul>      
+<% end %>
+
+<div id="commitment_product_team_id" data-id = "<%= @commitment.product.team.id %>" style="display: none;"></div>
+<div id="commitment_id" data-id = "<%= @commitment.id %>" style="display: none;"></div>
+
+<div id="commitment_information">
+  Informacion del compromiso
+  <div id="info">
+    <%= render "commitment_info" %>
+  </div>
+  <div class="fixed-action-btn vertical click-to-toggle">
+    <a href="#modal_edit_commitment" class="btn-floating btn-large tooltipped indigo" data-position="left" data-delay="50" data-tooltip="Editar compromiso">
+      <i class="material-icons">mode_edit</i>
+    </a>
+  </div>
+</div>
+
+<div id="commitment_tasks">
+  <%= link_to( product_path @commitment.product.id ) do %>
+    <span><%= @commitment.product.name %></span>
+  <%end%>
+  <%= link_to( commitment_path @commitment.id ) do %>
+    <span><%= @commitment.description %></span>
+  <%end%>
+  <ul class="collection">    
+  </ul>
+  <div class="fixed-action-btn vertical click-to-toggle">
+    <a id="link_new_task" href="#modal_new_task" class="btn-floating btn-large tooltipped indigo" data-position="left" data-delay="50" data-tooltip="Nueva tarea">
+      <i class="material-icons">add</i>
+    </a>
+  </div>
+
+</div>
+
+<!-- Modal Structure - Edit commitment -->
+<div id="modal_edit_commitment" class="modal">
+  <h5 style="padding-left: 20px;">Editar compromiso</h5>
+  <%= render "edit_form" %>
+</div>
+
+<!-- Modal Structure - New task -->
+<div id="modal_new_task" class="modal">
+  <h5 style="padding-left: 20px;">Nueva tarea</h5>
+  <%= render "tasks/form" %>
+</div>
+
+<% content_for :js do %>
+  $(".sidebar").addClass('hidden-sidebar');
+  $('#hamburger_menu').hide();
+<% end %> 

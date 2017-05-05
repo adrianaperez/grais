@@ -3,55 +3,55 @@
     <h4>Editar tu perfil</h4>
     
     <div class="input-field ">
-    <i class="material-icons prefix input__icon--color">account_box</i>
-    <%= f.text_field :names %>
-    <%= f.label :names, "Nombres" %>
-  </div>
-  <div class="input-field ">
-    <i class="material-icons prefix input__icon--color">account_box</i>
-    <%= f.text_field :lastnames %>
-    <%= f.label :lastnames, "Apellidos" %>
-  </div>
-  <div class="input-field ">
-    <i class="material-icons prefix input__icon--color">account_box</i>
-    <%= f.text_field :initials %>
-    <%= f.label :initials, "Iniciales" %>
-  </div>
-  <div class="input-field ">
-    <i class="material-icons prefix input__icon--color">email</i>
-    <%= f.email_field :email %>
-    <%= f.label :email, "Correo" %>
-  </div>
-  <div class="input-field ">
-    <i class="material-icons prefix input__icon--color">phone</i>
-    <%= f.telephone_field :phone%>
-    <%= f.label :phone, "Telefono" %>
-  </div>
-  <div class="input-field ">
-    <i class="material-icons prefix input__icon--color">account_box</i>
-    <%= f.text_field :country %>
-    <%= f.label :country, "País" %>
-  </div>
-  <div class="input-field ">
-    <i class="material-icons prefix input__icon--color">account_box</i>
-    <%= f.text_field :city %>
-    <%= f.label :city, "Estado" %>
-  </div>
-  <div class="input-field ">
-    <i class="material-icons prefix input__icon--color">account_box</i>
-    <%= f.text_field :sn_one %>
-    <%= f.label :sn_one, "Red social 1" %>
-  </div>
-  <div class="input-field ">
-    <i class="material-icons prefix input__icon--color">account_box</i>
-    <%= f.text_field :sn_two %>
-    <%= f.label :sn_two, "Red social 2" %>
-  </div>
-  <div class="input-field">
-    <i class="material-icons prefix input__icon--color">mode_edit</i>
-    <%= f.text_area :skills, class:"materialize-textarea" %>
-    <%= f.label :skills, "Estado" %>
-  </div>
+      <i class="material-icons prefix input__icon--color">account_box</i>
+      <%= f.text_field :names %>
+      <%= f.label :names, "Nombres" %>
+    </div>
+    <div class="input-field ">
+      <i class="material-icons prefix input__icon--color">account_box</i>
+      <%= f.text_field :lastnames %>
+      <%= f.label :lastnames, "Apellidos" %>
+    </div>
+    <div class="input-field ">
+      <i class="material-icons prefix input__icon--color">account_box</i>
+      <%= f.text_field :initials %>
+      <%= f.label :initials, "Iniciales" %>
+    </div>
+    <div class="input-field ">
+      <i class="material-icons prefix input__icon--color">email</i>
+      <%= f.email_field :email %>
+      <%= f.label :email, "Correo" %>
+    </div>
+    <div class="input-field ">
+      <i class="material-icons prefix input__icon--color">phone</i>
+      <%= f.telephone_field :phone%>
+      <%= f.label :phone, "Telefono" %>
+    </div>
+    <div class="input-field ">
+      <i class="material-icons prefix input__icon--color">account_box</i>
+      <%= f.text_field :country %>
+      <%= f.label :country, "País" %>
+    </div>
+    <div class="input-field ">
+      <i class="material-icons prefix input__icon--color">account_box</i>
+      <%= f.text_field :city %>
+      <%= f.label :city, "Estado" %>
+    </div>
+    <div class="input-field ">
+      <i class="material-icons prefix input__icon--color">account_box</i>
+      <%= f.text_field :sn_one %>
+      <%= f.label :sn_one, "Red social 1" %>
+    </div>
+    <div class="input-field ">
+      <i class="material-icons prefix input__icon--color">account_box</i>
+      <%= f.text_field :sn_two %>
+      <%= f.label :sn_two, "Red social 2" %>
+    </div>
+    <div class="input-field">
+      <i class="material-icons prefix input__icon--color">mode_edit</i>
+      <%= f.text_area :skills, class:"materialize-textarea" %>
+      <%= f.label :skills, "Estado" %>
+    </div>
   </div>
   <div class="modal-footer">
     <%= f.submit "Guardar", class: "btn" %>

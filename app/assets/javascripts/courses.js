@@ -1,11 +1,5 @@
 document.addEventListener("turbolinks:load", function() {
 
-  
-
-  /////////////////////////////////////////////////
-  //Sticky Header para mobile
-  stickyHeader();
-
   //Obtener el tab inicialmente activado
   var tab_actived = $("ul.tabs li a.active");
   if(tab_actived.attr('href')=="#teams"){
@@ -31,33 +25,16 @@ document.addEventListener("turbolinks:load", function() {
     getCourseProducts();
   });
 
+  //Obtener los productos prototipos del curso
+  $('#get_course_products_prototypes').click(function(){
+    $("#course_products_prototypes .collection").empty();
+    getCourseProductsPrototype();
+  });
+
   //Agregar miembros al curso
   addMemberToCourse();
 
 });
-
-
-
-///////////////////////////////////////////////
-//Sticky Header
-
-function stickyHeader(){
-
-  $(window).scroll(function(){
-    var height_header = $("header").height();
-    var p = $("#parax").height();
-    var current_position = $(this).scrollTop();
-    //var position_menu = $(".wrapper-submenu").offset();
-    //console.log("la posicion de parax "+ p);
-    if (current_position > p) {
-      $(".submenu").addClass("pinned");
-      $(".submenu").css("top", height_header);
-    } else {
-      $(".submenu").removeClass("pinned");
-      $(".submenu").css("top", "auto");
-    }
-  });
-}
 
 /////////////////////////////////////////////
 //Peticiones AJAX
@@ -137,7 +114,7 @@ function getCourseTeams(){
               '<a href="/teams/' + value.id + '">' +
                 '<img src="/assets/e-learning.png" alt="e-learning" class= "circle">' +
                 '<span class="title">'+ value.name +'</span>' +
-                '<p> Cantidad de estudiantes '+ value.studentsAmount +'</p>' +
+                '<p> Miembros: '+ value.studentsAmount +'</p>' +
               '</a>'+
             '</li>'
           );
@@ -169,14 +146,51 @@ function getCourseMembers (){
     success:function(data){
 
       $.each( data , function( index, item ) {
-         $.each(item, function(key, value){
-          $('div#course_members .collection').append(
-            '<li class="collection-item avatar">' +
-                '<img src="/assets/user_boy.svg" alt="user_boy" class= "circle">' +
-                '<span class="title">'+ value.names_user +'</span>' +
-            '</li>'
-            );
-         });
+        $.each(item, function(key, value){
+
+          if (value.name_team!=null) {
+            if (value.rol=="LEADER") {
+               $('div#course_members .collection').append(
+                '<li class="collection-item avatar">' +
+                  '<img src="/assets/user_boy.svg" alt="user_boy" class= "circle">' +
+                  '<span class="title">'+ value.names_user +'</span><br>' +
+                  '<span class="title">'+ "Lider" +'</span><br>' +
+                  '<span class="title">'+ value.name_team +'</span>' +
+                '</li>'
+              );
+            } else {
+               $('div#course_members .collection').append(
+                '<li class="collection-item avatar">' +
+                  '<img src="/assets/user_boy.svg" alt="user_boy" class= "circle">' +
+                  '<span class="title">'+ value.names_user +'</span><br>' +
+                  '<span class="title">'+ "Miembro" +'</span><br>' +
+                  '<span class="title">'+ value.name_team +'</span>' +
+                '</li>'
+              );
+            }
+           
+          } else {
+            if (value.rol=="CEO") {
+              $('div#course_members .collection').append(
+                '<li class="collection-item avatar">' +
+                  '<img src="/assets/user_boy.svg" alt="user_boy" class= "circle">' +
+                  '<span class="title">'+ value.names_user +'</span><br>' +
+                  '<span class="title">'+ "Director ejecutivo" +'</span><br>' +
+                '</li>'
+              );
+            } else {
+              $('div#course_members .collection').append(
+                '<li class="collection-item avatar">' +
+                  '<img src="/assets/user_boy.svg" alt="user_boy" class= "circle">' +
+                  '<span class="title">'+ value.names_user +'</span><br>' +
+                  '<span class="title">'+ "Miembro" +'</span><br>' +
+                  '<span class="title">'+ "sin equipo" +'</span>' +
+                '</li>'
+              );
+            }
+          }
+
+        });
       });
     },
 
@@ -208,8 +222,46 @@ function getCourseProducts (){
           $('div#course_products .collection').append(
             '<a href="/products/' + value.id + '">' +
               '<li class="collection-item avatar">' +
-                  '<img src="/assets/typewriter-01.svg" alt="user_boy" class= "circle">' +
-                  '<span class="title">'+ value.name +'</span>' +
+                '<img src="/assets/typewriter-01.svg" alt="user_boy" class= "circle">' +
+                '<span class="title">'+ value.name +'</span><br>' +
+                '<span class="title">'+ value.team_name +'</span>' +
+              '</li>'+
+            '</a>'
+            );
+         });
+      });
+    },
+
+    error: function(data){
+
+      console.log("ocurrio un error");
+    }
+  });
+}
+
+////////////////////////////////////
+//Obtener los productos de un curso
+
+function getCourseProductsPrototype (){
+
+  var course_id = $('div#course_id').attr('data-id');
+
+  $.ajax({
+
+    url: '/prototypes/find_by_course',
+    type: 'POST',
+    dataType: 'json',
+    data:{id:course_id},
+
+    success:function(data){
+      
+      $.each( data , function( index, item ) {
+         $.each(item, function(key, value){
+          $('div#course_products_prototypes .collection').append(
+            '<a href="/prototypes/' + value.id + '">' +
+              '<li class="collection-item avatar">' +
+                '<img src="/assets/typewriter-01.svg" alt="user_boy" class= "circle">' +
+                '<span class="title">'+ value.name +'</span>' +
               '</li>'+
             '</a>'
             );
@@ -258,16 +310,3 @@ function addMemberToCourse() {
     });
   });
 }
-
-/////////////////////////////////////////////////////////////
-//Función para reiniciar el modal si el resultado es exitoso
-
-(function($) {
-
-  $.fn.modal_success = function(){
-
-    this.modal('close'); // Función de Materialize
-    this.find('form input[type="text"]').val('');
-    this.find('form input[type="checkbox"]').removeAttr('checked');
-  };
-}(jQuery));

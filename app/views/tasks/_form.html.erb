@@ -1,0 +1,23 @@
+<%= form_for(@task, remote: true) do |f| %>
+  <div class="modal-content">
+    <%= hidden_field_tag 'task[commitment_id]', @commitment.id %> 
+    <%= hidden_field_tag 'task[execution]', 0 %> 
+    <div class="input-field ">
+      <%= f.label :description, "Descripción" %>
+      <%= f.text_field :description %>
+    </div>
+    <div class="input-field ">
+      <%= f.label :weight, "Peso" %>
+      <%= f.text_field :weight %>
+    </div>
+    <div class="input-field">
+      <%= f.select :user_id, options_for_select([['Miembro del equipo',"", {"disabled"=>"disabled", "selected"=>"selected"}]], 1) %>
+      <label>Asignar tarea a</label>
+    </div>
+    <%= date_field(:task, :due_date, class:"datepicker") %>
+  </div>
+  <div class="modal-footer">
+    <%= f.submit "Guardar", class: "btn" %>
+    <a href="#!" data-turbolinks="false" class=" modal-action modal-close waves-effect waves-green btn-flat grey lighten-1" >Cancelar</a> 
+  </div>
+<% end %>

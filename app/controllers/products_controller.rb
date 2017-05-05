@@ -8,6 +8,7 @@ class ProductsController < ApplicationController
 
   def show
     @product = Product.find(params[:id])
+    @commitment = Commitment.new
   end
 
   def new
@@ -18,8 +19,49 @@ class ProductsController < ApplicationController
     #El mismo caso que con course-teams
     #yo puedo enviar el id de team desde el formulario como hidden
     @product = Product.new(product_params);
+
+    #Agregar id si se trata de un prototipo
+    if params[:use_prototype] != nil && params[:use_prototype] == 'true'
+      @product.prototype_id = params[:prototype_id]
+    end  
     respond_to do |format|
       if @product.save
+
+        currUser = User.find(current_user)
+
+        if params[:use_prototype] != nil && params[:use_prototype] == 'true'
+
+          prototype = Prototype.find(params[:prototype_id])
+
+          # Obtener los compromisos del prototipo y crear los mismos compromisos para el producto
+          commitment_prototypes = prototype.commitment_prototypes
+          commitment_prototypes.each do |cp|
+            @commitment = Commitment.new()
+            @commitment.description = cp.description
+            @commitment.deadline = cp.deadline
+            @commitment.execution = 0
+            @commitment.count = 0
+
+            @commitment.user = currUser.id
+            @commitment.product = @product
+
+            # Validate if the user and the product were found
+            if currUser == nil
+                format.json {render json: { info: "User not found",  status: :not_found}.to_json}
+                format.js
+            else  # usuario encontrado
+              if @commitment.save
+                format.html{redirect_to products_path , notice: "Product was created successfully"}
+                format.json {render json: {product: product, status: :ok}.to_json}
+                format.js
+              else  # error con commitment.save
+                format.json {render json: { info: "Error creating commitment",  status: :unprocessable_entity}.to_json}
+                format.js
+              end
+            end
+          end # fin del commitent_prototypes.each 
+        end
+
         format.html{redirect_to products_path , notice: "Product was created successfully"}
         format.json {render json: {product: @product, status: :ok}.to_json}
         format.js
@@ -198,6 +240,7 @@ class ProductsController < ApplicationController
         
         if products.any?
           products.each do |pd|
+            pd.team_name = t.name
             @products_list << pd
           end
         end
@@ -272,6 +315,6 @@ class ProductsController < ApplicationController
   private
 
     def product_params
-        params.require(:product).permit(:name,:description, :logo, :team_id)
+        params.require(:product).permit(:name,:description, :logo, :team_id, :initials)
     end
 end

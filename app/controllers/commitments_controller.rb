@@ -1,5 +1,70 @@
 class CommitmentsController < ApplicationController
 
+  layout "main"
+
+  def index
+    @commitments = Commitment.all
+  end
+
+  def show
+    @commitment = Commitment.find(params[:id])
+    @task = Task.new
+  end
+
+  def new
+    @commitment = Commitment.new
+  end
+
+  def create
+    @commitment = Commitment.new(commitment_params);
+    respond_to do |format|
+      if @commitment.save
+        #format.html{redirect_to commitment_prototypes_path , notice: "Commitment was created successfully"}
+        format.json {render json: {product: @commitment_prototype, status: :ok}.to_json}
+        format.js
+      else
+        #format.html { render "new", error: "The commitment was not created" }
+        format.json {render json: {product: @commitment_prototype,  status: :unprocessable_entity}.to_json }
+        format.js
+      end
+    end
+  end
+
+  def edit
+    @commitment = Commitment.find(params[:id])
+  end
+
+  def update
+    @commitment = Commitment.find(params[:id])
+    
+    respond_to do |format|
+      if @commitment.update_attributes(commitment_params)
+        format.html{redirect_to commitment_path, notice: "Product was successfully updated"}
+        format.json {render json: {commitment: @commitment, status: :ok}.to_json}
+        format.js
+      else
+        format.html { render "edit", error: "Failed to edit product"}
+        format.json {render json: {commitment: @commitment, status: :unprocessable_entity}.to_json}
+        format.js
+      end
+    end
+  end
+
+  def destroy
+    @commitment = Commitment.find(params[:id])
+    respond_to do |format|
+      if @commitment.destroy
+        format.html{redirect_to commitment_path, notice: "Product delete"}
+        format.json {render json: {commitment: @commitment, status: :ok}.to_json}
+        format.js
+      else
+        format.html { render "edit", error: "Failed to delete this product"}
+        format.json {render json: {commitment: @commitment, status: :unprocessable_entity}.to_json}
+        format.js
+      end
+    end
+  end
+
 	def create_commitment
   	commitment = Commitment.new()
   	commitment.description = params[:description]
@@ -185,4 +250,10 @@ class CommitmentsController < ApplicationController
       format.json {render json: { commitments: commitments,  status: :ok}.to_json}
   	end
 	end
+
+  private
+
+    def commitment_params
+        params.require(:commitment).permit(:description, :deadline, :product_id)
+    end
 end

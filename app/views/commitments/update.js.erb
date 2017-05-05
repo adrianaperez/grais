@@ -1,0 +1,13 @@
+var error= <%= @commitment.errors.count %>;
+
+if(error>0){
+  console.log("NO se creo el curso");
+  
+}else{
+
+  $('#modal_edit_commitment').modal('close'); // Función definida en course.js
+  $('#commitment_information #info').empty();
+  $('#commitment_information #info').html("<%= escape_javascript (render partial: 'commitment_info') %>"); 
+  var $toastContent = $('<span>Compromiso actualizado correctamente</span>');
+  Materialize.toast($toastContent, 3000);
+}

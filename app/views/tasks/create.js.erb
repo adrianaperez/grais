@@ -1,0 +1,12 @@
+var error= <%= @task.errors.count %>;
+
+if(error>0){
+  console.log("NO se creo el curso");
+  
+}else{
+  
+  console.log("Se creo el curso");
+  $('#modal_new_task').modal('close');
+  $('#modal_new_task').find('form input[type="text"]').val('');
+  $("#commitment_tasks .collection").prepend("<%= j render @task %>");  
+}
