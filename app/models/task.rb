@@ -1,7 +1,8 @@
 class Task < ApplicationRecord
   belongs_to :commitment
   belongs_to :user
-
+  has_one :tasks_abstract
+  
   attr_accessor :user_name # Agregar cualquier otro al metodo as_json de abajo
 
   # Sobreescribir la funcion as_json
