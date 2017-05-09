@@ -298,6 +298,14 @@ class ProductsController < ApplicationController
         if products.any?
           products.each do |pd|
             pd.team_name = t.name
+
+            if pd.logo == "png" || pd.logo == "jpg" || pd.logo == "jpeg"
+              path = "http://localhost:3000/products_logos/#{pd.id}.#{pd.logo}"
+              image = open(path) { |io| io.read }
+              
+              pd.logo_img = Base64.encode64(image)
+            end
+
             @products_list << pd
           end
         end
@@ -330,6 +338,14 @@ class ProductsController < ApplicationController
         products_by_course = Product.joins(:product_users).where(product_users:{course_user_id: cu.id}) 
         if products_by_course.any?
           products_by_course.each do |product|
+
+            if product.logo == "png" || product.logo == "jpg" || product.logo == "jpeg"
+              path = "http://localhost:3000/products_logos/#{product.id}.#{product.logo}"
+              image = open(path) { |io| io.read }
+              
+              product.logo_img = Base64.encode64(image)
+            end
+
             @product_list << product
           end  
         end
@@ -358,9 +374,13 @@ class ProductsController < ApplicationController
     @products_list = Array.new
     if products.any?
       products.each do |pd|
-        path = "http://localhost:3000/products_logos/#{pd.id}.#{pd.logo}"
-        image = open(path) { |io| io.read }
-        pd.logo_img = Base64.encode64(image)
+        
+        if pd.logo == "png" || pd.logo == "jpg" || pd.logo == "jpeg"
+          path = "http://localhost:3000/products_logos/#{pd.id}.#{pd.logo}"
+          image = open(path) { |io| io.read }
+          
+          pd.logo_img = Base64.encode64(image)
+        end
 
         @products_list << pd
       end

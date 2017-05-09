@@ -20,11 +20,11 @@ class User < ApplicationRecord
 
   validates :password, presence: true, length: { maximum: 65 }, on: :create
 
-  attr_accessor :reset_token,:rol
+  attr_accessor :reset_token, :rol, :img
 
   def as_json options=nil
     options ||= {}
-    options[:methods] = ((options[:methods] || []) + [:rol])
+    options[:methods] = ((options[:methods] || []) + [:rol, :img])
     super options
   end
 

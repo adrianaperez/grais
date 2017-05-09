@@ -69,6 +69,7 @@ class TasksController < ApplicationController
 		task.commitment = Commitment.find(params[:commitment_id])
 		task.user = User.find(params[:user_id])	
     task.due_date = params[:due_date]	
+    task.weight = params[:weight]
 
 		if task.user == nil
       respond_to do |format|
@@ -125,6 +126,7 @@ class TasksController < ApplicationController
 		task.description = params[:description]
 		task.execution = params[:execution]
     task.user = User.find(params[:user_id]) 
+    task.weight = params[:weight]
 
   	if task == nil
 	  	respond_to do |format|
@@ -164,8 +166,11 @@ class TasksController < ApplicationController
 	def find_by_user
 		tasks = Task.where( user_id: params[:user_id])
 
-		tasks.each do |c|
-			c.user_name = c.user.names
+		tasks.each do |t|
+			t.user_name = t.user.names + " " + t.user.lastnames
+      t.user_id = t.user.id 
+      commitment = Commitment.find(t.commitment_id)
+      t.commitment_name = commitment.description 
 		end
 
   	respond_to do |format|
@@ -177,7 +182,7 @@ class TasksController < ApplicationController
 		tasks = Task.where( commitment_id: params[:commitment_id])
 
 		tasks.each do |c|
-			c.user_name = c.user.names + " "+ c.user.lastnames
+			c.user_name = c.user.names + " " + c.user.lastnames
 		end
 
   	respond_to do |format|

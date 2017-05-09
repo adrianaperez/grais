@@ -226,4 +226,20 @@ Rails.application.routes.draw do
       post :find_by_commitment
     end
   end
+
+    #exeptuar aquellas acciones que no son para la app 
+  resources :product_reports, :defaults => { :format => 'json' }, :except => [:create, :update] do
+    collection do
+      post :create_product_report
+    end
+    collection do
+      post :update_product_report
+    end
+    collection do
+      post :find_by_team
+    end
+    collection do
+      post :find_by_product
+    end
+  end
 end

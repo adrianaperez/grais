@@ -2,6 +2,8 @@ class TeamsController < ApplicationController
 
   layout "main"
 
+  TEAMS_LOGOS = File.join Rails.root, 'public', 'teams_logos'
+
   def index
     @teams = Team.all
   end
@@ -82,6 +84,25 @@ class TeamsController < ApplicationController
         course_user.team_id = @team.id
             
         if course_user.save
+
+          ########## Images
+          # validar si el archivo para la imagen fue cargado al post
+          if(params[:team][:logo_file])
+            # creamos si no existe la carpeta product_logos, definida al principio de este archivo
+            FileUtils.mkdir_p TEAMS_LOGOS
+            
+            # Creamos el path del archivo concatenando carpeta mas nombre del archivo 
+            path = File.join TEAMS_LOGOS, c.id.inspect + "." + params[:team][:logo]
+
+            # Creamos el archivo y le copiamos el archivo pasado en el post 
+            File.open(path, 'wb') do |f|
+              f.write(params[:team][:logo_file].read)
+            end
+
+            params[:team][:logo_file] = nil
+          end
+          ###########
+
           # Notificar al ceo  
           c_u = CourseUser.where(course_id: course_user.course.id)
           c_u.each do |cu|
@@ -387,7 +408,15 @@ class TeamsController < ApplicationController
               team.leader_id = auxCU.user.id
             end
           end
+
           team.studentsAmount = aux_list.length
+
+          if team.logo == "png" || team.logo == "jpg" || team.logo == "jpeg"
+            path = "http://localhost:3000/teams_logos/#{team.id}.#{team.logo}"
+            image = open(path) { |io| io.read }
+            
+            team.logo_file = Base64.encode64(image)
+          end
 
           @team_list << team
         end
@@ -421,6 +450,13 @@ class TeamsController < ApplicationController
       course_user = course_users[0]
 
       u.rol = course_user.rol
+
+      if u.image_user == "png" || u.image_user == "jpg" || u.image_user == "jpeg"
+        path = "http://localhost:3000/user_imgs/#{u.id}.#{u.image_user}"
+        image = open(path) { |io| io.read }
+        
+        u.img = Base64.encode64(image)
+      end
     end
   
     respond_to do |format|
@@ -457,6 +493,13 @@ class TeamsController < ApplicationController
           end
 
           team.studentsAmount = aux_list.length
+
+          if team.logo == "png" || team.logo == "jpg" || team.logo == "jpeg"
+            path = "http://localhost:3000/teams_logos/#{team.id}.#{team.logo}"
+            image = open(path) { |io| io.read }
+            
+            team.logo_file = Base64.encode64(image)
+          end
         end
       end
     end
@@ -473,6 +516,25 @@ class TeamsController < ApplicationController
     
     respond_to do |format|
       if @team.update_attributes(team_params)
+
+        ########## Images
+        # validar si el archivo para la imagen fue cargado al post
+        if(params[:team][:logo_file])
+          # creamos si no existe la carpeta product_logos, definida al principio de este archivo
+          FileUtils.mkdir_p TEAMS_LOGOS
+          
+          # Creamos el path del archivo concatenando carpeta mas nombre del archivo 
+          path = File.join TEAMS_LOGOS, c.id.inspect + "." + @team.logo
+
+          # Creamos el archivo y le copiamos el archivo pasado en el post 
+          File.open(path, 'wb') do |f|
+            f.write(params[:team][:logo_file].read)
+          end
+
+          params[:team][:logo_file] = nil
+        end
+        ###########
+
         format.json {render json:{team: @team, status: :ok}.to_json}
       else
         format.json {render json: {info: "Failed to update this team", status: :unprocessable_entity}.to_json}

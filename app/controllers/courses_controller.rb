@@ -8,6 +8,7 @@ class CoursesController < ApplicationController
 
   #skip_before_action :verify_authenticity_token #esto es para hacer pruebas, preguntar antes si necesitas eliminarlo
 
+  COURSES_LOGOS = File.join Rails.root, 'public', 'courses_logos'
 
   def index
     @course = Course.new
@@ -130,6 +131,13 @@ class CoursesController < ApplicationController
 
       course.is_member = is_member
 
+      if course.logo == "png" || course.logo == "jpg" || course.logo == "jpeg"
+        path = "http://localhost:3000/courses_logos/#{course.id}.#{course.logo}"
+        image = open(path) { |io| io.read }
+        
+        course.logo_file = Base64.encode64(image)
+      end
+
       list << course
     end
 
@@ -174,7 +182,7 @@ class CoursesController < ApplicationController
       c.evaluate_teacher = params[:evaluate_teacher]
       c.strict_mode_isa = params[:strict_mode_isa]
       c.code_confirmed = params[:code_confirmed]
-      c.logo = "489563.png"
+      c.logo = params[:logo]
       c.period_length = params[:period_length]
       c.description = params[:description]
 
@@ -182,6 +190,25 @@ class CoursesController < ApplicationController
         cu = CourseUser.new(:user => u,:course => c,:rol => "CEO")
 
         if cu.save
+
+          ########## Images
+          # validar si el archivo para la imagen fue cargado al post
+          if(params[:logo_file])
+            # creamos si no existe la carpeta product_logos, definida al principio de este archivo
+            FileUtils.mkdir_p COURSES_LOGOS
+            
+            # Creamos el path del archivo concatenando carpeta mas nombre del archivo 
+            path = File.join COURSES_LOGOS, c.id.inspect + "." + params[:logo]
+
+            # Creamos el archivo y le copiamos el archivo pasado en el post 
+            File.open(path, 'wb') do |f|
+              f.write(params[:logo_file].read)
+            end
+
+            params[:logo_file] = nil
+          end
+          ###########
+
           created_courses << c
           next
         else
@@ -224,13 +251,31 @@ class CoursesController < ApplicationController
     c.evaluate_teacher = params[:evaluate_teacher]
     c.strict_mode_isa = params[:strict_mode_isa]
     c.code_confirmed = params[:code_confirmed]
-    c.logo = "489563.png"
+    c.logo = params[:logo]
     c.period_length = params[:period_length]
     c.description = params[:description]
 
     if c.save
-      respond_to do |format|
 
+      ########## Images
+      # validar si el archivo para la imagen fue cargado al post
+      if(params[:logo_file])
+        # creamos si no existe la carpeta product_logos, definida al principio de este archivo
+        FileUtils.mkdir_p COURSES_LOGOS
+        
+        # Creamos el path del archivo concatenando carpeta mas nombre del archivo 
+        path = File.join COURSES_LOGOS, c.id.inspect + "." + params[:logo]
+
+        # Creamos el archivo y le copiamos el archivo pasado en el post 
+        File.open(path, 'wb') do |f|
+          f.write(params[:logo_file].read)
+        end
+
+        params[:logo_file] = nil
+      end
+      ###########
+
+      respond_to do |format|
         format.json {render json: {course: c, status: :ok}.to_json}
       end
     else
@@ -273,6 +318,13 @@ class CoursesController < ApplicationController
 
       course.is_member = true
 
+      if course.logo == "png" || course.logo == "jpg" || course.logo == "jpeg"
+        path = "http://localhost:3000/courses_logos/#{course.id}.#{course.logo}"
+        image = open(path) { |io| io.read }
+        
+        course.logo_file = Base64.encode64(image)
+      end
+
       list << course
     end
     
@@ -313,6 +365,14 @@ class CoursesController < ApplicationController
       end
 
       course.is_member = is_member
+
+      if course.logo == "png" || course.logo == "jpg" || course.logo == "jpeg"
+        path = "http://localhost:3000/courses_logos/#{course.id}.#{course.logo}"
+        image = open(path) { |io| io.read }
+        
+        course.logo_file = Base64.encode64(image)
+      end
+      
       list << course
     end
 
@@ -461,7 +521,14 @@ class CoursesController < ApplicationController
     course_users.each do |cu| #Pasando campos necesarios para armar la lista de los miembros
       cu.names_user = cu.user.names
       cu.lastnames_user = cu.user.lastnames
-      cu.image_user = cu.user.image_user
+
+      if cu.user.image_user == "png" || cu.user.image_user == "jpg" || cu.user.image_user == "jpeg"
+        path = "http://localhost:3000/user_imgs/#{cu.user.id}.#{cu.user.image_user}"
+        image = open(path) { |io| io.read }
+        
+        cu.image_user = Base64.encode64(image)
+      end
+
       if cu.team != nil
         cu.name_team = cu.team.name
       end 
