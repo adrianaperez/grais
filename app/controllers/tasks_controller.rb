@@ -183,6 +183,9 @@ class TasksController < ApplicationController
 
 		tasks.each do |c|
 			c.user_name = c.user.names + " " + c.user.lastnames
+      c.user_id = c.user.id 
+      commitment = Commitment.find(c.commitment_id)
+      c.commitment_name = commitment.description 
 		end
 
   	respond_to do |format|
