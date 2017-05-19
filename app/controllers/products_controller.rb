@@ -82,6 +82,11 @@ class ProductsController < ApplicationController
     product.logo = params[:logo]  #extension
     product.team_id = params[:team_id]
     product.initials = params[:initials]
+    
+    if params[:use_prototype] != nil && params[:use_prototype] == 'true'
+      prototype = Prototype.find(params[:prototype_id])
+      product.prototype = prototype
+    end
 
     respond_to do |format|
       if product.save
@@ -145,6 +150,7 @@ class ProductsController < ApplicationController
             commitment.execution = 0
             commitment.count = 0
 
+            commitment.commitment_prototype = cp
             commitment.user = currUser.id
             commitment.product = product
 
@@ -293,7 +299,6 @@ class ProductsController < ApplicationController
     if @course.teams.any?  
       @course.teams.each do |t|
         products = t.products
-        puts products.inspect
         
         if products.any?
           products.each do |pd|
@@ -305,6 +310,8 @@ class ProductsController < ApplicationController
               
               pd.logo_img = Base64.encode64(image)
             end
+
+            pd.execution = calculate_execution(pd)
 
             @products_list << pd
           end
@@ -346,6 +353,8 @@ class ProductsController < ApplicationController
               product.logo_img = Base64.encode64(image)
             end
 
+            product.execution = calculate_execution(product)
+
             @product_list << product
           end  
         end
@@ -382,6 +391,8 @@ class ProductsController < ApplicationController
           pd.logo_img = Base64.encode64(image)
         end
 
+        pd.execution = calculate_execution(pd)
+
         @products_list << pd
       end
     end
@@ -391,6 +402,37 @@ class ProductsController < ApplicationController
       format.json {render json: {products:@products_list, status: :ok}.to_json}
       format.js
     end
+  end
+
+  def calculate_execution (product)
+
+    commitments = Commitment.where( product_id: product.id)
+    
+    execution = 0
+    nn = commitments.length
+
+    # Calculate commitment's execution
+    commitments.each do |c|
+      n = c.tasks.length
+      c.execution = 0
+
+      c.tasks.each do |t|
+        c.execution = c.execution + t.execution
+      end
+      
+      if n > 0
+        c.execution = c.execution / n
+      end
+
+      execution = execution + c.execution
+
+    end
+
+    if nn > 0
+      execution = execution / nn
+    end
+
+    return execution
   end
 
   private

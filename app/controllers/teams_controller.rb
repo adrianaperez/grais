@@ -67,13 +67,13 @@ class TeamsController < ApplicationController
     #el id del usuario, user_id, se debe pasar en el post como un campo mas del objeto
     @team = Team.new();
     #Del objeto completo que se pasa en el post "team" (con sus respectivos campos + user_id)", obtengo los campos del Team
-    @team.name = params[:team][:name]
-    @team.description = params[:team][:description]
-    @team.initials = params[:team][:initials]
-    @team.logo = params[:team][:logo]
-    @team.course_id = params[:team][:course_id]
+    @team.name = params[:name]
+    @team.description = params[:description]
+    @team.initials = params[:initials]
+    @team.logo = params[:logo]
+    @team.course_id = params[:course_id]
 
-    course_users = CourseUser.where("user_id = ? AND course_id = ?", params[:team][:user_id], params[:team][:course_id])
+    course_users = CourseUser.where("user_id = ? AND course_id = ?", params[:user_id], params[:course_id])
   
     #Como se supone que hay un solo course_user en que coincidan usuario y curso, obtenemos el primer elemento
     course_user = course_users[0]
@@ -87,19 +87,19 @@ class TeamsController < ApplicationController
 
           ########## Images
           # validar si el archivo para la imagen fue cargado al post
-          if(params[:team][:logo_file])
+          if(params[:logo_file])
             # creamos si no existe la carpeta product_logos, definida al principio de este archivo
             FileUtils.mkdir_p TEAMS_LOGOS
             
             # Creamos el path del archivo concatenando carpeta mas nombre del archivo 
-            path = File.join TEAMS_LOGOS, c.id.inspect + "." + params[:team][:logo]
+            path = File.join TEAMS_LOGOS, c.id.inspect + "." + params[:logo]
 
             # Creamos el archivo y le copiamos el archivo pasado en el post 
             File.open(path, 'wb') do |f|
-              f.write(params[:team][:logo_file].read)
+              f.write(params[:logo_file].read)
             end
 
-            params[:team][:logo_file] = nil
+            params[:logo_file] = nil
           end
           ###########
 
@@ -131,7 +131,7 @@ class TeamsController < ApplicationController
           end
         else
           respond_to do |format|
-            format.json {render json: { info: "Failed to create course_user",  status: :bad_request}.to_json}
+            format.json {render json: { info: "Failed to create course_user",  status: :failed}.to_json}
           end
         end
       else
@@ -512,38 +512,51 @@ class TeamsController < ApplicationController
   end
 
   def update_team
-    @team = Team.find(params[:team][:id])
+    team = Team.find(params[:id])
     
-    respond_to do |format|
-      if @team.update_attributes(team_params)
+    if team == nil
+      respond_to do |format|
+        format.json {render json: team, status: :not_found}
+      end
+    end
 
-        ########## Images
-        # validar si el archivo para la imagen fue cargado al post
-        if(params[:team][:logo_file])
-          # creamos si no existe la carpeta product_logos, definida al principio de este archivo
-          FileUtils.mkdir_p TEAMS_LOGOS
-          
-          # Creamos el path del archivo concatenando carpeta mas nombre del archivo 
-          path = File.join TEAMS_LOGOS, c.id.inspect + "." + @team.logo
+    team.name = params[:name]
+    team.description = params[:description]
+    team.initials = params[:initials]
+    team.logo = params[:logo]
+    team.course_id = params[:course_id]
 
-          # Creamos el archivo y le copiamos el archivo pasado en el post 
-          File.open(path, 'wb') do |f|
-            f.write(params[:team][:logo_file].read)
-          end
+    if team.save
 
-          params[:team][:logo_file] = nil
+      ########## Images
+      # validar si el archivo para la imagen fue cargado al post
+      if(params[:logo_file])
+        # creamos si no existe la carpeta product_logos, definida al principio de este archivo
+        FileUtils.mkdir_p TEAMS_LOGOS
+        
+        # Creamos el path del archivo concatenando carpeta mas nombre del archivo 
+        path = File.join TEAMS_LOGOS, team.id.inspect + "." + @team.logo
+
+        # Creamos el archivo y le copiamos el archivo pasado en el post 
+        File.open(path, 'wb') do |f|
+          f.write(params[:logo_file].read)
         end
-        ###########
 
-        format.json {render json:{team: @team, status: :ok}.to_json}
-      else
-        format.json {render json: {info: "Failed to update this team", status: :unprocessable_entity}.to_json}
+        params[:logo_file] = nil
+      end
+      ###########
+
+      respond_to do |format|
+        format.json {render json: {team: team, status: :ok}.to_json}
+      end
+    else
+      respond_to do |format|
+        format.json  {render json: {team: team, status: :unprocessable_entity}.to_json}
       end
     end
   end
 
   private
-
     def team_params
         params.require(:team).permit(:name, :description, :initials, :logo, :course_id)
     end
