@@ -5,6 +5,8 @@ class UsersController < ApplicationController
 
   layout "main", only: [:show]
 
+  USER_IMGS = File.join Rails.root, 'public', 'user_imgs'
+
   def index
   end
 
@@ -63,17 +65,35 @@ class UsersController < ApplicationController
   # get all the users
   def all
     users = User.all
-    
-    puts users.inspect
 
-      respond_to do |format|
-        format.json {render json: users}
+    if users.any?
+      users.each do |u|
+        if u.image_user == "png" || u.image_user == "jpg" || u.image_user == "jpeg"
+          path = "http://localhost:3000/user_imgs/#{u.id}.#{u.image_user}"
+          image = open(path) { |io| io.read }
+          
+          u.img = Base64.encode64(image)
+        end
       end
+    end
+
+    respond_to do |format|
+      format.json {render json: users}
+    end
   end
 
   # return 1 user data
   def find
     u = User.find(params[:id])
+
+    if u != nil
+      if u.image_user == "png" || u.image_user == "jpg" || u.image_user == "jpeg"
+        path = "http://localhost:3000/user_imgs/#{u.id}.#{u.image_user}"
+        image = open(path) { |io| io.read }
+        
+        u.img = Base64.encode64(image)
+      end
+    end
 
     if u != nil
       respond_to do |format|
@@ -110,6 +130,24 @@ class UsersController < ApplicationController
 
     if(mailLists.length == 0)
       if u.save
+
+        ########## Images
+        # validar si el archivo para la imagen fue cargado al post
+        if(params[:img_file])
+          # creamos si no existe la carpeta product_logos, definida al principio de este archivo
+          FileUtils.mkdir_p USER_IMGS
+          
+          # Creamos el path del archivo concatenando carpeta mas nombre del archivo 
+          path = File.join USER_IMGS, u.id.inspect + "." + params[:image_user]
+
+          # Creamos el archivo y le copiamos el archivo pasado en el post 
+          File.open(path, 'wb') do |f|
+            f.write(params[:img_file].read)
+          end
+
+          params[:img_file] = nil
+        end
+        ###########
 
         if params[:fcm_token] != nil
           fcm_token = FcmToken.new()
@@ -166,9 +204,28 @@ class UsersController < ApplicationController
     u.sn_two = params[:sn_two]
     u.phone = params[:phone]
     u.skills = params[:skills]
-    u.image_user = '45345.png'   #cambiar cuando se tenga lista la traza
+    u.image_user = params[:image_user]
 
     if u.save
+
+      ########## Images
+      # validar si el archivo para la imagen fue cargado al post
+      if(params[:img_file])
+        # creamos si no existe la carpeta product_logos, definida al principio de este archivo
+        FileUtils.mkdir_p USER_IMGS
+        
+        # Creamos el path del archivo concatenando carpeta mas nombre del archivo 
+        path = File.join USER_IMGS, u.id.inspect + "." + params[:image_user]
+
+        # Creamos el archivo y le copiamos el archivo pasado en el post 
+        File.open(path, 'wb') do |f|
+          f.write(params[:img_file].read)
+        end
+
+        params[:img_file] = nil
+      end
+      ###########
+
       respond_to do |format|
         format.json {render json: {user: u, status: :ok}.to_json}
       end
