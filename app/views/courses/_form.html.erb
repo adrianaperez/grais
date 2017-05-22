@@ -29,6 +29,21 @@
         <span class="lever"></span>
       </label>
     </div>
+    <div class="switch">
+      <label>
+        Inscripciones activas
+        <%= f.check_box :inscriptions_activated%>
+        <span class="lever"></span>
+      </label>
+    </div>
+    <p>
+      <%= f.radio_button :privacy, "public" %>
+      <%= label_tag(:course_privacy_public, "Público") %>
+    </p>
+    <p>
+      <%= f.radio_button :privacy, "private" %>
+      <%= label_tag(:course_privacy_private, "Privado") %>
+    </p>
     <div class="input-field">
       <%= f.select :section, options_for_select([['1', 1], ['2', 2], ['3', 3]], 1) %>
       <label>Secciones</label>

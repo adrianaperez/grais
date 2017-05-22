@@ -1,0 +1,9 @@
+<%if @comment.user==current_user%>
+  
+  $('#post_comments_<%=@comment.post.id%> #comment_<%=@comment.id%>').remove();
+  $('#modal_edit_comment_<%=@comment.id%>').remove();
+  var $toastContent = $('<span>Comentario eliminado</span>');
+  Materialize.toast($toastContent, 3000);
+<%else%>
+  console.log("Error al eliminar comentario");
+<%end%>

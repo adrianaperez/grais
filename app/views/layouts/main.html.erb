@@ -10,6 +10,13 @@
   </head>
   <body>
     <header>
+      <div id="notification" class="notification">
+        <p>Deseas recibir notificaciones?</p>
+        <a class="waves-effect waves-light btn">Aceptar</a>
+        <a href="#" id="hidebar" class="close"  data-turbolinks="false">
+          <i class="material-icons right">close</i>
+        </a>
+      </div>
       <div class="navbar-fixed">
         <nav class="z-depth-0">
           <div class="nav__content">
@@ -26,7 +33,7 @@
               <a href="#!" class="hide-on-med-and-up right"><i class="material-icons right">add_alert</i></a>
               <ul class="right hide-on-small-only">
                 <!-- Dropdown Trigger -->
-                <li><a href="#!"><i class="material-icons right">add_alert</i></a></li>
+                <li><a id="note" href="#!"><i class="material-icons right">add_alert</i></a></li>
                 <li>
                   <%= link_to("#!", data:{activates:"dropdown1", position:"left", delay:"50", tooltip:current_user.names}, class:"dropdown-button img-height-size tooltipped") do %>
                     <div class="user-img">
@@ -46,7 +53,7 @@
         <li class="divider"></li>
         <li><%= link_to "Perfil", user_path(current_user)%></li>
         <li class="divider"></li>
-        <li><%= link_to "Cerrar sesión", logout_path, method: "delete" %></li>
+        <li><%= link_to "Cerrar sesión", logout_path, method: "delete", id:"logout" %></li>
       </ul>
     </header>
     <div class="sidebar hide-on-small-only">

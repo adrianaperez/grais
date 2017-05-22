@@ -1,4 +1,29 @@
 class ProductReportsController < ApplicationController
+
+	def create
+		@report = ProductReport.new(product_report_params);
+		@report.save
+		respond_to do |format|
+			format.js
+		end
+	end
+
+	def update
+		@report = ProductReport.find(params[:id])
+		@report.update_attributes(product_report_params)
+		respond_to do |format|
+			format.js
+		end
+	end
+
+	def destroy
+		@report = ProductReport.find(params[:id])
+		@report.destroy
+		respond_to do |format|
+			format.js
+		end
+	end
+
 	def create_product_report
 		report = ProductReport.new()
 		report.report = params[:report]
@@ -65,4 +90,10 @@ class ProductReportsController < ApplicationController
 	      format.json {render json: { report: product.product_report,  status: :ok}.to_json}
   		end
 	end
+
+	private
+
+    def product_report_params
+        params.require(:product_report).permit(:report, :product_id)
+    end
 end

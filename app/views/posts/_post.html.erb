@@ -1,0 +1,36 @@
+<div id="post_<%=post.id%>">
+  <div id="post_body">
+    <%= post.post_text%>
+  </div>
+ 
+  <% if is_member?(current_user.id, post.course.id) %>
+    <%if post.user==current_user%>
+      <a href="#modal_edit_post_<%=post.id%>">
+        <span>Editar</span>
+      </a>
+      <%= link_to 'Eliminar', course_post_path(post.course,post), method: :delete, remote: true, data:{:confirm => 'Estás seguro?'} %>
+    <%end%>
+  <%end%>
+  <div class="divider"></div>
+
+  <span>Comentarios</span>
+  <div id="post_comments_<%=post.id%>">
+    <%if post.comments.any?%>
+      <%= render post.comments %>
+    <%end%>
+  </div>
+
+  <% if is_member? current_user.id, post.course.id %>
+    <%= render partial: "comments/form", locals: {post: post} %>
+  <%end%>
+
+  <div class="divider"></div>
+</div>
+
+<!-- Modal Structure - Edit post -->
+<div id="modal_edit_post_<%=post.id%>" class="modal">
+  <h5 style="padding-left: 20px;">Editar post</h5>
+  <%= render partial: "edit_form" , locals: {post: post}  %>
+</div>
+
+

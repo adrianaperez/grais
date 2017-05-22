@@ -1,19 +1,17 @@
 document.addEventListener("turbolinks:load", function() {
-  //<script src="https://www.gstatic.com/firebasejs/3.9.0/firebase.js"></script>
-  //<script>
-    // Initialize Firebase
-    var config = {
-      apiKey: "AIzaSyB4DvvSXF-VqUSPvz_YtiEJ2jYqf1FqT7U",
-      authDomain: "geraisapp-6b1be.firebaseapp.com",
-      databaseURL: "https://geraisapp-6b1be.firebaseio.com",
-      projectId: "geraisapp-6b1be",
-      storageBucket: "geraisapp-6b1be.appspot.com",
-      messagingSenderId: "433408545786"
-    };
-    firebase.initializeApp(config);
-  //</script>
+ 
+  // Initialize Firebase
+  var config = {
+    apiKey: "AlzaSyCAUwy3JH6WZCj2YNRsqPD26Gegdab62ow",
+    authDomain: "gerais-98c80.firebaseapp.com",
+    databaseURL: "https://gerais-98c80.firebaseio.com",
+    projectId: "gerais-98c80",
+    storageBucket: "gerais-98c80.appspot.com",
+    messagingSenderId: "530165822986"
+  };
+  firebase.initializeApp(config);
 
-  //Aqui de bebería obtener el token y enviarlo al servidor a través del formulario
+  //Aqui bebería obtener el token y enviarlo al servidor
 
   const messaging = firebase.messaging();
 
@@ -30,6 +28,24 @@ document.addEventListener("turbolinks:load", function() {
   .catch(function(err) {
     console.log('Unable to get permission to notify.', err);
   });
+
+  messaging.onMessage(function(payload){
+    console.log('onMessage:', payload);
+    $('#aqui').append("Solicitud de: "+payload.data.user_name);
+  });
+
+  navigator.serviceWorker.addEventListener('message', function(event) {  
+    console.log('Received a message from service worker: ', event.data.message);
+    $.each( event.data , function( index, item ) {
+      if (index =="message") {
+        console.log('Received a message from service worker: ', event.data);
+      }
+      if (index =="data") {
+        $('#aquiaqui').append("Solicitado por: "+item.data.user_name);
+      }
+    });
+  });
+
 
 });
 

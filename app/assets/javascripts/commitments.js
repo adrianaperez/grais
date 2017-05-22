@@ -25,7 +25,9 @@ function getCommitmentTask(){
         $.each(item, function(key, value){
 
           $('div#commitment_tasks .collection').append(
-            '<li class="collection-item">'+value.description+'<br>'+value.user_name+'</li>'
+            '<a href="/tasks/' + value.id + '">' +
+              '<li class="collection-item">'+value.description+'<br>'+value.user_name+'</li>'+
+            '</a>'
           );
         
         });

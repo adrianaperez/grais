@@ -1,0 +1,11 @@
+<% if @course_user.any?%>
+  <% errors = @post.errors.count %>
+  <% if errors == 0%>
+    $('form#new_post').find('input[type="text"]').val('');
+    $('div#course_posts').prepend("<%= j render @post %>");
+  <%else%>
+    console.log("NO NO NO");
+  <%end%>  
+<%else%>
+  console.log("NO NO NO");
+<%end%>

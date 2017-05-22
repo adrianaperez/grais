@@ -1,0 +1,10 @@
+<%if @course_user.any? and @comment.user==current_user%>
+  
+  $('#post_comments_<%=@comment.post.id%> #comment_<%=@comment.id%> #comment_body').empty();
+  $('#post_comments_<%=@comment.post.id%> #comment_<%=@comment.id%> #comment_body').html("<%= @comment.comment_text %>");
+  $('#modal_edit_comment_<%=@comment.id%>').modal('close');
+  var $toastContent = $('<span>Comentario editado</span>');
+  Materialize.toast($toastContent, 3000);
+<%else%>
+  console.log("Error al actualizar post");
+<%end%>

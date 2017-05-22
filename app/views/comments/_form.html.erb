@@ -1,0 +1,7 @@
+<%= form_for([post, post.comments.new], remote: true) do |f| %>
+  <div class="input-field ">
+    <%= f.text_field :comment_text %>
+    <%= f.label :comment_text, "Quieres comentar?" %>
+  </div>
+  <%= f.submit "Comentar", class: "btn" %>
+<% end %>

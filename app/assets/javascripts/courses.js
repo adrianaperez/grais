@@ -284,9 +284,6 @@ function addMemberToCourse() {
   $('form[id=add_member_to_course]').submit(function(event) {  
     event.preventDefault();
     var valuesToSubmit = $(this).serialize();
-    
-    console.log(valuesToSubmit);
-    console.log($(this).attr('action'));
 
     $.ajax({
 

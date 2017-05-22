@@ -10,7 +10,7 @@
     <% else %>
       <% if !is_member? current_user.id, @course.id %>
 
-        <form accept-charset="UTF-8" action="<%= add_member_to_course_courses_path %>" method="post" id="add_member_to_course" >
+        <form accept-charset="UTF-8" action="<%= request_course_access_courses_path %>" method="post" id="add_member_to_course" >
           <input name="utf8" type="hidden" value="&#x2713;" />
           <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>" />
           <%= hidden_field_tag :user_id, current_user.id %>
