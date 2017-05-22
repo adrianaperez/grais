@@ -135,6 +135,18 @@ class ProductsController < ApplicationController
  
           response = http.request(req)
           ##############################
+
+          notification = Notification.new
+          notification.user_id = currUser.id
+          notification.noti_type = 'NEW_PRODUCT'
+          notification.noti_user_id = currUser.id
+          notification.user_name = currUser.names
+          notification.course_id = product.team.course.id
+          notification.course_name = product.team.course.name
+          notification.team_id = product.team.id
+          notification.team_name = product.team.name
+          
+          notification.save
         end
 
         # Verofocar si el producto esta basado en un prototipo
@@ -239,6 +251,18 @@ class ProductsController < ApplicationController
 
           response = http.request(req)
           ##############################
+
+          notification = Notification.new
+          notification.user_id = currUser.id
+          notification.noti_type = 'PRODUCT_UPDATE'
+          notification.noti_user_id = currUser.id
+          notification.user_name = currUser.names
+          notification.course_id = product.team.course.id
+          notification.course_name = product.team.course.name
+          notification.team_id = product.team.id
+          notification.team_name = product.team.name
+          
+          notification.save
         end
 
         format.html{redirect_to team_path, notice: "Product was successfully updated"}

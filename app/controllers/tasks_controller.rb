@@ -108,6 +108,17 @@ class TasksController < ApplicationController
 
           response = http.request(req)
           ##############################
+
+          notification = Notification.new
+          notification.user_id = task.user.id
+          notification.noti_type = 'NEW_TASK'
+          notification.noti_user_id = task.user.id
+          notification.user_name = task.user.names
+          notification.task_id = task.id
+          notification.task_desc = task.description
+          notification.commitment_id = task.commitment.id
+          
+          notification.save
       	end
     	
 	    	respond_to do |format|
@@ -150,6 +161,17 @@ class TasksController < ApplicationController
 
           response = http.request(req)
           ##############################
+
+          notification = Notification.new
+          notification.user_id = task.user.id
+          notification.noti_type = 'TASK_UPDATE'
+          notification.noti_user_id = task.user.id
+          notification.user_name = task.user.names
+          notification.task_id = task.id
+          notification.task_desc = task.description
+          notification.commitment_id = task.commitment.id
+          
+          notification.save
       	end
 
       	respond_to do |format|

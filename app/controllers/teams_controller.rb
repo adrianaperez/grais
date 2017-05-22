@@ -122,6 +122,18 @@ class TeamsController < ApplicationController
 
                 response = http.request(req)
                 ##############################
+
+                notification = Notification.new
+                notification.user_id = cu.user.id
+                notification.noti_type = 'NEW_TEAM_CREATED'
+                notification.noti_user_id = course_user.user.id
+                notification.user_name = course_user.user.names
+                notification.team_id = @team.id
+                notification.team_name = @team.name
+                notification.course_id = course_user.course.id
+                notification.course_name = course_user.course.name
+                
+                notification.save
               end
             end
           end
@@ -236,6 +248,18 @@ class TeamsController < ApplicationController
           response = http.request(req)
           ##############################
 
+          notification = Notification.new
+          notification.user_id = cu.user.id
+          notification.noti_type = 'NEW_TEAM_CREATED'
+          notification.noti_user_id = course_user.user.id
+          notification.user_name = course_user.user.names
+          notification.team_id = @team.id
+          notification.team_name = @team.name
+          notification.course_id = course_user.course.id
+          notification.course_name = course_user.course.name
+          
+          notification.save
+
           respond_to do |format|
             format.json {render json: {info: "Request sended", status: :ok}.to_json}
           end
@@ -311,6 +335,16 @@ class TeamsController < ApplicationController
 
               response = http.request(req)
               ##############################
+
+              notification = Notification.new
+              notification.user_id = user.id
+              notification.noti_type = 'ACCEPTED_IN_TEAM'
+              notification.noti_user_id = user.id
+              notification.user_name = user.names
+              notification.team_id = @team.id
+              notification.team_name = @team.name
+              
+              notification.save
             end
           else  # CourseUser no actualizado, no se pudo asociar el usuario al curso
             respond_to do |format|
@@ -508,6 +542,54 @@ class TeamsController < ApplicationController
       format.html{redirect_to teams_path, notice: "Success"}
       format.json {render json: {teams: @teams, status: :ok}.to_json}
       format.js
+    end
+  end
+
+  def find_teams_by_prototype
+    prototype = Prototype.find(params[:prototype_id])
+
+    course = prototype.course
+    teams = course.teams
+
+    team_list = Array.new
+
+    teams.each do |t|
+      # Obtener lista de miembros para
+      # luego agregar datos extra como lider, logo, etc
+      aux_list = CourseUser.where(team_id: t.id)
+
+      usePrototype = false
+      # Verificar si algun producto del equipo usa el prototipo 
+      t.products.each do |p|
+        if p.prototype_id == prototype.id    
+          usePrototype = true
+          break #
+        end
+      end
+
+      if aux_list.any? && usePrototype == true
+        aux_list.each do |auxCU|  
+          if auxCU.rol == "LEADER" # Es decir donde el rol es lider
+            t.leader = auxCU.user.names + " " + auxCU.user.lastnames
+            t.leader_id = auxCU.user.id
+          end
+        end
+
+        t.studentsAmount = aux_list.length
+
+        if t.logo == "png" || t.logo == "jpg" || t.logo == "jpeg"
+          path = "http://localhost:3000/teams_logos/#{t.id}.#{t.logo}"
+          image = open(path) { |io| io.read }
+          
+          t.logo_file = Base64.encode64(image)
+        end
+        
+        team_list << t  
+      end
+    end
+
+    respond_to do |format|
+      format.json {render json: {teams: team_list, status: :ok}.to_json}
     end
   end
 

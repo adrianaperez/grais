@@ -436,6 +436,15 @@ class CoursesController < ApplicationController
         response = http.request(req)
         ##############################
 
+        notification = Notification.new
+        notification.user_id = course.ceo_id
+        notification.noti_type = 'NEW_COURSE_MEMBER'
+        notification.noti_user_id = user.id
+        notification.user_name = user.names
+        notification.course_id = course.id
+        notification.course_name = course.name
+        
+        notification.save
       else
         respond_to do |format|
           format.json {render json: {info: "There is no device for this user", status: :unprocessable_entity}.to_json}
@@ -497,6 +506,16 @@ class CoursesController < ApplicationController
 
           response = http.request(req)
           ##############################
+
+          notification = Notification.new
+          notification.user_id = user.id
+          notification.noti_type = 'ACCEPTED_IN_COURSE'
+          notification.noti_user_id = user.id
+          notification.user_name = user.names
+          notification.course_id = course.id
+          notification.course_name = course.name
+          
+          notification.save
         end
       else
         respond_to do |format|
