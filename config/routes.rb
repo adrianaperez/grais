@@ -114,7 +114,9 @@ Rails.application.routes.draw do
     collection do
       post :request_team_access
     end
-    
+    collection do
+      post :find_teams_by_prototype
+    end
   end
 
   resources :products, :defaults => { :format => 'json' }, :except => [ :create,:update, :destroy, :edit, :index, :show, :new] do
@@ -185,9 +187,6 @@ Rails.application.routes.draw do
     collection do
       post :find_by_course
     end
-    collection do
-      post :find_teams_by_prototype
-    end
   end
 
   #exeptuar aquellas acciones que no son para la app 
@@ -234,4 +233,34 @@ Rails.application.routes.draw do
       post :find_by_commitment
     end
   end
+
+    #exeptuar aquellas acciones que no son para la app 
+  resources :product_reports, :defaults => { :format => 'json' }, :except => [:create, :update] do
+    collection do
+      post :create_product_report
+    end
+    collection do
+      post :update_product_report
+    end
+    collection do
+      post :find_by_team
+    end
+    collection do
+      post :find_by_product
+    end
+  end
+
+    #exeptuar aquellas acciones que no son para la app 
+  resources :notifications, :defaults => { :format => 'json' }, :except => [:create, :update] do
+    collection do
+      post :get_notifications
+    end
+    collection do
+      post :set_viewed
+    end
+    collection do
+      post :set_accepted
+    end
+  end
+
 end

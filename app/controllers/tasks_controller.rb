@@ -71,6 +71,7 @@ class TasksController < ApplicationController
 		task.commitment = Commitment.find(params[:commitment_id])
 		task.user = User.find(params[:user_id])	
     task.due_date = params[:due_date]	
+    task.weight = params[:weight]
 
 		if task.user == nil
       respond_to do |format|
@@ -109,6 +110,17 @@ class TasksController < ApplicationController
 
           response = http.request(req)
           ##############################
+
+          notification = Notification.new
+          notification.user_id = task.user.id
+          notification.noti_type = 'NEW_TASK'
+          notification.noti_user_id = task.user.id
+          notification.user_name = task.user.names
+          notification.task_id = task.id
+          notification.task_desc = task.description
+          notification.commitment_id = task.commitment.id
+          
+          notification.save
       	end
     	
 	    	respond_to do |format|
@@ -127,6 +139,7 @@ class TasksController < ApplicationController
 		task.description = params[:description]
 		task.execution = params[:execution]
     task.user = User.find(params[:user_id]) 
+    task.weight = params[:weight]
 
   	if task == nil
 	  	respond_to do |format|
@@ -150,6 +163,17 @@ class TasksController < ApplicationController
 
           response = http.request(req)
           ##############################
+
+          notification = Notification.new
+          notification.user_id = task.user.id
+          notification.noti_type = 'TASK_UPDATE'
+          notification.noti_user_id = task.user.id
+          notification.user_name = task.user.names
+          notification.task_id = task.id
+          notification.task_desc = task.description
+          notification.commitment_id = task.commitment.id
+          
+          notification.save
       	end
 
       	respond_to do |format|
@@ -166,8 +190,12 @@ class TasksController < ApplicationController
 	def find_by_user
 		tasks = Task.where( user_id: params[:user_id])
 
-		tasks.each do |c|
-			c.user_name = c.user.names
+		tasks.each do |t|
+			t.user_name = t.user.names + " " + t.user.lastnames
+      t.user_id = t.user.id 
+      commitment = Commitment.find(t.commitment_id)
+      t.commitment_name = commitment.description
+      t.commitment_date = commitment.deadline
 		end
 
   	respond_to do |format|
@@ -179,7 +207,11 @@ class TasksController < ApplicationController
 		tasks = Task.where( commitment_id: params[:commitment_id])
 
 		tasks.each do |c|
-			c.user_name = c.user.names + " "+ c.user.lastnames
+			c.user_name = c.user.names + " " + c.user.lastnames
+      c.user_id = c.user.id 
+      commitment = Commitment.find(c.commitment_id)
+      c.commitment_name = commitment.description
+      c.commitment_date = commitment.deadline 
 		end
 
   	respond_to do |format|
@@ -192,17 +224,27 @@ class TasksController < ApplicationController
     product = Product.find(params[:product_id])
     user = User.find(params[:user_id])
     commitments = product.commitments
+
+    puts commitments.inspect
+
     task_list = Array.new
 
     commitments.each do |c|
       tasks = c.tasks
+      puts tasks.inspect
+
       tasks.each do |t|
-        if t.user_id == user.id
+        if t.user.id == user.id
           t.commitment_name = c.description
+          t.commitment_date = c.deadline
+          t.user_id = t.user.id 
+          t.user_name = t.user.names + " " + t.user.lastnames
           task_list << t
         end
       end
     end
+    puts task_list.inspect
+
     respond_to do |format|
       format.json {render json: { tasks: task_list,  status: :ok}.to_json}
     end

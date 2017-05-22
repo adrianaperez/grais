@@ -94,8 +94,35 @@ class CommitmentsPrototypesController < ApplicationController
 
 	    respond_to do |format|
 	      if commitmentPrototype.save
+
+          # find products with this prototype_id
+          products = Product.where(prototype_id: commitmentPrototype.prototype_id)
+
+          products.each do |p|
+            commitment = Commitment.new()
+            commitment.description = params[:description]
+            commitment.deadline = params[:deadline]
+            commitment.execution = 0
+            commitment.count = 0
+            commitment.commitment_prototype = commitmentPrototype
+
+            aux_list = CourseUser.where(team_id: p.team.id)
+
+            if aux_list.any?
+              aux_list.each do |auxCU|  
+                if auxCU.rol == "LEADER" # Es decir donde el rol es lider
+                  commitment.user = auxCU.user.id
+                end
+              end
+            end
+
+            commitment.product = p
+            commitment.save
+          end
+
 	        format.json {render json: {commitmentPrototype: commitmentPrototype, status: :ok}.to_json}
 	      else
+          format.json {render json: {commitmentPrototype: commitmentPrototype, status: :unprocessable_entity}.to_json}
 	      end
 	    end
 	end
@@ -107,6 +134,15 @@ class CommitmentsPrototypesController < ApplicationController
 
 	    respond_to do |format|
 	      if commitmentPrototype.save
+          # find products with this prototype_id
+          commitments = Commitment.where(commitment_prototype_id: commitmentPrototype.id)
+
+          commitments.each do |c|
+            c.description = params[:description]
+            c.deadline = params[:deadline]
+            c.save
+          end
+
 	        format.json {render json: {commitmentPrototype: commitmentPrototype, status: :ok}.to_json}
 	      else
 	        format.json {render json: {commitmentPrototype: commitmentPrototype, status: :unprocessable_entity}.to_json}
