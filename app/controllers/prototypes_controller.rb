@@ -2,6 +2,7 @@ class PrototypesController < ApplicationController
 
   layout "main"
   PROTOTYPES_LOGOS = File.join Rails.root, 'public', 'prototypes_logos'
+  PRODUCT_LOGOS = File.join Rails.root, 'public', 'products_logos'
 
   def index
     @prototypes = Prototype.all
@@ -137,9 +138,44 @@ class PrototypesController < ApplicationController
             f.write(params[:logo_file].read)
           end
 
-          params[:logo_file] = nil
+          #params[:logo_file] = nil # se necesitara para copiarlo en los productos que usan este product
         end
         ###########
+
+        course = prototype.course
+        teams = course.teams
+
+        # Para cada equipo actualizar sus productos
+        teams.each do |t|
+          t.products.each do |p|
+            if p.prototype_id == prototype.id
+              p.name = params[:name]
+              p.description = params[:description]
+              p.logo = params[:logo]  #extension
+              p.initials = params[:initials]
+
+              ########## Images
+              # validar si el archivo para la imagen fue cargado al post
+              if(params[:logo_file])
+                # creamos si no existe la carpeta product_logos, definida al principio de este archivo
+                FileUtils.mkdir_p PRODUCT_LOGOS
+                
+                # Creamos el path del archivo concatenando carpeta mas nombre del archivo 
+                path = File.join PRODUCT_LOGOS, p.id.inspect + "." + p.logo
+
+                # Creamos el archivo y le copiamos el archivo pasado en el post 
+                File.open(path, 'wb') do |f|
+                  f.write(params[:logo_file].read)
+                end
+
+                #params[:logo_file] = nil
+              end
+              ###########
+
+              p.save
+            end
+          end
+        end
 
         format.json {render json: {prototype: prototype, status: :ok}.to_json}
       else

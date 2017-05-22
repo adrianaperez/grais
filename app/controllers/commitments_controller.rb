@@ -108,6 +108,20 @@ class CommitmentsController < ApplicationController
 
               response = http.request(req)
               ##############################
+
+              notification = Notification.new
+              notification.user_id = currUser.id
+              notification.noti_type = 'NEW_COMMITMENT'
+              notification.commitment_id = commitment.id
+              notification.commitment.desc = commitment.description
+              notification.noti_user_id = currUser.id
+              notification.user_name = currUser.names
+              notification.course_id = cu.course.id
+              notification.course_name = cu.course.name
+              notification.team_id = commitment.product.team.id
+              notification.team_name = commitment.product.team.name
+              
+              notification.save
         		end
           end
       	end
@@ -162,6 +176,21 @@ class CommitmentsController < ApplicationController
 
               response = http.request(req)
               ##############################
+
+              notification = Notification.new
+              notification.user_id = currUser.id
+              notification.noti_type = 'COMMITMENT_UPDATE'
+              notification.commitment_id = commitment.id
+              notification.commitment.desc = commitment.description
+              notification.noti_user_id = currUser.id
+              notification.user_name = currUser.names
+              notification.course_id = cu.course.id
+              notification.course_name = cu.course.name
+              notification.team_id = commitment.product.team.id
+              notification.team_name = commitment.product.team.name
+              
+              notification.save
+
         		end
           end
       	end
