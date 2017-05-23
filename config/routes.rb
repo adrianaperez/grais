@@ -250,4 +250,17 @@ Rails.application.routes.draw do
       post :find_by_product
     end
   end
+
+  #exeptuar aquellas acciones que no son para la app 
+  resources :notifications, :defaults => { :format => 'json' }, :except => [:create, :update] do
+    collection do
+      post :get_notifications
+    end
+    collection do
+      post :set_viewed
+    end
+    collection do
+      post :set_accepted
+    end
+  end
 end
