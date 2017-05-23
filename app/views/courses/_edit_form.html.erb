@@ -29,6 +29,21 @@
         <span class="lever"></span>
       </label>
     </div>
+    <div class="switch">
+      <label>
+        Inscripciones activas
+        <%= f.check_box :inscriptions_activated%>
+        <span class="lever"></span>
+      </label>
+    </div>
+    <p>
+      <%= f.radio_button :privacy, "public" %>
+      <%= label_tag(:course_privacy_public, "Público") %>
+    </p>
+    <p>
+      <%= f.radio_button :privacy, "private" %>
+      <%= label_tag(:course_privacy_private, "Privado") %>
+    </p>
   </div>
   <div class="modal-footer">
     <%= f.submit "Guardar", class: "btn" %>

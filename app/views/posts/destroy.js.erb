@@ -1,0 +1,9 @@
+<%if @post.user==current_user%>
+  
+  $('#post_<%=@post.id%>').remove();
+  $('#modal_edit_post_<%=@post.id%>').remove();
+  var $toastContent = $('<span>Post eliminado</span>');
+  Materialize.toast($toastContent, 3000);
+<%else%>
+  console.log("Error al eliminar post");
+<%end%>

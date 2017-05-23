@@ -1,0 +1,21 @@
+<div id="comment_<%=comment.id%>">
+  <%= comment.user.names%>
+  <div id="comment_body">
+    <%= comment.comment_text%>
+  </div>
+  <% if is_member? current_user.id, comment.post.course.id %>
+    <%if comment.user==current_user%>
+      <a href="#modal_edit_comment_<%=comment.id%>">
+        <span>Editar</span>
+      </a>
+      <%= link_to 'Eliminar', post_comment_path(comment.post,comment), method: :delete, remote: true, data:{:confirm => 'Estás seguro?'} %>
+    <%end%>
+  <%end%>
+  <div class="divider"></div>
+</div>
+  
+<!-- Modal Structure - Edit commnet -->
+<div id="modal_edit_comment_<%=comment.id%>" class="modal">
+  <h5 style="padding-left: 20px;">Editar commetario</h5>
+  <%= render partial: "comments/edit_form" , locals: {comment: comment}  %>
+</div>

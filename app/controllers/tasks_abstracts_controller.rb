@@ -1,5 +1,29 @@
 class TasksAbstractsController < ApplicationController
 
+	def create
+		@abstract = TasksAbstract.new(tasks_abstract_params);
+		@abstract.save
+		respond_to do |format|
+			format.js
+		end
+	end
+
+	def update
+		@abstract = TasksAbstract.find(params[:id])
+		@abstract.update_attributes(tasks_abstract_params)
+		respond_to do |format|
+			format.js
+		end
+	end
+
+	def destroy
+		@abstract = TasksAbstract.find(params[:id])
+		@abstract.destroy
+		respond_to do |format|
+			format.js
+		end
+	end
+
 	def create_task_abstract
 		abstract = TasksAbstract.new()
 		abstract.abstract = params[:abstract]
@@ -68,4 +92,10 @@ class TasksAbstractsController < ApplicationController
 	      format.json {render json: { abstract: task.tasks_abstract,  status: :ok}.to_json}
   		end
 	end
+
+	private
+
+    def tasks_abstract_params
+        params.require(:tasks_abstract).permit(:abstract, :task_id)
+    end
 end

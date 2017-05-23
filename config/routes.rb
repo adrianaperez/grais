@@ -17,6 +17,14 @@ Rails.application.routes.draw do
 
   post 'commitment_prototypes', to: 'commitments_prototypes#create', as: 'commitment_prototypes'
   post 'set_token', to: 'fcm_tokens#set_token', as: 'set_token'
+  resources :posts do
+    resources :comments
+  end
+  #resources :comments
+  resources :courses do
+   resources :posts
+  end
+  #resources :posts
   resources :tasks
   resources :commitments
   resources :prototypes

@@ -1,5 +1,29 @@
 class CommitmentAbstractsController < ApplicationController
 
+	def create
+		@abstract = CommitmentAbstract.new(commitment_abstract_params);
+		@abstract.save
+		respond_to do |format|
+			format.js
+		end
+	end
+
+	def update
+		@abstract = CommitmentAbstract.find(params[:id])
+		@abstract.update_attributes(commitment_abstract_params)
+		respond_to do |format|
+			format.js
+		end
+	end
+
+	def destroy
+		@abstract = CommitmentAbstract.find(params[:id])
+		@abstract.destroy
+		respond_to do |format|
+			format.js
+		end
+	end
+
 	def create_commitment_abstract
 		abstract = CommitmentAbstract.new()
 		abstract.abstract = params[:abstract]
@@ -66,4 +90,10 @@ class CommitmentAbstractsController < ApplicationController
 	      format.json {render json: { abstract: commitment.commitment_abstract,  status: :ok}.to_json}
   		end
 	end
+
+	private
+
+    def commitment_abstract_params
+        params.require(:commitment_abstract).permit(:abstract, :commitment_id)
+    end
 end

@@ -1,0 +1,6 @@
+<% if @course_user.any?%>
+  console.log("Siiiiiiiiiiiii");
+  $('div#post_comments_<%=@comment.post.id%>').append("<%= j render @comment %>");
+<%else%>
+  console.log("NO NO NO");
+<%end%>

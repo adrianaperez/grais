@@ -394,3 +394,29 @@ body {
 
 }
 
+.notification {
+  display: none;
+  position: fixed;
+  width: 100%;
+  height: 64px;
+  background-color: white;
+  overflow: hidden;
+  z-index: 999;
+  p {
+    float: left;
+    line-height: 56px;
+    color: black;
+    margin: 0 0 0 20px;
+  }
+  .close {
+    float: right;
+    margin-right: 20px;
+    font-size: 24px;
+    height: 56px;
+    line-height: 56px;
+  }
+}
+
+.show_notification {
+  
+}

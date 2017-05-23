@@ -28,7 +28,55 @@ document.addEventListener("turbolinks:load", function() {
   //Sticky Header para mobile
   stickyHeader();
 
+  //////////////////////////////////////////////
+  //Notificaciones
+  notificationControl();
+  $('#hidebar').click(function(){
+    $('#notification').slideUp(500);
+    activeNotification(false);
+  });
+  $('#logout').click(function(){
+    if (!isNotificationActive()) {
+      activeNotification(true);
+    }    
+  });
+
+  //deleteLocalNotification();
+
+  $( "#note" ).click(function() {
+    $( this ).toggleClass( "show_notification" );
+  });
+
 });
+
+///////////////////////////////////////////////
+//Notificaciones
+function notificationControl(){
+
+  if (!window.localStorage.getItem('notification_enabled')) {
+    console.log(window.localStorage.getItem('notification_enabled'));
+    activeNotification(true);
+    $('#notification').slideDown(500);
+  } else {
+
+    if (isNotificationActive()) {
+
+      $('#notification').slideDown(500);
+    }
+  }
+}
+
+function isNotificationActive() {
+  return window.localStorage.getItem('notification_enabled') == 1;
+}
+
+function activeNotification(sent) {
+  window.localStorage.setItem('notification_enabled', sent ? 1 : 0);
+}
+
+function deleteLocalNotification (){
+  window.localStorage.removeItem('notification_enabled');
+}
 
 ///////////////////////////////////////////////
 //Sticky Header

@@ -16,7 +16,8 @@
     <li class="tab"><a id="get_course_members" href="#course_members" style="outline: none;">miembros</a></li>
     <li class="tab"><a id="get_course_products" href="#course_products" style="outline: none;">productos</a></li>
     <li class="tab"><a id="get_course_products_prototypes" href="#course_products_prototypes" style="outline: none;">productos prototipos</a></li>
-    <li class="tab"><a href="#conversations" style="outline: none;">muro</a></li>
+    <!--<li class="tab"><a href="posts" style="outline: none;">muro</a></li>-->
+    <li class="tab"><%= link_to "muro", course_posts_path(@course.id), target:"_self", style:"outline: none;" %></li>
   </ul>      
 <% end %>
 
@@ -70,10 +71,6 @@
       </a>
     </div>
   <% end %>
-</div>
-
-<div id="conversations">
-  <h4>Aqui van las conversaciones curso</h4>
 </div>
 
 <!-- Modal Structure - Edit course -->

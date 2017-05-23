@@ -1,0 +1,16 @@
+<h1>Posts para el curso</h1>
+
+<% if is_member? current_user.id, @course.id %>
+  <%= render "form"%>
+<%end%>
+<div id="course_posts" style="padding-bottom: 50px;">
+  <%if @posts.any?%>
+    <%= render @posts%>
+  <%end%>
+</div>
+
+<%= will_paginate @posts %>
+
+<% content_for :js do %>
+  $(".sidebar").addClass('hide-sidebar');
+<% end %>
