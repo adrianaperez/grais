@@ -137,7 +137,7 @@ class ProductsController < ApplicationController
           ##############################
 
           notification = Notification.new
-          notification.user_id = currUser.id
+          notification.user_id = ceo_id
           notification.noti_type = 'NEW_PRODUCT'
           notification.noti_user_id = currUser.id
           notification.user_name = currUser.names
@@ -253,7 +253,7 @@ class ProductsController < ApplicationController
           ##############################
 
           notification = Notification.new
-          notification.user_id = currUser.id
+          notification.user_id = ceo_id
           notification.noti_type = 'PRODUCT_UPDATE'
           notification.noti_user_id = currUser.id
           notification.user_name = currUser.names

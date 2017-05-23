@@ -76,7 +76,6 @@ class CommitmentsController < ApplicationController
   	commitment.user = currUser.id
   	commitment.product = Product.find(params[:product_id])
 
-
   	# validate if the user and the product were found
   	if currUser == nil
       respond_to do |format|
@@ -110,10 +109,10 @@ class CommitmentsController < ApplicationController
               ##############################
 
               notification = Notification.new
-              notification.user_id = currUser.id
+              notification.user_id = cu.user_id
               notification.noti_type = 'NEW_COMMITMENT'
               notification.commitment_id = commitment.id
-              notification.commitment.desc = commitment.description
+              notification.commitment_desc = commitment.description
               notification.noti_user_id = currUser.id
               notification.user_name = currUser.names
               notification.course_id = cu.course.id
@@ -178,10 +177,10 @@ class CommitmentsController < ApplicationController
               ##############################
 
               notification = Notification.new
-              notification.user_id = currUser.id
+              notification.user_id = cu.user_id
               notification.noti_type = 'COMMITMENT_UPDATE'
               notification.commitment_id = commitment.id
-              notification.commitment.desc = commitment.description
+              notification.commitment_desc = commitment.description
               notification.noti_user_id = currUser.id
               notification.user_name = currUser.names
               notification.course_id = cu.course.id

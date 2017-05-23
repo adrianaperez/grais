@@ -21,6 +21,22 @@ class PasswordResetsController < ApplicationController
     end
   end
 
+  def reset_user_password
+    @user = User.find_by(email: params[:email].downcase)
+    if @user
+      @user.create_reset_digest
+      @user.send_password_reset_email
+      
+      respond_to do |format|
+        format.json {render json: {info: "Email sent", status: :ok}.to_json}
+      end
+    else
+      respond_to do |format|
+        format.json {render json: {info: "The email dosn't exist", status: :unprocessable_entity}.to_json}
+      end
+    end
+  end
+
   def edit
   end
 

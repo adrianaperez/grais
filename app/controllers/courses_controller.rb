@@ -325,6 +325,11 @@ class CoursesController < ApplicationController
         course.logo_file = Base64.encode64(image)
       end
 
+      # Buscar si ya solicito acceso al curso
+      notifications = Notification.where("course_id = ? AND noti_type = ? AND noti_user_id = ?", course.id, "NEW_COURSE_MEMBER", u.id)
+
+      course.access_requested = (notifications.length > 0)
+
       list << course
     end
     
@@ -516,6 +521,13 @@ class CoursesController < ApplicationController
           notification.course_name = course.name
           
           notification.save
+
+          # Tick notification for access request as accepted
+          if params[:notification_id] != nil
+            notificationTick = Notification.find(params[:notification_id])
+            notificationTick.accepted = true
+            notificationTick.save
+          end
         end
       else
         respond_to do |format|

@@ -249,14 +249,13 @@ class TeamsController < ApplicationController
           ##############################
 
           notification = Notification.new
-          notification.user_id = cu.user.id
-          notification.noti_type = 'NEW_TEAM_CREATED'
-          notification.noti_user_id = course_user.user.id
-          notification.user_name = course_user.user.names
-          notification.team_id = @team.id
-          notification.team_name = @team.name
-          notification.course_id = course_user.course.id
-          notification.course_name = course_user.course.name
+          notification.user_id = leader_id
+          notification.noti_type = 'NEW_TEAM_MEMBER'
+          notification.noti_user_id = user.id
+          notification.user_name = user.names
+          notification.team_id = team.id
+          notification.team_name = team.name
+          notification.course_id = team.course.id
           
           notification.save
 
@@ -341,10 +340,17 @@ class TeamsController < ApplicationController
               notification.noti_type = 'ACCEPTED_IN_TEAM'
               notification.noti_user_id = user.id
               notification.user_name = user.names
-              notification.team_id = @team.id
-              notification.team_name = @team.name
+              notification.team_id = team.id
+              notification.team_name = team.name
               
               notification.save
+
+              # Tick notification for access request as accepted
+              if params[:notification_id] != nil
+                notificationTick = Notification.find(params[:notification_id])
+                notificationTick.accepted = true
+                notificationTick.save
+              end
             end
           else  # CourseUser no actualizado, no se pudo asociar el usuario al curso
             respond_to do |format|
