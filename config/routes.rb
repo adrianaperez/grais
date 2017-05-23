@@ -40,7 +40,11 @@ Rails.application.routes.draw do
   get '/login', to: 'sessions#new'
   post '/login', to: 'sessions#create'
   delete '/logout', to: 'sessions#destroy'
-  resources :password_resets, only: [:new, :create, :edit, :update]
+  resources :password_resets, only: [:new, :create, :edit, :update] do
+    collection do
+      post :reset_user_password
+    end
+  end
 
   #exeptuar aquellas acciones que no son para la app 
   resources :users, :defaults => { :format => 'json' }, :except => [:create, :update, :destroy, :edit, :index, :show, :new] do
@@ -234,7 +238,7 @@ Rails.application.routes.draw do
     end
   end
 
-    #exeptuar aquellas acciones que no son para la app 
+  #exeptuar aquellas acciones que no son para la app 
   resources :product_reports, :defaults => { :format => 'json' }, :except => [:create, :update] do
     collection do
       post :create_product_report
