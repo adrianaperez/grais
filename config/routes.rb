@@ -114,7 +114,9 @@ Rails.application.routes.draw do
     collection do
       post :request_team_access
     end
-    
+    collection do
+      post :find_teams_by_prototype
+    end
   end
 
   resources :products, :defaults => { :format => 'json' }, :except => [ :create,:update, :destroy, :edit, :index, :show, :new] do
@@ -184,9 +186,6 @@ Rails.application.routes.draw do
     end
     collection do
       post :find_by_course
-    end
-    collection do
-      post :find_teams_by_prototype
     end
   end
 
